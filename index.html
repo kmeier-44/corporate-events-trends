@@ -3,331 +3,256 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Corporate Events Booking Trends 2022–2025 | Hire Space</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.25/fullpage.min.css">
-  <link rel="stylesheet" href="css/styles.css">
+  <title>Corporate Events Booking Trends 2022-2025 | Hire Space</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --hs-green: #00A82C;
+      --hs-green-hover: #53B04B;
+      --hs-dark: #282A30;
+      --hs-darkest: #1d1f24;
+      --hs-white: #FFFFFF;
+      --hs-lightest: #F7F9FC;
+      --hs-border: #BBBDBF;
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: var(--hs-darkest);
+      color: var(--hs-white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Nunito Sans', sans-serif;
+    }
+
+    .page {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px 40px;
+    }
+
+    .logo {
+      margin-bottom: 56px;
+    }
+
+    .logo img {
+      height: 32px;
+      display: block;
+    }
+
+    .title {
+      font-size: 2.6rem;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--hs-border);
+      text-align: center;
+      max-width: 560px;
+      line-height: 1.6;
+      margin-bottom: 56px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      width: 100%;
+      max-width: 820px;
+    }
+
+    .card {
+      background: var(--hs-dark);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 44px 36px;
+      text-decoration: none;
+      color: var(--hs-white);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--hs-green);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--hs-green);
+      box-shadow: 0 0 30px rgba(0, 168, 44, 0.15), 0 8px 32px rgba(0, 0, 0, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(0, 168, 44, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .card-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--hs-green);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .card h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: var(--hs-border);
+      line-height: 1.6;
+      margin-bottom: 28px;
+      flex: 1;
+    }
+
+    .card-cta {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--hs-green);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease, gap 0.2s ease;
+    }
+
+    .card:hover .card-cta {
+      color: var(--hs-green-hover);
+      gap: 10px;
+    }
+
+    .card-cta svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    @media (max-width: 680px) {
+      .title {
+        font-size: 1.8rem;
+      }
+
+      .subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 40px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .card {
+        padding: 32px 28px;
+      }
+
+      .logo {
+        margin-bottom: 40px;
+      }
+
+      .logo img {
+        height: 26px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Logo -->
-  <div class="logo-fixed">
-    <img src="https://content.hirespace.com/hubfs/Hire%20Space%20Logo%20White%20Web%20Header.png" alt="Hire Space" height="28">
+  <div class="page">
+    <div class="logo">
+      <img src="assets/logo-white.png" alt="Hire Space">
+    </div>
+
+    <h1 class="title">Corporate Events Booking Trends 2022&#8211;2025</h1>
+    <p class="subtitle">Data-driven insights from thousands of confirmed corporate event bookings</p>
+
+    <div class="cards">
+      <a href="organisers.html" class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h2>For Event Organisers</h2>
+        <p>How to plan smarter: benchmarks, trends, and timing insights</p>
+        <span class="card-cta">
+          View report
+          <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <a href="venues.html" class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h2>For Venues</h2>
+        <p>How to win more bookings: market intelligence and demand patterns</p>
+        <span class="card-cta">
+          View report
+          <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+    </div>
   </div>
 
-  <div id="fullpage">
+  <footer>
+    Source: Hire Space confirmed booking data, 2022&#8211;2025
+  </footer>
 
-    <!-- ═══ 1. TITLE ═══ -->
-    <div class="section title-slide">
-      <div class="slide-inner">
-        <span class="year-badge">2022 – 2025</span>
-        <h1>Corporate Events<br>Booking Trends</h1>
-        <p>Insights from 40,000+ corporate event enquiries across London's leading venues, analysed to help event organisers plan smarter and venues compete better.</p>
-      </div>
-    </div>
-
-    <!-- ═══ 2. EXECUTIVE SUMMARY ═══ -->
-    <div class="section dark-slide">
-      <div class="slide-inner">
-        <span class="section-label">Executive Summary</span>
-        <h2>The headlines</h2>
-        <p class="subtitle">Four years of corporate event data reveal a market that's spending more, planning further ahead, and shopping harder for the right venue.</p>
-        <div class="stat-grid">
-          <div class="stat-card">
-            <div class="stat-value">£7,230</div>
-            <div class="stat-label">Typical Booking Value</div>
-            <div class="stat-detail">Median actual spend in 2025 — up 156% from 2022</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">£102</div>
-            <div class="stat-label">Cost Per Head</div>
-            <div class="stat-detail">Median per-person spend — up 62% since 2022</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">6.4</div>
-            <div class="stat-label">Venues Considered</div>
-            <div class="stat-detail">Average venues per enquiry — up from 3.7 in 2022</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">84 days</div>
-            <div class="stat-label">Planning Window</div>
-            <div class="stat-detail">Typical lead time — up from 60 days in 2022</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">60%</div>
-            <div class="stat-label">Conference Centres</div>
-            <div class="stat-detail">Share of won bookings in 2025 — dominant and growing</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">Thu</div>
-            <div class="stat-label">Peak Event Day</div>
-            <div class="stat-detail">29% of events fall on Thursday — midweek reigns</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ 3. MARKET GROWTH ═══ -->
-    <div class="section light-slide">
-      <div class="slide-inner">
-        <span class="section-label">The Market</span>
-        <h2>Fewer enquiries, better outcomes</h2>
-        <p class="subtitle">While total enquiry volume has declined from its 2022 peak, conversion rates have nearly doubled — suggesting both organisers and venues are getting better at matching.</p>
-        <div class="two-col">
-          <div class="chart-container" style="height:320px">
-            <canvas id="chartVolume"></canvas>
-          </div>
-          <div>
-            <div class="callout">
-              <strong>What this means:</strong> The post-pandemic surge of exploratory enquiries has settled. Today's enquiries are more intentional, with organisers increasingly clear on what they need. For venues, every enquiry matters more — response speed and proposal quality are critical.
-            </div>
-            <div class="stat-grid" style="grid-template-columns:1fr 1fr; margin-top:16px">
-              <div class="stat-card">
-                <div class="stat-value">8.3%</div>
-                <div class="stat-label">2025 Conversion</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-value">2,889</div>
-                <div class="stat-label">Won Bookings</div>
-                <div class="stat-detail">Over 4 years</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="source-line">Source: Hire Space booking data, corporate enquiries 2022–2025</div>
-      </div>
-    </div>
-
-    <!-- ═══ 4. WHAT COMPANIES ARE SPENDING ═══ -->
-    <div class="section dark-slide">
-      <div class="slide-inner">
-        <span class="section-label">Spending</span>
-        <h2>Companies are spending significantly more</h2>
-        <p class="subtitle">The typical corporate event booking has grown from £2,800 to over £7,200 in just four years — and cost per head has risen from £63 to £102.</p>
-        <div class="chart-row">
-          <div class="chart-col">
-            <h3>Actual Booking Values</h3>
-            <div class="chart-container" style="height:280px">
-              <canvas id="chartValues"></canvas>
-            </div>
-          </div>
-          <div class="chart-col">
-            <h3>Cost Per Head</h3>
-            <div class="chart-container" style="height:280px">
-              <canvas id="chartPPH"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="callout">
-          <strong>For event organisers:</strong> Budget expectations are rising across the board. Private events and award ceremonies command the highest spend (£17k–18k), while meetings remain the most accessible category at around £830. Plan your budgets against these benchmarks to set realistic expectations.
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ 5. BOOKING VALUES BY TYPE ═══ -->
-    <div class="section light-slide">
-      <div class="slide-inner">
-        <span class="section-label">Spending by Category</span>
-        <h2>What different events actually cost</h2>
-        <p class="subtitle">Typical booking value varies dramatically by event type — from £828 for meetings to over £17,000 for award ceremonies and private events.</p>
-        <div class="chart-container" style="height:380px">
-          <canvas id="chartValuesByCat"></canvas>
-        </div>
-        <div class="callout">
-          <strong>For venues:</strong> If you're winning corporate parties at £5k but your peers in the award ceremony space are achieving £17k, consider whether your event offering could stretch into higher-value categories.
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ 6. PLANNING HORIZONS ═══ -->
-    <div class="section dark-slide">
-      <div class="slide-inner">
-        <span class="section-label">Planning</span>
-        <h2>The earlier you book, the better your options</h2>
-        <p class="subtitle">Lead times have stretched significantly since 2022, with the typical booking now placed nearly 3 months ahead. But it varies wildly by event type.</p>
-        <div class="chart-row">
-          <div class="chart-col">
-            <h3>Lead Time Trend</h3>
-            <div class="chart-container" style="height:260px">
-              <canvas id="chartLeadTrend"></canvas>
-            </div>
-          </div>
-          <div class="chart-col">
-            <h3>Lead Time by Event Type</h3>
-            <div class="chart-container" style="height:260px">
-              <canvas id="chartLeadByCat"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="callout">
-          <strong>Key insight:</strong> Award ceremonies need 5+ months of planning. Conferences average nearly 4 months. Even Christmas parties — which have a fixed date — see organisers booking 3+ months out. If you're an organiser, starting your venue search late means the best spaces are already taken.
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ 7. WHAT'S BEING BOOKED ═══ -->
-    <div class="section light-slide">
-      <div class="slide-inner">
-        <span class="section-label">Event Types</span>
-        <h2>The rise of the corporate conference</h2>
-        <p class="subtitle">Conferences surged from just 5.5% of won bookings in 2022 to 23.8% in 2024, before settling at 10.3% in 2025. Meanwhile, meetings are declining and experience-led events like corporate parties and networking are gaining ground.</p>
-        <div class="chart-container" style="height:340px">
-          <canvas id="chartCategoryMix"></canvas>
-        </div>
-        <div class="callout">
-          <strong>The story:</strong> Post-pandemic, companies invested heavily in bringing people together for conferences. As that wave normalised, we're seeing a diversification into networking, parties, and experiential formats — events that build culture, not just share information.
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ 8. WHEN EVENTS HAPPEN ═══ -->
-    <div class="section dark-slide">
-      <div class="slide-inner">
-        <span class="section-label">Timing</span>
-        <h2>Peak windows: when to book, when to prepare</h2>
-        <p class="subtitle">December is the busiest month, driven by Christmas parties. But the real insight is in the seasonal patterns by event type.</p>
-        <div class="chart-row">
-          <div class="chart-col">
-            <h3>Monthly Distribution</h3>
-            <div class="chart-container" style="height:250px">
-              <canvas id="chartSeasonality"></canvas>
-            </div>
-          </div>
-          <div class="chart-col">
-            <h3>Day of Week</h3>
-            <div class="chart-container" style="height:250px">
-              <canvas id="chartDOW"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="callout">
-          <strong>For venues:</strong> Thursday is the single busiest event day (29%). June and September are peak conference months. Staff your sales team accordingly — and consider that August is your quietest month at just 3%.
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ 9. VENUE SHOPPING ═══ -->
-    <div class="section light-slide">
-      <div class="slide-inner">
-        <span class="section-label">Venue Selection</span>
-        <h2>Organisers are shopping harder than ever</h2>
-        <p class="subtitle">The average enquiry now considers 6.4 venues — up 73% from 3.7 in 2022. Over half of all enquiries are multi-venue, meaning competition for every booking is intensifying.</p>
-        <div class="two-col">
-          <div class="chart-container" style="height:300px">
-            <canvas id="chartShopping"></canvas>
-          </div>
-          <div>
-            <div class="callout">
-              <strong>What this tells us:</strong> Organisers have more choice and they're using it. Your venue isn't just competing on price — it's competing on response time, proposal quality, and the experience of the enquiry process itself. Venues that respond within hours, not days, have a significant edge.
-            </div>
-            <h3 style="margin-top:20px">When hotels are shortlisted…</h3>
-            <div style="margin-top:10px">
-              <div class="co-occur-row">
-                <span class="co-occur-label">+ Conf. Centre</span>
-                <div class="co-occur-bar-wrap">
-                  <div class="co-occur-bar" style="width:92%; background:var(--hs-green)">92%</div>
-                </div>
-              </div>
-              <div class="co-occur-row">
-                <span class="co-occur-label">+ Outdoor</span>
-                <div class="co-occur-bar-wrap">
-                  <div class="co-occur-bar" style="width:46%; background:var(--hs-green-hover)">46%</div>
-                </div>
-              </div>
-              <div class="co-occur-row">
-                <span class="co-occur-label">+ Rooftop</span>
-                <div class="co-occur-bar-wrap">
-                  <div class="co-occur-bar" style="width:43%; background:var(--hs-green-light)">43%</div>
-                </div>
-              </div>
-            </div>
-            <p class="insight">Hotels almost always compete with conference centres. Position your offering against their strengths — F&B, accommodation, and one-stop service.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ 10. VENUE TYPES DEEP DIVE ═══ -->
-    <div class="section dark-slide">
-      <div class="slide-inner">
-        <span class="section-label">Venue Types</span>
-        <h2>Conference centres dominate — but the mix is shifting</h2>
-        <p class="subtitle">60% of won bookings in 2025 went to conference centres, up from 51% in 2022. But bars, restaurants, and hotels are all steadily growing their share.</p>
-        <div class="two-col">
-          <div class="chart-container" style="height:320px">
-            <canvas id="chartVenueYoY"></canvas>
-          </div>
-          <div>
-            <h3>Emerging trends</h3>
-            <div class="callout" style="margin-top:10px">
-              <strong>Bars:</strong> Growing from 8.7% → 11.6% of bookings. The social, informal event is on the rise — corporates want experiences, not boardrooms.
-            </div>
-            <div class="callout" style="margin-top:10px">
-              <strong>Hotels:</strong> Jumped from 17.9% to 21.2% in 2025 after being flat. The all-inclusive package is increasingly appealing for multi-day events.
-            </div>
-            <div class="callout" style="margin-top:10px">
-              <strong>Meeting Rooms:</strong> Declining from 22.2% → 18.4%. As hybrid work normalises, companies are booking fewer standalone meeting rooms and opting for more distinctive spaces.
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ 11. VENUE PRICING ═══ -->
-    <div class="section light-slide">
-      <div class="slide-inner">
-        <span class="section-label">Venue Pricing</span>
-        <h2>What different venue types command</h2>
-        <p class="subtitle">Historic and landmark venues achieve the highest booking values, while meeting rooms sit at the lower end. Your venue type doesn't define your ceiling — but it sets the starting point.</p>
-        <div class="chart-container" style="height:360px">
-          <canvas id="chartVenuePricing"></canvas>
-        </div>
-        <div class="callout">
-          <strong>For venues:</strong> Conference centres handle the most volume (1,447 bookings) at a solid £6,825 median. But historic venues achieve £10,852 — nearly 60% more — with less volume. Premium positioning works, but you need to win the enquiry first.
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ 12. KEY INSIGHTS ═══ -->
-    <div class="section dark-slide">
-      <div class="slide-inner">
-        <span class="section-label">Takeaways</span>
-        <h2>What this means for you</h2>
-        <div class="insights-grid">
-          <div class="insight-card">
-            <h3>🎯 For Event Organisers</h3>
-            <p>Start your venue search 3–5 months ahead for conferences, 3 months for parties. The median booking value is £7,230 — budget accordingly. Consider that 55% of organisers are comparing 2+ venues, so make your brief clear and specific to get better-matched proposals.</p>
-          </div>
-          <div class="insight-card">
-            <h3>🏛️ For Venues</h3>
-            <p>Every enquiry is more competitive — you're being compared against 6+ other venues. Respond fast, personalise your proposals, and differentiate on experience. Thursday is your biggest day, September–December is your peak season. Staff and price accordingly.</p>
-          </div>
-          <div class="insight-card">
-            <h3>📈 The Spending Story</h3>
-            <p>Per-person spend has risen 62% in four years to £102. This isn't inflation alone — it reflects a shift toward higher-quality, experience-led events. Companies are booking fewer but better events, and they're willing to pay for them.</p>
-          </div>
-          <div class="insight-card">
-            <h3>🔄 The Venue Mix</h3>
-            <p>Conference centres are consolidating their dominance (60%), but the real movement is in bars and restaurants growing steadily. Meeting rooms are losing share as companies seek more inspiring spaces. The informal, social event is the growth story.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ 13. CTA ═══ -->
-    <div class="section cta-slide">
-      <div class="slide-inner">
-        <h2>Ready to find your perfect venue?</h2>
-        <p class="subtitle" style="margin: 0 auto; text-align:center; margin-bottom:8px">Hire Space connects event organisers with London's best venues.<br>Start your free search today.</p>
-        <a href="https://hirespace.com" class="cta-btn" target="_blank">Explore Venues →</a>
-        <p style="margin-top:40px; font-size:0.75rem; opacity:0.4">Data sourced from 40,000+ corporate event enquiries across 2022–2025.<br>Analysis by Hire Space, March 2026.</p>
-      </div>
-    </div>
-
-  </div><!-- /fullpage -->
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.25/fullpage.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script src="js/data.js"></script>
-  <script src="js/charts.js"></script>
 </body>
 </html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Win More Bookings | Corporate Events Trends | Hire Space</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- fullpage.js CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.25/fullpage.min.css">
+
+  <!-- Brand styles -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    /* venues-specific overrides */
+    .audience-label {
+      display: inline-block;
+      background: rgba(0,168,44,0.15);
+      color: var(--hs-green);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+    .co-occur-section { margin-bottom: 28px; }
+    .co-occur-section h3 {
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+      color: var(--hs-green);
+    }
+    .co-occur-bar-green {
+      background: var(--hs-green);
+    }
+    .co-occur-bar-blue {
+      background: var(--hs-blue);
+    }
+    .co-occur-bar-amber {
+      background: var(--hs-amber);
+    }
+    .key-callout {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+    .key-callout .kc-icon {
+      flex-shrink: 0;
+      width: 8px;
+      height: 8px;
+      margin-top: 7px;
+      border-radius: 50%;
+      background: var(--hs-green);
+    }
+    .xmas-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .xmas-stat {
+      text-align: center;
+      padding: 14px;
+      background: rgba(0,168,44,0.08);
+      border-radius: 8px;
+    }
+    .xmas-stat .xv { font-family: var(--font-heading); font-weight: 800; font-size: 1.5rem; color: var(--hs-green); }
+    .xmas-stat .xl { font-size: 0.75rem; opacity: 0.7; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+<!-- Fixed logo -->
+<div class="logo-fixed">
+  <img src="assets/logo-white.png" alt="Hire Space">
+</div>
+
+<div id="fullpage">
+
+  <!-- ============ SLIDE 1: Title ============ -->
+  <div class="section title-slide">
+    <div class="slide-inner">
+      <span class="year-badge">2022 &ndash; 2025</span>
+      <h1>Corporate Events Booking Trends</h1>
+      <p class="subtitle">Market intelligence to help you price smarter, respond faster, and fill your calendar</p>
+      <span class="audience-label">For Venues</span>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 2: Executive Summary ============ -->
+  <div class="section dark-slide">
+    <div class="slide-inner">
+      <div class="section-label">AT A GLANCE</div>
+      <h2>The Market at a Glance</h2>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-value">157%</div>
+          <div class="stat-label">Median Spend Growth</div>
+          <div class="stat-detail">Since 2022 (indexed)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">6.4 venues</div>
+          <div class="stat-label">Avg Venues Per Enquiry</div>
+          <div class="stat-detail">Your competition per booking</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">19.5%</div>
+          <div class="stat-label">Lost to Slow Response</div>
+          <div class="stat-detail">Venues that missed the deadline</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">3%</div>
+          <div class="stat-label">Same-Venue Rebooking</div>
+          <div class="stat-detail">Only 3% of companies rebook the same venue</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>The market is maturing.</strong> Corporates spend more but compare more venues. Speed and differentiation matter more than ever.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 3: What Corporates Spend ============ -->
+  <div class="section light-slide">
+    <div class="slide-inner">
+      <div class="section-label">SPENDING LANDSCAPE</div>
+      <h2>What Corporates Are Actually Spending</h2>
+
+      <div class="chart-container" style="max-height: 320px;">
+        <canvas id="vChartSpending"></canvas>
+      </div>
+
+      <div class="stat-grid" style="margin-top: 18px;">
+        <div class="stat-card">
+          <div class="stat-value">&pound;1,921</div>
+          <div class="stat-label">25th Percentile</div>
+          <div class="stat-detail">2025 lower quartile spend</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">&pound;7,230</div>
+          <div class="stat-label">Median</div>
+          <div class="stat-detail">2025 typical booking value</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">&pound;21,000</div>
+          <div class="stat-label">75th Percentile</div>
+          <div class="stat-detail">2025 top quartile spend</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>The gap between low and high spenders is widening.</strong> Top quartile bookings now exceed &pound;21k.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 4: Demand by Event Type ============ -->
+  <div class="section dark-slide">
+    <div class="slide-inner">
+      <div class="section-label">DEMAND TRENDS</div>
+      <h2>What's Being Booked</h2>
+
+      <div class="chart-container" style="max-height: 340px;">
+        <canvas id="vChartCategoryTrend"></canvas>
+      </div>
+
+      <div class="callout">
+        <strong>Conferences surged post-COVID but are normalising.</strong> Corporate parties and networking are growing fast. Meetings are declining as remote-first companies reduce in-person bookings.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 5: Competition per Booking ============ -->
+  <div class="section light-slide">
+    <div class="slide-inner">
+      <div class="section-label">VENUE COMPETITION</div>
+      <h2>How Many Venues Are You Competing Against?</h2>
+
+      <div class="chart-container" style="max-height: 300px;">
+        <canvas id="vChartCompetition"></canvas>
+      </div>
+
+      <div class="callout">
+        <strong>Event organisers now compare 73% more venues than in 2022.</strong> You're likely competing against 5&ndash;6 other venues for every booking.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 6: Why Venues Lose Bookings ============ -->
+  <div class="section dark-slide">
+    <div class="slide-inner">
+      <div class="section-label">LOST BOOKINGS</div>
+      <h2>Why Venues Lose Bookings</h2>
+
+      <div class="two-col-wide-left">
+        <div class="chart-container" style="max-height: 320px;">
+          <canvas id="vChartLostReasons"></canvas>
+        </div>
+        <div>
+          <div class="key-callout">
+            <div class="kc-icon"></div>
+            <div><strong>19.5% lost because the venue missed the client's deadline</strong> &mdash; respond fast</div>
+          </div>
+          <div class="key-callout">
+            <div class="kc-icon" style="background: var(--hs-amber);"></div>
+            <div><strong>7.5% lost to date unavailability</strong> &mdash; growing from 0% to 5.4% in 2025</div>
+          </div>
+          <div class="key-callout">
+            <div class="kc-icon" style="background: var(--hs-blue);"></div>
+            <div><strong>23.6% booked an alternative venue</strong> &mdash; differentiation matters</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Speed is your biggest lever.</strong> Nearly 1 in 5 bookings is lost simply because the venue didn't respond in time.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 7: Co-Occurrence ============ -->
+  <div class="section light-slide">
+    <div class="slide-inner">
+      <div class="section-label">CO-OCCURRENCE</div>
+      <h2>Who You Compete With on Shortlists</h2>
+
+      <div class="two-col" style="margin-top: 20px;">
+        <!-- Hotels -->
+        <div class="co-occur-section">
+          <h3>Hotels</h3>
+          <div class="co-occur-row">
+            <span class="co-occur-label">Conference Centres</span>
+            <div class="co-occur-bar-wrap">
+              <div class="co-occur-bar co-occur-bar-green" style="width: 92%;">92%</div>
+            </div>
+          </div>
+          <div class="co-occur-row">
+            <span class="co-occur-label">Outdoor</span>
+            <div class="co-occur-bar-wrap">
+              <div class="co-occur-bar co-occur-bar-blue" style="width: 46%;">46%</div>
+            </div>
+          </div>
+          <div class="co-occur-row">
+            <span class="co-occur-label">Rooftop</span>
+            <div class="co-occur-bar-wrap">
+              <div class="co-occur-bar co-occur-bar-amber" style="width: 43%;">43%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rooftops -->
+        <div class="co-occur-section">
+          <h3>Rooftops</h3>
+          <div class="co-occur-row">
+            <span class="co-occur-label">Conference Centres</span>
+            <div class="co-occur-bar-wrap">
+              <div class="co-occur-bar co-occur-bar-green" style="width: 87%;">87%</div>
+            </div>
+          </div>
+          <div class="co-occur-row">
+            <span class="co-occur-label">Outdoor</span>
+            <div class="co-occur-bar-wrap">
+              <div class="co-occur-bar co-occur-bar-blue" style="width: 72%;">72%</div>
+            </div>
+          </div>
+          <div class="co-occur-row">
+            <span class="co-occur-label">Hotels</span>
+            <div class="co-occur-bar-wrap">
+              <div class="co-occur-bar co-occur-bar-amber" style="width: 51%;">51%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bars -->
+        <div class="co-occur-section">
+          <h3>Bars</h3>
+          <div class="co-occur-row">
+            <span class="co-occur-label">Conference Centres</span>
+            <div class="co-occur-bar-wrap">
+              <div class="co-occur-bar co-occur-bar-green" style="width: 64%;">64%</div>
+            </div>
+          </div>
+          <div class="co-occur-row">
+            <span class="co-occur-label">Restaurants</span>
+            <div class="co-occur-bar-wrap">
+              <div class="co-occur-bar co-occur-bar-blue" style="width: 52%;">52%</div>
+            </div>
+          </div>
+          <div class="co-occur-row">
+            <span class="co-occur-label">Outdoor</span>
+            <div class="co-occur-bar-wrap">
+              <div class="co-occur-bar co-occur-bar-amber" style="width: 52%;">52%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Restaurants -->
+        <div class="co-occur-section">
+          <h3>Restaurants</h3>
+          <div class="co-occur-row">
+            <span class="co-occur-label">Conference Centres</span>
+            <div class="co-occur-bar-wrap">
+              <div class="co-occur-bar co-occur-bar-green" style="width: 69%;">69%</div>
+            </div>
+          </div>
+          <div class="co-occur-row">
+            <span class="co-occur-label">Bars</span>
+            <div class="co-occur-bar-wrap">
+              <div class="co-occur-bar co-occur-bar-blue" style="width: 59%;">59%</div>
+            </div>
+          </div>
+          <div class="co-occur-row">
+            <span class="co-occur-label">Hotels</span>
+            <div class="co-occur-bar-wrap">
+              <div class="co-occur-bar co-occur-bar-amber" style="width: 52%;">52%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Understanding who you're benchmarked against</strong> helps you position and price competitively.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 8: Pricing by Venue Type ============ -->
+  <div class="section dark-slide">
+    <div class="slide-inner">
+      <div class="section-label">PRICING TIERS</div>
+      <h2>What Different Venue Types Command</h2>
+
+      <div class="chart-container" style="max-height: 360px;">
+        <canvas id="vChartPricing"></canvas>
+      </div>
+
+      <div class="callout">
+        <strong>Historic/landmark venues command the highest median at nearly &pound;11k.</strong> Meeting rooms sit at under &pound;2k. Know where you fit in the pricing hierarchy.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 9: Market Share Trends ============ -->
+  <div class="section light-slide">
+    <div class="slide-inner">
+      <div class="section-label">MARKET SHARE</div>
+      <h2>Which Venue Types Are Growing?</h2>
+
+      <div class="chart-container" style="max-height: 320px;">
+        <canvas id="vChartMarketShare"></canvas>
+      </div>
+
+      <div class="stat-grid" style="margin-top: 14px;">
+        <div class="stat-card">
+          <div class="stat-value">21.2%</div>
+          <div class="stat-label">Hotels</div>
+          <div class="stat-detail">Up from 17.9% in 2022</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">11.6%</div>
+          <div class="stat-label">Bars</div>
+          <div class="stat-detail">Up from 8.7% in 2022</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">18.4%</div>
+          <div class="stat-label">Meeting Rooms</div>
+          <div class="stat-detail">Down from 22.2% in 2022</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Hotels and bars are gaining share of confirmed bookings.</strong> Meeting rooms are losing ground as corporates shift toward experiential venues.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 10: When to Staff Up ============ -->
+  <div class="section dark-slide">
+    <div class="slide-inner">
+      <div class="section-label">SEASONALITY</div>
+      <h2>When to Staff Up</h2>
+
+      <div class="chart-row">
+        <div class="chart-col">
+          <h3>Monthly Seasonality</h3>
+          <div class="chart-container" style="max-height: 280px;">
+            <canvas id="vChartSeasonality"></canvas>
+          </div>
+        </div>
+        <div class="chart-col">
+          <h3>Day of Week</h3>
+          <div class="chart-container" style="max-height: 280px;">
+            <canvas id="vChartDayOfWeek"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Nov&ndash;Dec accounts for 26% of events.</strong> Thursday is the peak day at 29%. Staff and availability should be optimised for these windows.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 11: The Loyalty Signal ============ -->
+  <div class="section light-slide">
+    <div class="slide-inner">
+      <div class="section-label">REPEAT BUSINESS</div>
+      <h2>How Loyal Are Corporate Clients?</h2>
+
+      <div class="two-col">
+        <div>
+          <div class="stat-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="stat-card">
+              <div class="stat-value">3%</div>
+              <div class="stat-label">Same-Venue Rebooking</div>
+              <div class="stat-detail">Companies rebooking the same venue</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">10.8%</div>
+              <div class="stat-label">Return to Platform</div>
+              <div class="stat-detail">Companies that book in 2+ years</div>
+            </div>
+          </div>
+          <p class="insight" style="margin-top: 16px;">
+            Loyalty is extremely low &mdash; but earlier bookings are more likely to convert. Responding quickly to long-lead enquiries is especially valuable.
+          </p>
+        </div>
+        <div>
+          <h3>Conversion Rate by Lead Time</h3>
+          <div class="chart-container" style="max-height: 260px;">
+            <canvas id="vChartConversion"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Only 3% of companies rebook the same venue.</strong> Loyalty is low &mdash; but earlier bookings are more likely to convert. Responding quickly to long-lead enquiries is especially valuable.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 12: Christmas Party Deep Dive ============ -->
+  <div class="section accent-slide">
+    <div class="slide-inner">
+      <div class="section-label">CHRISTMAS PARTIES</div>
+      <h2>The Christmas Party Calendar</h2>
+
+      <div class="two-col">
+        <div>
+          <div class="chart-container" style="max-height: 250px;">
+            <canvas id="vChartXmasEnquiry"></canvas>
+          </div>
+          <div class="chart-container" style="max-height: 250px; margin-top: 10px;">
+            <canvas id="vChartXmasClose"></canvas>
+          </div>
+        </div>
+        <div>
+          <div class="xmas-stats">
+            <div class="xmas-stat">
+              <div class="xv">80&ndash;90</div>
+              <div class="xl">Median group size (growing)</div>
+            </div>
+            <div class="xmas-stat">
+              <div class="xv">35%</div>
+              <div class="xl">Groups of 51&ndash;100</div>
+            </div>
+            <div class="xmas-stat">
+              <div class="xv">23%</div>
+              <div class="xl">Groups of 101&ndash;200</div>
+            </div>
+            <div class="xmas-stat">
+              <div class="xv">9%</div>
+              <div class="xl">Lost to &ldquo;Date not available&rdquo;</div>
+            </div>
+          </div>
+          <p class="insight" style="color: rgba(255,255,255,0.7); margin-top: 14px;">
+            &ldquo;Date not available&rdquo; losses are <strong style="color: var(--hs-green);">higher for Christmas parties</strong> than the 7.5% overall average. In 2024, this reached 6.6% for Xmas-specific bookings.
+          </p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Big venues get booked first.</strong> With median groups of 80&ndash;90 and 34% requiring capacity for 100+, large Christmas party spaces are the scarcest resource. Open your December calendar early and respond to September enquiries immediately.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SLIDE 13: Key Takeaways & CTA ============ -->
+  <div class="section cta-slide">
+    <div class="slide-inner">
+      <h2>Win More Bookings in 2026</h2>
+
+      <div class="insights-grid">
+        <div class="insight-card">
+          <h3>Respond Faster</h3>
+          <p>19.5% of bookings lost to missed deadlines. Speed is your biggest lever.</p>
+        </div>
+        <div class="insight-card">
+          <h3>Open December Early</h3>
+          <p>Christmas party demand peaks Sep&ndash;Oct. Big venues fill up first.</p>
+        </div>
+        <div class="insight-card">
+          <h3>Know Your Competition</h3>
+          <p>Organisers compare 6+ venues. Know who you're benchmarked against.</p>
+        </div>
+        <div class="insight-card">
+          <h3>Price Strategically</h3>
+          <p>Median spend has grown 157%. The market can bear higher prices for premium experiences.</p>
+        </div>
+      </div>
+
+      <a href="https://hirespace.com/venues" class="cta-btn" target="_blank">List Your Venue on Hire Space &rarr;</a>
+
+      <div class="source-line">Source: Hire Space platform data, confirmed bookings 2022&ndash;2025. All values based on booking line spend (GBP).</div>
+    </div>
+  </div>
+
+</div><!-- /fullpage -->
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- fullpage.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.25/fullpage.min.js"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<!-- Data -->
+<script src="js/data.js"></script>
+<!-- Charts (built separately) -->
+<script src="js/charts-venues.js"></script>
+
+<script>
+  new fullpage('#fullpage', {
+    autoScrolling: true,
+    navigation: true,
+    navigationPosition: 'right',
+    navigationTooltips: [
+      'Title',
+      'At a Glance',
+      'Spending',
+      'Demand',
+      'Competition',
+      'Lost Bookings',
+      'Co-Occurrence',
+      'Pricing',
+      'Market Share',
+      'Seasonality',
+      'Loyalty',
+      'Christmas Parties',
+      'Takeaways'
+    ],
+    scrollOverflow: false,
+    css3: true,
+    easingcss3: 'cubic-bezier(0.645, 0.045, 0.355, 1)',
+    scrollingSpeed: 800
+  });
+</script>
+
+</body>
+</html>

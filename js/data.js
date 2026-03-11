@@ -1,26 +1,20 @@
 // Corporate Events Booking Trends 2022–2025
 // Data extracted from Hire Space MongoDB (March 2026)
-// All monetary values based on WON booking lines (actual spend, not budgets)
+// All monetary values based on confirmed booking lines (actual spend)
+// Numbers shown as proportions/indexes where competitively sensitive
 
 const DATA = {
 
-  // ── A. Market Volume ──
-  volume: {
-    years: [2022, 2023, 2024, 2025],
-    enquiries: [12452, 9906, 9579, 8964],
-    won: [657, 689, 803, 740],
-    conversionRate: [5.3, 7.0, 8.4, 8.3]
-  },
-
-  // ── B. Actual Booking Values (won booking lines, GBP) ──
+  // ── Booking Values (actual confirmed spend, GBP) ──
   bookingValues: {
     years: [2022, 2023, 2024, 2025],
     median: [2818, 4523, 5757, 7230],
     p25: [720, 1224, 1608, 1921],
-    p75: [10769, 12666, 15725, 21000]
+    p75: [10769, 12666, 15725, 21000],
+    indexMedian: [100, 160, 204, 257] // 2022 = 100
   },
 
-  // ── C. Booking Values by Event Type ──
+  // ── Booking Values by Event Type ──
   valuesByCategory: [
     { category: 'Private Event', median: 18222, n: 50 },
     { category: 'Award Ceremony', median: 17043, n: 63 },
@@ -39,7 +33,7 @@ const DATA = {
     { category: 'Meeting', median: 828, n: 513 }
   ],
 
-  // ── D. Price Per Head ──
+  // ── Price Per Head ──
   pricePerHead: {
     years: [2022, 2023, 2024, 2025],
     median: [63, 73, 85, 102],
@@ -59,7 +53,7 @@ const DATA = {
     ]
   },
 
-  // ── E. Lead Times ──
+  // ── Lead Times ──
   leadTimes: {
     years: [2022, 2023, 2024, 2025],
     median: [60, 72, 88, 84],
@@ -76,10 +70,19 @@ const DATA = {
       { category: 'Corporate Party', median: 72, p25: 34, p75: 130 },
       { category: 'Pop-Up', median: 60, p25: 28, p75: 115 },
       { category: 'Meeting', median: 42, p25: 17, p75: 86 }
+    ],
+    // Earlier bookings convert better
+    conversionByLeadTime: [
+      { bucket: 'Under 2 weeks', pct: 4.3 },
+      { bucket: '2–4 weeks', pct: 5.9 },
+      { bucket: '1–2 months', pct: 6.3 },
+      { bucket: '2–3 months', pct: 7.6 },
+      { bucket: '3–4 months', pct: 9.0 },
+      { bucket: '4+ months', pct: 9.6 }
     ]
   },
 
-  // ── F. Category Mix by Year (%) ──
+  // ── Category Mix (% of confirmed bookings) ──
   categoryMix: {
     years: [2022, 2023, 2024, 2025],
     categories: [
@@ -96,7 +99,7 @@ const DATA = {
     ]
   },
 
-  // ── G. Seasonality ──
+  // ── Seasonality ──
   seasonality: {
     months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
     overall: [5, 6, 7, 6, 7, 11, 7, 3, 10, 11, 12, 14],
@@ -108,26 +111,26 @@ const DATA = {
     }
   },
 
-  // ── H. Day of Week ──
+  // ── Day of Week ──
   dayOfWeek: {
     days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     pcts: [8.0, 18.4, 23.4, 29.0, 11.7, 7.1, 2.5]
   },
 
-  // ── I. Venue Shopping Behaviour ──
+  // ── Venue Shopping ──
   venueShopping: {
     years: [2022, 2023, 2024, 2025],
     avgVenues: [3.7, 5.2, 5.8, 6.4],
     multiVenuePct: [44, 50, 56, 55]
   },
 
-  // ── J. Repeat Bookings ──
+  // ── Repeat Bookings (same venue) ──
   repeatBookings: {
-    sameVenue: { total: 2503, repeat: 75, rate: 3.0 },
-    sameCompany: { total: 1815, repeat: 196, rate: 10.8 }
+    sameVenueRate: 3.0,  // % of company-venue pairs that rebook in 2+ years
+    returningCompanyRate: 10.8  // % of companies that book in 2+ years
   },
 
-  // ── K. Group Sizes ──
+  // ── Group Sizes ──
   groupSizes: {
     years: [2022, 2023, 2024, 2025],
     median: [50, 60, 60, 70],
@@ -147,7 +150,7 @@ const DATA = {
     ]
   },
 
-  // ── L. Venue Type Pricing ──
+  // ── Venue Type Pricing (confirmed bookings) ──
   venueTypePricing: [
     { type: 'Historic / Landmark', median: 10852, n: 592 },
     { type: 'Theatre', median: 9697, n: 142 },
@@ -160,8 +163,8 @@ const DATA = {
     { type: 'Meeting Rooms', median: 1797, n: 540 }
   ],
 
-  // ── M. Venue Type YoY Trends ──
-  venueTypeYoY: {
+  // ── Venue Type YoY (% of confirmed bookings with that type) ──
+  venueTypeConfirmed: {
     years: [2022, 2023, 2024, 2025],
     types: [
       { type: 'Conference Centre', pcts: [51.0, 56.8, 58.6, 59.9] },
@@ -174,7 +177,22 @@ const DATA = {
     ]
   },
 
-  // ── N. Venue Type Co-Occurrence ──
+  // ── Venue Type Enquiry Trends (% of all enquiry lines with that type) ──
+  venueTypeEnquiry: {
+    years: [2022, 2023, 2024, 2025],
+    types: [
+      { type: 'Conference Centre', pcts: [53.1, 56.9, 58.0, 57.1] },
+      { type: 'Historic / Landmark', pcts: [31.6, 32.1, 30.0, 25.9] },
+      { type: 'Hotel', pcts: [14.2, 15.3, 15.9, 18.5] },
+      { type: 'Outdoor', pcts: [15.0, 13.7, 13.7, 14.4] },
+      { type: 'Meeting Rooms', pcts: [14.3, 14.2, 14.6, 14.9] },
+      { type: 'Rooftop', pcts: [9.7, 8.5, 10.3, 12.1] },
+      { type: 'Bar', pcts: [9.8, 9.3, 9.3, 11.8] },
+      { type: 'Restaurant', pcts: [9.2, 8.9, 8.9, 11.7] }
+    ]
+  },
+
+  // ── Venue Co-Occurrence ──
   coOccurrence: [
     { type: 'Hotel', alsoWith: [
       { type: 'Conference Centre', pct: 92 },
@@ -196,5 +214,60 @@ const DATA = {
       { type: 'Bar', pct: 59 },
       { type: 'Hotel', pct: 52 }
     ]}
-  ]
+  ],
+
+  // ── Christmas Party Booking Cycle ──
+  xmasParty: {
+    months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    enquiryMonth: [1.9, 1.6, 3.3, 3.1, 4.5, 6.0, 9.5, 12.2, 23.2, 23.4, 8.8, 2.5],
+    closeMonth:   [3.1, 2.6, 3.1, 3.6, 6.2, 4.1, 3.1, 8.8, 17.6, 22.3, 17.6, 7.8],
+    eventMonth:   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10.4, 79.8],
+    // Group sizes — big venues get booked up first
+    groupSize: {
+      median: 80, p25: 50, p75: 148,
+      byYear: [
+        { year: 2022, median: 80, p25: 50, p75: 150 },
+        { year: 2023, median: 80, p25: 50, p75: 130 },
+        { year: 2024, median: 90, p25: 50, p75: 150 },
+        { year: 2025, median: 90, p25: 46, p75: 150 }
+      ],
+      distribution: [
+        { bucket: '1–50', pct: 30.4 },
+        { bucket: '51–100', pct: 35.1 },
+        { bucket: '101–200', pct: 22.7 },
+        { bucket: '201–500', pct: 9.8 },
+        { bucket: '500+', pct: 1.9 }
+      ]
+    }
+  },
+
+  // ── Booking Line Lost Reasons (grouped, % of all lost lines) ──
+  lostReasons: {
+    overall: [
+      { reason: 'Booked alternative venue', pct: 23.6 },
+      { reason: 'Venue missed deadline', pct: 19.5 },
+      { reason: 'Client unresponsive', pct: 16.2 },
+      { reason: 'Fast-track expired', pct: 13.2 },
+      { reason: 'Date not available', pct: 7.5 },
+      { reason: 'Event cancelled', pct: 5.9 },
+      { reason: 'Budget mismatch', pct: 1.5 },
+      { reason: 'Style mismatch', pct: 1.4 },
+      { reason: 'Capacity mismatch', pct: 0.9 }
+    ],
+    xmasParty: [
+      { reason: 'Booked alternative venue', pct: 31.5 },
+      { reason: 'Client unresponsive', pct: 18.1 },
+      { reason: 'Venue missed deadline', pct: 12.5 },
+      { reason: 'Date not available', pct: 9.0 },
+      { reason: 'Budget mismatch', pct: 3.3 },
+      { reason: 'Event cancelled', pct: 3.1 },
+      { reason: 'Style mismatch', pct: 1.0 }
+    ],
+    // "Date not available" as % of lost lines, by year (overall)
+    availabilityByYear: {
+      years: [2022, 2023, 2024, 2025],
+      overall: [0, 0, 3.1, 5.4],
+      xmasParty: [0, 0, 6.6, 3.8]
+    }
+  }
 };
