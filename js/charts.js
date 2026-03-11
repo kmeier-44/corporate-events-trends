@@ -2,235 +2,210 @@
    Hire Space — Chart.js Initialisations
    =================================================== */
 
-// Brand palette
-const COLORS = {
-  green:      '#00A82C',
-  dark:       '#282A30',
-  greenLight: '#53B04B',
-  blue:       '#5B9BD5',
-  border:     '#BBBDBF',
-  greenMid:   '#7DC87D',
-  greenDeep:  '#3D7A3D',
-  blueLight:  '#8FBCE6',
-  white:      '#FFFFFF',
-  lightText:  '#F7F9FC',
-  lightGray:  '#EBEDF0'
+const C = {
+  green: '#00A82C',
+  greenHover: '#53B04B',
+  greenLight: '#7DC87D',
+  greenDark: '#3D7A3D',
+  dark: '#282A30',
+  darkest: '#1d1f24',
+  light: '#EBEDF0',
+  white: '#FFFFFF',
+  blue: '#5B9BD5',
+  blueLight: '#8FBCE6',
+  amber: '#E8A838',
+  red: '#D94F4F',
+  border: '#BBBDBF'
 };
 
-const PALETTE = [COLORS.green, COLORS.dark, COLORS.greenLight, COLORS.blue, COLORS.border, COLORS.greenMid, COLORS.greenDeep, COLORS.blueLight];
+/* Palette for multi-series */
+const palette = [C.green, C.dark, C.greenHover, C.blue, C.border, C.greenLight, C.greenDark, C.blueLight, C.amber, C.red];
 
-// Shared defaults
-Chart.defaults.font.family = "'Open Sans', Helvetica, Arial, sans-serif";
+/* ── Chart.js defaults ── */
+Chart.defaults.font.family = "'Open Sans', sans-serif";
 Chart.defaults.font.size = 12;
 Chart.defaults.plugins.legend.labels.usePointStyle = true;
 Chart.defaults.plugins.legend.labels.padding = 16;
+Chart.defaults.plugins.tooltip.cornerRadius = 6;
+Chart.defaults.plugins.tooltip.padding = 10;
 Chart.defaults.animation.duration = 800;
 
-// Helpers
-function isDark(sectionEl) {
-  return sectionEl.classList.contains('bg-dark');
-}
-function textColor(sectionEl) {
-  return isDark(sectionEl) ? COLORS.lightText : COLORS.dark;
-}
-function gridColor(sectionEl) {
-  return isDark(sectionEl) ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)';
-}
-function legendColor(sectionEl) {
-  return isDark(sectionEl) ? COLORS.lightText : COLORS.dark;
+/* Helper: detect dark slide */
+function isDark(canvasId) {
+  const el = document.getElementById(canvasId);
+  return el ? el.closest('.dark-slide, .accent-slide, .cta-slide') !== null : false;
 }
 
-// ------------------------------------------------
-// Chart instances (populated on scroll-enter)
-// ------------------------------------------------
-const charts = {};
-
-function destroyChart(id) {
-  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+function gridColor(canvasId) {
+  return isDark(canvasId) ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
+}
+function tickColor(canvasId) {
+  return isDark(canvasId) ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.6)';
+}
+function legendColor(canvasId) {
+  return isDark(canvasId) ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)';
 }
 
-// ------------------------------------------------
-// Slide 2: Budget Trajectory — Line
-// ------------------------------------------------
-function initBudgetChart(sectionEl) {
-  const ctx = document.getElementById('chartBudget');
-  if (!ctx) return;
-  destroyChart('budget');
-  const d = DATA.budgetTrajectory;
-  const tc = textColor(sectionEl), gc = gridColor(sectionEl);
+/* ── Currency formatter ── */
+const fmtGBP = v => '£' + v.toLocaleString('en-GB');
+const fmtPct = v => v + '%';
 
-  charts.budget = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: d.years,
-      datasets: [
-        { label: 'Median', data: d.median, borderColor: COLORS.green, backgroundColor: COLORS.green+'22', fill: false, tension: 0.3, pointRadius: 5, pointBackgroundColor: COLORS.green, borderWidth: 3 },
-        { label: 'Average', data: d.average, borderColor: COLORS.blue, backgroundColor: COLORS.blue+'22', fill: false, tension: 0.3, pointRadius: 5, pointBackgroundColor: COLORS.blue, borderWidth: 3, borderDash: [6,3] },
-        { label: '75th Percentile', data: d.percentile75, borderColor: COLORS.greenLight, backgroundColor: COLORS.greenLight+'22', fill: false, tension: 0.3, pointRadius: 5, pointBackgroundColor: COLORS.greenLight, borderWidth: 3 }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: tc } },
-        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': £' + ctx.parsed.y.toLocaleString() } }
-      },
-      scales: {
-        x: { ticks: { color: tc }, grid: { color: gc } },
-        y: { ticks: { color: tc, callback: v => '£' + (v/1000) + 'k' }, grid: { color: gc }, beginAtZero: true }
-      }
-    }
-  });
-}
+/* ══════════════════════════════════════════════════
+   INIT ALL CHARTS
+   ══════════════════════════════════════════════════ */
 
-// ------------------------------------------------
-// Slide 3: Venue Sourcing — Dual axis bar + line
-// ------------------------------------------------
-function initVenueChart(sectionEl) {
-  const ctx = document.getElementById('chartVenues');
-  if (!ctx) return;
-  destroyChart('venues');
-  const d = DATA.venuesPerEnquiry;
-  const tc = textColor(sectionEl), gc = gridColor(sectionEl);
+function initCharts() {
 
-  charts.venues = new Chart(ctx, {
+  /* ── 3. Volume & Conversion ── */
+  new Chart(document.getElementById('chartVolume'), {
     type: 'bar',
     data: {
-      labels: d.years,
+      labels: DATA.volume.years,
       datasets: [
-        { label: 'Avg Venues per Enquiry', data: d.average, backgroundColor: COLORS.green+'CC', borderRadius: 4, yAxisID: 'y', order: 2 },
-        { label: 'Multi-Venue %', data: d.multiVenuePct, borderColor: COLORS.blue, backgroundColor: COLORS.blue+'22', type: 'line', fill: false, tension: 0.3, pointRadius: 5, pointBackgroundColor: COLORS.blue, borderWidth: 3, yAxisID: 'y1', order: 1 }
+        {
+          label: 'Total Enquiries',
+          data: DATA.volume.enquiries,
+          backgroundColor: C.green,
+          borderRadius: 4,
+          yAxisID: 'y',
+          order: 2
+        },
+        {
+          label: 'Conversion Rate',
+          data: DATA.volume.conversionRate,
+          type: 'line',
+          borderColor: C.amber,
+          backgroundColor: C.amber,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          tension: 0.3,
+          yAxisID: 'y1',
+          order: 1
+        }
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: tc } } },
-      scales: {
-        x: { ticks: { color: tc }, grid: { color: gc } },
-        y: { position: 'left', ticks: { color: tc }, grid: { color: gc }, beginAtZero: true, title: { display: true, text: 'Venues per Enquiry', color: tc } },
-        y1: { position: 'right', ticks: { color: tc, callback: v => v + '%' }, grid: { drawOnChartArea: false }, beginAtZero: true, title: { display: true, text: 'Multi-Venue %', color: tc } }
-      }
-    }
-  });
-}
-
-// ------------------------------------------------
-// Slide 4: Lead Times — Line with percentile bands
-// ------------------------------------------------
-function initLeadTimesChart(sectionEl) {
-  const ctx = document.getElementById('chartLeadTimes');
-  if (!ctx) return;
-  destroyChart('leadTimes');
-  const d = DATA.leadTimes;
-  const tc = textColor(sectionEl), gc = gridColor(sectionEl);
-
-  charts.leadTimes = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: d.years,
-      datasets: [
-        { label: '75th Percentile', data: d.p75, borderColor: COLORS.greenLight, backgroundColor: COLORS.greenLight+'18', fill: '+1', tension: 0.3, pointRadius: 4, borderWidth: 2 },
-        { label: 'Median', data: d.median, borderColor: COLORS.green, backgroundColor: COLORS.green+'22', fill: '+1', tension: 0.3, pointRadius: 5, pointBackgroundColor: COLORS.green, borderWidth: 3 },
-        { label: '25th Percentile', data: d.p25, borderColor: COLORS.greenMid, backgroundColor: 'transparent', fill: false, tension: 0.3, pointRadius: 4, borderWidth: 2 },
-        { label: 'Average', data: d.average, borderColor: COLORS.blue, fill: false, tension: 0.3, pointRadius: 4, borderWidth: 2, borderDash: [6,3] }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: tc } },
-        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + ' days' } }
+      plugins: {
+        legend: { labels: { color: tickColor('chartVolume') } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label === 'Conversion Rate'
+              ? ctx.dataset.label + ': ' + ctx.raw + '%'
+              : ctx.dataset.label + ': ' + ctx.raw.toLocaleString()
+          }
+        }
       },
       scales: {
-        x: { ticks: { color: tc }, grid: { color: gc } },
-        y: { ticks: { color: tc, callback: v => v + 'd' }, grid: { color: gc }, beginAtZero: true }
+        x: { ticks: { color: tickColor('chartVolume') }, grid: { display: false } },
+        y: {
+          position: 'left',
+          ticks: { color: tickColor('chartVolume'), callback: v => (v/1000)+'k' },
+          grid: { color: gridColor('chartVolume') },
+          title: { display: true, text: 'Enquiries', color: tickColor('chartVolume') }
+        },
+        y1: {
+          position: 'right',
+          min: 0, max: 12,
+          ticks: { color: C.amber, callback: v => v + '%' },
+          grid: { display: false },
+          title: { display: true, text: 'Conversion %', color: C.amber }
+        }
       }
     }
   });
-}
 
-// ------------------------------------------------
-// Slide 5: Category Mix — Grouped bar
-// ------------------------------------------------
-function initCategoryChart(sectionEl) {
-  const ctx = document.getElementById('chartCategory');
-  if (!ctx) return;
-  destroyChart('category');
-  const d = DATA.categoryMix;
-  const tc = textColor(sectionEl), gc = gridColor(sectionEl);
-
-  // Top 8 categories
-  const top8 = d.categories.slice(0, 8);
-  const yearColors = [COLORS.green, COLORS.dark, COLORS.greenLight, COLORS.blue];
-
-  const datasets = d.years.map((yr, i) => ({
-    label: '' + yr,
-    data: top8.map(cat => d.data[cat][i] || 0),
-    backgroundColor: yearColors[i] + 'CC',
-    borderRadius: 3
-  }));
-
-  charts.category = new Chart(ctx, {
-    type: 'bar',
-    data: { labels: top8, datasets },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: tc } },
-        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '%' } }
-      },
-      scales: {
-        x: { ticks: { color: tc, maxRotation: 45 }, grid: { color: gc } },
-        y: { ticks: { color: tc, callback: v => v + '%' }, grid: { color: gc }, beginAtZero: true }
-      }
-    }
-  });
-}
-
-// ------------------------------------------------
-// Slide 6: Group Sizes — Line (left)
-// ------------------------------------------------
-function initGroupSizesChart(sectionEl) {
-  const ctx = document.getElementById('chartGroupSizes');
-  if (!ctx) return;
-  destroyChart('groupSizes');
-  const d = DATA.groupSizes;
-  const tc = textColor(sectionEl), gc = gridColor(sectionEl);
-
-  charts.groupSizes = new Chart(ctx, {
+  /* ── 4a. Booking Values (band chart) ── */
+  new Chart(document.getElementById('chartValues'), {
     type: 'line',
     data: {
-      labels: d.years,
+      labels: DATA.bookingValues.years,
       datasets: [
-        { label: 'Median', data: d.median, borderColor: COLORS.green, tension: 0.3, pointRadius: 5, pointBackgroundColor: COLORS.green, borderWidth: 3, fill: false },
-        { label: 'Average', data: d.average, borderColor: COLORS.blue, tension: 0.3, pointRadius: 5, pointBackgroundColor: COLORS.blue, borderWidth: 3, borderDash: [6,3], fill: false },
-        { label: '75th Pctl', data: d.percentile75, borderColor: COLORS.greenLight, tension: 0.3, pointRadius: 4, borderWidth: 2, fill: false }
+        {
+          label: 'Upper range (75th)',
+          data: DATA.bookingValues.p75,
+          borderColor: 'transparent',
+          backgroundColor: 'rgba(0,168,44,0.15)',
+          fill: '+1',
+          pointRadius: 0
+        },
+        {
+          label: 'Typical spend (median)',
+          data: DATA.bookingValues.median,
+          borderColor: C.green,
+          backgroundColor: C.green,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          tension: 0.3,
+          fill: false
+        },
+        {
+          label: 'Lower range (25th)',
+          data: DATA.bookingValues.p25,
+          borderColor: 'transparent',
+          backgroundColor: 'rgba(0,168,44,0.15)',
+          fill: '-1',
+          pointRadius: 0
+        }
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: tc } } },
+      plugins: {
+        legend: {
+          labels: { color: legendColor('chartValues'), filter: item => item.text === 'Typical spend (median)' }
+        },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtGBP(ctx.raw) } }
+      },
       scales: {
-        x: { ticks: { color: tc }, grid: { color: gc } },
-        y: { ticks: { color: tc }, grid: { color: gc }, beginAtZero: true, title: { display: true, text: 'Guests', color: tc } }
+        x: { ticks: { color: tickColor('chartValues') }, grid: { display: false } },
+        y: {
+          ticks: { color: tickColor('chartValues'), callback: v => fmtGBP(v) },
+          grid: { color: gridColor('chartValues') }
+        }
       }
     }
   });
-}
 
-// Slide 6: Booking Values — Horizontal bar (right)
-function initBookingValuesChart(sectionEl) {
-  const ctx = document.getElementById('chartBookingValues');
-  if (!ctx) return;
-  destroyChart('bookingValues');
-  const d = DATA.bookingValues;
-  const tc = textColor(sectionEl), gc = gridColor(sectionEl);
-
-  charts.bookingValues = new Chart(ctx, {
+  /* ── 4b. Price Per Head ── */
+  new Chart(document.getElementById('chartPPH'), {
     type: 'bar',
     data: {
-      labels: d.types,
+      labels: DATA.pricePerHead.years,
       datasets: [{
-        label: 'Median Booking Value',
-        data: d.median,
-        backgroundColor: [COLORS.green+'CC', COLORS.greenLight+'CC', COLORS.blue+'CC', COLORS.dark+'CC'],
+        label: 'Median £ per head',
+        data: DATA.pricePerHead.median,
+        backgroundColor: [C.greenDark, C.greenHover, C.green, C.green],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => fmtGBP(ctx.raw) + ' per head' } }
+      },
+      scales: {
+        x: { ticks: { color: tickColor('chartPPH') }, grid: { display: false } },
+        y: {
+          ticks: { color: tickColor('chartPPH'), callback: v => '£' + v },
+          grid: { color: gridColor('chartPPH') },
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  /* ── 5. Values by Category ── */
+  const catData = DATA.valuesByCategory.slice(0, 12);
+  new Chart(document.getElementById('chartValuesByCat'), {
+    type: 'bar',
+    data: {
+      labels: catData.map(d => d.category),
+      datasets: [{
+        label: 'Typical booking value (median)',
+        data: catData.map(d => d.median),
+        backgroundColor: catData.map((d, i) => i < 3 ? C.green : (i < 7 ? C.greenHover : C.greenLight)),
         borderRadius: 4
       }]
     },
@@ -239,250 +214,365 @@ function initBookingValuesChart(sectionEl) {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: ctx => '£' + ctx.parsed.x.toLocaleString() } }
+        tooltip: { callbacks: { label: ctx => fmtGBP(ctx.raw) + ' (n=' + catData[ctx.dataIndex].n + ')' } }
       },
       scales: {
-        x: { ticks: { color: tc, callback: v => '£' + (v/1000) + 'k' }, grid: { color: gc }, beginAtZero: true },
-        y: { ticks: { color: tc }, grid: { display: false } }
+        x: {
+          ticks: { color: tickColor('chartValuesByCat'), callback: v => fmtGBP(v) },
+          grid: { color: gridColor('chartValuesByCat') }
+        },
+        y: { ticks: { color: tickColor('chartValuesByCat'), font: { size: 11 } }, grid: { display: false } }
       }
     }
   });
-}
 
-// ------------------------------------------------
-// Slide 7: Seasonality — Bar (left)
-// ------------------------------------------------
-function initSeasonalityChart(sectionEl) {
-  const ctx = document.getElementById('chartSeasonality');
-  if (!ctx) return;
-  destroyChart('seasonality');
-  const d = DATA.seasonality;
-  const tc = textColor(sectionEl), gc = gridColor(sectionEl);
-
-  const bgColors = d.share.map(v => v >= 10 ? COLORS.green+'CC' : COLORS.green+'66');
-
-  charts.seasonality = new Chart(ctx, {
-    type: 'bar',
+  /* ── 6a. Lead Time Trend ── */
+  new Chart(document.getElementById('chartLeadTrend'), {
+    type: 'line',
     data: {
-      labels: d.months,
-      datasets: [{ label: 'Share of Events', data: d.share, backgroundColor: bgColors, borderRadius: 3 }]
+      labels: DATA.leadTimes.years,
+      datasets: [
+        {
+          label: 'Planning buffer (75th)',
+          data: DATA.leadTimes.p75,
+          borderColor: 'transparent',
+          backgroundColor: 'rgba(0,168,44,0.12)',
+          fill: '+1',
+          pointRadius: 0
+        },
+        {
+          label: 'Typical lead time',
+          data: DATA.leadTimes.median,
+          borderColor: C.green,
+          backgroundColor: C.green,
+          pointRadius: 5,
+          tension: 0.3,
+          fill: false
+        },
+        {
+          label: 'Minimum window (25th)',
+          data: DATA.leadTimes.p25,
+          borderColor: 'transparent',
+          backgroundColor: 'rgba(0,168,44,0.12)',
+          fill: '-1',
+          pointRadius: 0
+        }
+      ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ctx.parsed.y.toFixed(1) + '%' } }
+        legend: {
+          labels: { color: legendColor('chartLeadTrend'), filter: item => item.text === 'Typical lead time' }
+        },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.raw + ' days' } }
       },
       scales: {
-        x: { ticks: { color: tc }, grid: { color: gc } },
-        y: { ticks: { color: tc, callback: v => v + '%' }, grid: { color: gc }, beginAtZero: true }
+        x: { ticks: { color: tickColor('chartLeadTrend') }, grid: { display: false } },
+        y: {
+          ticks: { color: tickColor('chartLeadTrend'), callback: v => v + 'd' },
+          grid: { color: gridColor('chartLeadTrend') }
+        }
       }
     }
   });
-}
 
-// Slide 7: Day of Week — Bar (right)
-function initDayOfWeekChart(sectionEl) {
-  const ctx = document.getElementById('chartDayOfWeek');
-  if (!ctx) return;
-  destroyChart('dayOfWeek');
-  const d = DATA.dayOfWeek;
-  const tc = textColor(sectionEl), gc = gridColor(sectionEl);
-
-  const bgColors = d.share.map(v => v >= 15 ? COLORS.green+'CC' : COLORS.green+'66');
-
-  charts.dayOfWeek = new Chart(ctx, {
+  /* ── 6b. Lead Time by Category ── */
+  const ltCats = DATA.leadTimes.byCategory.slice(0, 8);
+  new Chart(document.getElementById('chartLeadByCat'), {
     type: 'bar',
     data: {
-      labels: d.days,
-      datasets: [{ label: 'Share of Events', data: d.share, backgroundColor: bgColors, borderRadius: 3 }]
+      labels: ltCats.map(d => d.category),
+      datasets: [{
+        label: 'Typical days ahead',
+        data: ltCats.map(d => d.median),
+        backgroundColor: ltCats.map((_, i) => i < 2 ? C.red : (i < 5 ? C.amber : C.green)),
+        borderRadius: 4
+      }]
     },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ctx.parsed.y.toFixed(1) + '%' } }
-      },
-      scales: {
-        x: { ticks: { color: tc }, grid: { color: gc } },
-        y: { ticks: { color: tc, callback: v => v + '%' }, grid: { color: gc }, beginAtZero: true }
-      }
-    }
-  });
-}
-
-// ------------------------------------------------
-// Slide 8: Venue Type by Event Type — Grouped horizontal bar
-// ------------------------------------------------
-function initVenueTypeByEventChart(sectionEl) {
-  const ctx = document.getElementById('chartVenueTypeEvent');
-  if (!ctx) return;
-  destroyChart('venueTypeEvent');
-  const d = DATA.venueTypeByEvent;
-  const tc = textColor(sectionEl), gc = gridColor(sectionEl);
-
-  const eventColors = [COLORS.green, COLORS.dark, COLORS.greenLight, COLORS.blue, COLORS.border];
-
-  const datasets = d.eventTypes.map((evt, i) => ({
-    label: evt,
-    data: d.venueTypes.map(vt => d.data[vt][i]),
-    backgroundColor: eventColors[i] + 'CC',
-    borderRadius: 3
-  }));
-
-  charts.venueTypeEvent = new Chart(ctx, {
-    type: 'bar',
-    data: { labels: d.venueTypes, datasets },
     options: {
       indexAxis: 'y',
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: tc } },
-        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.x.toFixed(1) + '%' } }
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ctx.raw + ' days (median)' } }
       },
       scales: {
-        x: { ticks: { color: tc, callback: v => v + '%' }, grid: { color: gc }, beginAtZero: true },
-        y: { ticks: { color: tc, font: { size: 11 } }, grid: { display: false } }
+        x: {
+          ticks: { color: tickColor('chartLeadByCat'), callback: v => v + 'd' },
+          grid: { color: gridColor('chartLeadByCat') }
+        },
+        y: { ticks: { color: tickColor('chartLeadByCat'), font: { size: 11 } }, grid: { display: false } }
       }
     }
   });
-}
 
-// ------------------------------------------------
-// Slide 9: Venue Type YoY — Small multiples
-// ------------------------------------------------
-function initVenueTypeYoYCharts(sectionEl) {
-  const d = DATA.venueTypeYoY;
-  const tc = textColor(sectionEl), gc = gridColor(sectionEl);
-  const categories = Object.keys(d.categories);
-
-  categories.forEach((cat, idx) => {
-    const canvasId = 'chartYoY_' + idx;
-    const ctx = document.getElementById(canvasId);
-    if (!ctx) return;
-    const chartKey = 'yoy_' + idx;
-    destroyChart(chartKey);
-
-    const catData = d.categories[cat];
-    // Top 4 venue types for clarity
-    const topVTs = catData.venueTypes.slice(0, 4);
-    const vtColors = [COLORS.green, COLORS.blue, COLORS.greenLight, COLORS.dark];
-
-    const datasets = topVTs.map((vt, vi) => ({
-      label: vt,
-      data: catData.data[vt],
-      borderColor: vtColors[vi],
-      backgroundColor: 'transparent',
-      tension: 0.3,
-      pointRadius: 3,
-      borderWidth: 2,
-      fill: false
-    }));
-
-    charts[chartKey] = new Chart(ctx, {
-      type: 'line',
-      data: { labels: d.years, datasets },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '%' } }
-        },
-        scales: {
-          x: { ticks: { color: tc, font: { size: 10 } }, grid: { color: gc } },
-          y: { ticks: { color: tc, font: { size: 10 }, callback: v => v + '%' }, grid: { color: gc }, beginAtZero: true }
-        }
-      }
-    });
-  });
-}
-
-// ------------------------------------------------
-// Slide 10: Repeat Business — Doughnut
-// ------------------------------------------------
-function initRepeatChart(sectionEl) {
-  const ctx = document.getElementById('chartRepeat');
-  if (!ctx) return;
-  destroyChart('repeat');
-  const d = DATA.repeatBusiness;
-  const tc = textColor(sectionEl);
-
-  charts.repeat = new Chart(ctx, {
-    type: 'doughnut',
+  /* ── 7. Category Mix ── */
+  const cmData = DATA.categoryMix;
+  new Chart(document.getElementById('chartCategoryMix'), {
+    type: 'bar',
     data: {
-      labels: d.labels,
-      datasets: [{
-        data: d.share,
-        backgroundColor: [COLORS.green, COLORS.dark, COLORS.greenLight, COLORS.blue],
-        borderWidth: 2,
-        borderColor: isDark(sectionEl) ? COLORS.dark : COLORS.white
-      }]
+      labels: cmData.years,
+      datasets: cmData.categories.slice(0, 8).map((cat, i) => ({
+        label: cat.name,
+        data: cat.pcts,
+        backgroundColor: palette[i],
+        borderRadius: 2
+      }))
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      cutout: '55%',
       plugins: {
-        legend: { position: 'bottom', labels: { color: tc, padding: 16 } },
-        tooltip: { callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed.toFixed(1) + '% (' + d.companies[ctx.dataIndex].toLocaleString() + ' companies)' } }
+        legend: { position: 'bottom', labels: { color: tickColor('chartCategoryMix'), boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.raw + '%' } }
+      },
+      scales: {
+        x: { stacked: true, ticks: { color: tickColor('chartCategoryMix') }, grid: { display: false } },
+        y: {
+          stacked: true,
+          ticks: { color: tickColor('chartCategoryMix'), callback: v => v + '%' },
+          grid: { color: gridColor('chartCategoryMix') }
+        }
       }
     }
   });
-}
 
-// ------------------------------------------------
-// Slide 11: Hybrid Events — Small line
-// ------------------------------------------------
-function initHybridChart(sectionEl) {
-  const ctx = document.getElementById('chartHybrid');
-  if (!ctx) return;
-  destroyChart('hybrid');
-  const d = DATA.hybridTagging;
-  const tc = textColor(sectionEl), gc = gridColor(sectionEl);
-
-  charts.hybrid = new Chart(ctx, {
-    type: 'line',
+  /* ── 8a. Seasonality ── */
+  const seasData = DATA.seasonality;
+  new Chart(document.getElementById('chartSeasonality'), {
+    type: 'bar',
     data: {
-      labels: d.years,
+      labels: seasData.months,
+      datasets: [
+        {
+          label: 'Overall',
+          data: seasData.overall,
+          backgroundColor: C.green,
+          borderRadius: 3
+        },
+        {
+          label: 'Conferences',
+          data: seasData.byType['Conference'],
+          type: 'line',
+          borderColor: C.blue,
+          backgroundColor: C.blue,
+          pointRadius: 3,
+          tension: 0.3
+        },
+        {
+          label: 'Corporate Parties',
+          data: seasData.byType['Corporate Party'],
+          type: 'line',
+          borderColor: C.amber,
+          backgroundColor: C.amber,
+          pointRadius: 3,
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: legendColor('chartSeasonality'), boxWidth: 12, font: { size: 10 } } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.raw + '%' } }
+      },
+      scales: {
+        x: { ticks: { color: tickColor('chartSeasonality'), font: { size: 10 } }, grid: { display: false } },
+        y: {
+          ticks: { color: tickColor('chartSeasonality'), callback: v => v + '%' },
+          grid: { color: gridColor('chartSeasonality') }
+        }
+      }
+    }
+  });
+
+  /* ── 8b. Day of Week ── */
+  new Chart(document.getElementById('chartDOW'), {
+    type: 'bar',
+    data: {
+      labels: DATA.dayOfWeek.days,
       datasets: [{
-        label: 'Hybrid-Tagged %',
-        data: d.percent,
-        borderColor: COLORS.green,
-        backgroundColor: COLORS.green + '22',
-        fill: true,
-        tension: 0.3,
-        pointRadius: 5,
-        pointBackgroundColor: COLORS.green,
-        borderWidth: 3
+        label: 'Share of events',
+        data: DATA.dayOfWeek.pcts,
+        backgroundColor: DATA.dayOfWeek.pcts.map(v => v > 20 ? C.green : (v > 10 ? C.greenHover : C.greenLight)),
+        borderRadius: 4
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ctx.parsed.y.toFixed(1) + '%' } }
+        tooltip: { callbacks: { label: ctx => ctx.raw + '% of events' } }
       },
       scales: {
-        x: { ticks: { color: tc }, grid: { color: gc } },
-        y: { ticks: { color: tc, callback: v => v + '%' }, grid: { color: gc }, beginAtZero: true, max: 6 }
+        x: { ticks: { color: tickColor('chartDOW') }, grid: { display: false } },
+        y: {
+          ticks: { color: tickColor('chartDOW'), callback: v => v + '%' },
+          grid: { color: gridColor('chartDOW') },
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  /* ── 9. Venue Shopping ── */
+  new Chart(document.getElementById('chartShopping'), {
+    type: 'bar',
+    data: {
+      labels: DATA.venueShopping.years,
+      datasets: [
+        {
+          label: 'Avg. venues per enquiry',
+          data: DATA.venueShopping.avgVenues,
+          backgroundColor: C.green,
+          borderRadius: 4,
+          yAxisID: 'y'
+        },
+        {
+          label: 'Multi-venue enquiries',
+          data: DATA.venueShopping.multiVenuePct,
+          type: 'line',
+          borderColor: C.blue,
+          backgroundColor: C.blue,
+          pointRadius: 5,
+          tension: 0.3,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: tickColor('chartShopping'), boxWidth: 12 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label === 'Multi-venue enquiries'
+              ? ctx.dataset.label + ': ' + ctx.raw + '%'
+              : ctx.dataset.label + ': ' + ctx.raw
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: tickColor('chartShopping') }, grid: { display: false } },
+        y: {
+          position: 'left',
+          ticks: { color: tickColor('chartShopping') },
+          grid: { color: gridColor('chartShopping') },
+          title: { display: true, text: 'Venues', color: tickColor('chartShopping') },
+          beginAtZero: true
+        },
+        y1: {
+          position: 'right',
+          min: 30, max: 70,
+          ticks: { color: C.blue, callback: v => v + '%' },
+          grid: { display: false },
+          title: { display: true, text: 'Multi-venue %', color: C.blue }
+        }
+      }
+    }
+  });
+
+  /* ── 10. Venue Type YoY ── */
+  const vtData = DATA.venueTypeYoY;
+  const vtColors = [C.green, C.dark, C.blue, C.greenHover, C.amber, C.greenLight, C.border];
+  new Chart(document.getElementById('chartVenueYoY'), {
+    type: 'line',
+    data: {
+      labels: vtData.years,
+      datasets: vtData.types.map((t, i) => ({
+        label: t.type,
+        data: t.pcts,
+        borderColor: vtColors[i],
+        backgroundColor: vtColors[i],
+        pointRadius: 4,
+        tension: 0.3,
+        borderWidth: t.type === 'Conference Centre' ? 3 : 2
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: legendColor('chartVenueYoY'), boxWidth: 12, font: { size: 10 } } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.raw + '%' } }
+      },
+      scales: {
+        x: { ticks: { color: tickColor('chartVenueYoY') }, grid: { display: false } },
+        y: {
+          ticks: { color: tickColor('chartVenueYoY'), callback: v => v + '%' },
+          grid: { color: gridColor('chartVenueYoY') }
+        }
+      }
+    }
+  });
+
+  /* ── 11. Venue Type Pricing ── */
+  const vpData = DATA.venueTypePricing;
+  new Chart(document.getElementById('chartVenuePricing'), {
+    type: 'bar',
+    data: {
+      labels: vpData.map(d => d.type),
+      datasets: [{
+        label: 'Typical booking value',
+        data: vpData.map(d => d.median),
+        backgroundColor: vpData.map((d, i) => {
+          if (d.median > 9000) return C.green;
+          if (d.median > 5000) return C.greenHover;
+          return C.greenLight;
+        }),
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => fmtGBP(ctx.raw) + ' median (n=' + vpData[ctx.dataIndex].n + ')' } }
+      },
+      scales: {
+        x: {
+          ticks: { color: tickColor('chartVenuePricing'), callback: v => fmtGBP(v) },
+          grid: { color: gridColor('chartVenuePricing') }
+        },
+        y: {
+          ticks: { color: tickColor('chartVenuePricing'), font: { size: 11 } },
+          grid: { display: false }
+        }
       }
     }
   });
 }
 
-// ------------------------------------------------
-// Init dispatcher — called by fullpage.js onLeave
-// ------------------------------------------------
-function initSlideCharts(index, sectionEl) {
-  switch(index) {
-    case 2: initBudgetChart(sectionEl); break;
-    case 3: initVenueChart(sectionEl); break;
-    case 4: initLeadTimesChart(sectionEl); break;
-    case 5: initCategoryChart(sectionEl); break;
-    case 6: initGroupSizesChart(sectionEl); initBookingValuesChart(sectionEl); break;
-    case 7: initSeasonalityChart(sectionEl); initDayOfWeekChart(sectionEl); break;
-    case 8: initVenueTypeByEventChart(sectionEl); break;
-    case 9: initVenueTypeYoYCharts(sectionEl); break;
-    case 10: initRepeatChart(sectionEl); break;
-    case 11: initHybridChart(sectionEl); break;
-  }
-}
+/* ══════════════════════════════════════════════════
+   FULLPAGE.JS INIT
+   ══════════════════════════════════════════════════ */
+
+document.addEventListener('DOMContentLoaded', function() {
+  new fullpage('#fullpage', {
+    licenseKey: '',
+    autoScrolling: true,
+    scrollingSpeed: 700,
+    navigation: true,
+    navigationPosition: 'right',
+    navigationTooltips: [
+      'Title', 'Summary', 'Market', 'Spending',
+      'By Category', 'Planning', 'Event Types',
+      'Timing', 'Venue Selection', 'Venue Trends',
+      'Venue Pricing', 'Takeaways', ''
+    ],
+    afterLoad: function(origin, destination) {
+      // Animate stat cards
+      destination.item.querySelectorAll('.stat-card, .callout, .insight-card').forEach((el, i) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, 100 + i * 80);
+      });
+    }
+  });
+
+  initCharts();
+});

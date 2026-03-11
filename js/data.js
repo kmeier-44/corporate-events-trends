@@ -1,175 +1,200 @@
-// Corporate Events Booking Trends Data 2022-2025
-// Source: Hire Space MongoDB (corporate won bookings)
+// Corporate Events Booking Trends 2022–2025
+// Data extracted from Hire Space MongoDB (March 2026)
+// All monetary values based on WON booking lines (actual spend, not budgets)
 
 const DATA = {
 
-  // Slide 2: Budget Trajectory
-  budgetTrajectory: {
+  // ── A. Market Volume ──
+  volume: {
     years: [2022, 2023, 2024, 2025],
-    median:         [6500, 10000, 10000, 10500],
-    average:        [17055, 18787, 78108, 19329],
-    percentile75:   [20000, 23000, 20000, 20000]
+    enquiries: [12452, 9906, 9579, 8964],
+    won: [657, 689, 803, 740],
+    conversionRate: [5.3, 7.0, 8.4, 8.3]
   },
 
-  // Slide 3: Venue Sourcing Behaviour
-  venuesPerEnquiry: {
+  // ── B. Actual Booking Values (won booking lines, GBP) ──
+  bookingValues: {
     years: [2022, 2023, 2024, 2025],
-    average:      [3.8, 4.9, 4.6, 6.6],
-    multiVenuePct: [43.4, 45.9, 40.4, 55.0]
+    median: [2818, 4523, 5757, 7230],
+    p25: [720, 1224, 1608, 1921],
+    p75: [10769, 12666, 15725, 21000]
   },
 
-  // Slide 4: Lead Times
+  // ── C. Booking Values by Event Type ──
+  valuesByCategory: [
+    { category: 'Private Event', median: 18222, n: 50 },
+    { category: 'Award Ceremony', median: 17043, n: 63 },
+    { category: 'Christmas Party', median: 12500, n: 184 },
+    { category: 'Ticketed Event', median: 11667, n: 93 },
+    { category: 'Summer Party', median: 11250, n: 137 },
+    { category: 'Networking', median: 10819, n: 140 },
+    { category: 'Conference', median: 10499, n: 376 },
+    { category: 'Gala Dinner', median: 9010, n: 26 },
+    { category: 'Corporate Party', median: 5000, n: 249 },
+    { category: 'Private Dining', median: 4702, n: 161 },
+    { category: 'Presentation', median: 4174, n: 76 },
+    { category: 'Pop-Up', median: 4100, n: 130 },
+    { category: 'Product Launch', median: 3800, n: 41 },
+    { category: 'Screening', median: 2880, n: 232 },
+    { category: 'Meeting', median: 828, n: 513 }
+  ],
+
+  // ── D. Price Per Head ──
+  pricePerHead: {
+    years: [2022, 2023, 2024, 2025],
+    median: [63, 73, 85, 102],
+    byCategory: [
+      { category: 'Private Dining', median: 111 },
+      { category: 'Christmas Party', median: 104 },
+      { category: 'Award Ceremony', median: 100 },
+      { category: 'Summer Party', median: 100 },
+      { category: 'Networking', median: 98 },
+      { category: 'Conference', median: 96 },
+      { category: 'Ticketed Event', median: 92 },
+      { category: 'Private Event', median: 91 },
+      { category: 'Corporate Party', median: 74 },
+      { category: 'Pop-Up', median: 62 },
+      { category: 'Screening', median: 44 },
+      { category: 'Meeting', median: 28 }
+    ]
+  },
+
+  // ── E. Lead Times ──
   leadTimes: {
     years: [2022, 2023, 2024, 2025],
-    p25:     [26, 23, 21, 22],
-    median:  [53, 56, 57, 57],
-    p75:     [101, 106, 113, 113],
-    average: [75, 78, 80, 82]
+    median: [60, 72, 88, 84],
+    p25: [27, 33, 45, 40],
+    p75: [111, 126, 156, 160],
+    byCategory: [
+      { category: 'Award Ceremony', median: 155, p25: 86, p75: 264 },
+      { category: 'Gala Dinner', median: 138, p25: 86, p75: 173 },
+      { category: 'Conference', median: 114, p25: 62, p75: 189 },
+      { category: 'Summer Party', median: 104, p25: 64, p75: 147 },
+      { category: 'Christmas Party', median: 103, p25: 70, p75: 169 },
+      { category: 'Networking', median: 84, p25: 47, p75: 154 },
+      { category: 'Private Dining', median: 82, p25: 50, p75: 139 },
+      { category: 'Corporate Party', median: 72, p25: 34, p75: 130 },
+      { category: 'Pop-Up', median: 60, p25: 28, p75: 115 },
+      { category: 'Meeting', median: 42, p25: 17, p75: 86 }
+    ]
   },
 
-  // Slide 5: Event Category Mix
+  // ── F. Category Mix by Year (%) ──
   categoryMix: {
-    categories: ['Conference', 'Meeting', 'Corporate Party', 'Pop-Up', 'Screening', 'Networking', 'Christmas Party', 'Private Dining', 'Summer Party', 'Birthday Party', 'Ticketed Event', 'Product Launch'],
     years: [2022, 2023, 2024, 2025],
-    data: {
-      'Conference':      [7.4,  15.6, 20.9, null],
-      'Meeting':         [14.8, 14.4, 14.6, 13.0],
-      'Corporate Party': [9.2,  12.0, 11.6, 11.7],
-      'Pop-Up':          [11.5,  9.5,  7.9, 10.2],
-      'Screening':       [10.5,  3.3, null, 11.5],
-      'Networking':      [6.1,   3.2, null,  7.1],
-      'Christmas Party': [null,  8.0,  7.2, null],
-      'Private Dining':  [null,  4.4,  6.9, null],
-      'Summer Party':    [4.3,   3.2,  6.6,  4.3],
-      'Birthday Party':  [3.7,  null, null,  6.1],
-      'Ticketed Event':  [5.2,  null, null,  7.0],
-      'Product Launch':  [null, null, null,  4.5]
+    categories: [
+      { name: 'Conference',      pcts: [5.5, 14.9, 23.8, 10.3] },
+      { name: 'Meeting',         pcts: [21.0, 19.7, 19.3, 15.3] },
+      { name: 'Corporate Party', pcts: [8.5, 9.1, 7.7, 11.5] },
+      { name: 'Christmas Party', pcts: [3.2, 11.2, 9.0, 3.1] },
+      { name: 'Screening',       pcts: [15.1, 6.8, 0, 12.2] },
+      { name: 'Networking',      pcts: [5.9, 3.8, 3.6, 8.9] },
+      { name: 'Private Dining',  pcts: [4.9, 6.1, 9.5, 4.5] },
+      { name: 'Summer Party',    pcts: [4.6, 3.0, 5.7, 5.8] },
+      { name: 'Pop-Up',          pcts: [7.3, 4.1, 2.4, 5.9] },
+      { name: 'Ticketed Event',  pcts: [3.7, 2.8, 0, 5.4] }
+    ]
+  },
+
+  // ── G. Seasonality ──
+  seasonality: {
+    months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    overall: [5, 6, 7, 6, 7, 11, 7, 3, 10, 11, 12, 14],
+    byType: {
+      'Conference':      [5, 7, 10, 9, 6, 14, 6, 1, 14, 12, 12, 3],
+      'Christmas Party': [4, 0, 2, 1, 0, 0, 1, 0, 2, 0, 10, 80],
+      'Summer Party':    [1, 1, 0, 5, 4, 26, 29, 10, 14, 1, 3, 6],
+      'Corporate Party': [3, 3, 5, 7, 6, 9, 6, 4, 9, 14, 16, 16]
     }
   },
 
-  // Slide 6: Group Sizes
+  // ── H. Day of Week ──
+  dayOfWeek: {
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    pcts: [8.0, 18.4, 23.4, 29.0, 11.7, 7.1, 2.5]
+  },
+
+  // ── I. Venue Shopping Behaviour ──
+  venueShopping: {
+    years: [2022, 2023, 2024, 2025],
+    avgVenues: [3.7, 5.2, 5.8, 6.4],
+    multiVenuePct: [44, 50, 56, 55]
+  },
+
+  // ── J. Repeat Bookings ──
+  repeatBookings: {
+    sameVenue: { total: 2503, repeat: 75, rate: 3.0 },
+    sameCompany: { total: 1815, repeat: 196, rate: 10.8 }
+  },
+
+  // ── K. Group Sizes ──
   groupSizes: {
     years: [2022, 2023, 2024, 2025],
-    median:       [60, 60, 60, 60],
-    average:      [130, 141, 141, 134],
-    percentile75: [140, 150, 140, 130]
+    median: [50, 60, 60, 70],
+    p25: [20, 20, 23, 25],
+    p75: [120, 120, 120, 150],
+    byCategory: [
+      { category: 'Award Ceremony', median: 200 },
+      { category: 'Gala Dinner', median: 160 },
+      { category: 'Summer Party', median: 120 },
+      { category: 'Christmas Party', median: 100 },
+      { category: 'Networking', median: 100 },
+      { category: 'Conference', median: 100 },
+      { category: 'Corporate Party', median: 60 },
+      { category: 'Pop-Up', median: 50 },
+      { category: 'Private Dining', median: 30 },
+      { category: 'Meeting', median: 20 }
+    ]
   },
 
-  // Slide 6: Booking Values (by event type)
-  bookingValues: {
-    types:  ['Award Ceremony', 'Christmas Party', 'Networking Event', 'Conference'],
-    median: [17422, 12500, 11912, 9833]
-  },
+  // ── L. Venue Type Pricing ──
+  venueTypePricing: [
+    { type: 'Historic / Landmark', median: 10852, n: 592 },
+    { type: 'Theatre', median: 9697, n: 142 },
+    { type: 'Outdoor', median: 7550, n: 317 },
+    { type: 'Rooftop', median: 6825, n: 339 },
+    { type: 'Conference Centre', median: 6825, n: 1447 },
+    { type: 'Bar', median: 5246, n: 254 },
+    { type: 'Hotel', median: 4688, n: 483 },
+    { type: 'Restaurant', median: 4059, n: 216 },
+    { type: 'Meeting Rooms', median: 1797, n: 540 }
+  ],
 
-  // Slide 7: Seasonality
-  seasonality: {
-    months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    share:  [6.5, 7.0, 8.0, 6.7, 7.5, 10.7, 7.8, 4.0, 9.5, 8.6, 10.2, 13.4]
-  },
-
-  // Slide 7: Day of Week
-  dayOfWeek: {
-    days:  ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    share: [7.1, 13.8, 17.2, 25.0, 14.0, 17.7, 5.3]
-  },
-
-  // Slide 8: Venue Type by Event Type (top venue types × top event types, %)
-  venueTypeByEvent: {
-    venueTypes: ['Conference Centre', 'Hotel', 'Meeting Rooms', 'Historic / Landmark', 'Rooftop', 'Outdoor', 'Bar', 'Restaurant'],
-    eventTypes: ['Conference', 'Meeting', 'Christmas Party', 'Summer Party', 'Corporate Party'],
-    // data[venueType][eventType] = percentage
-    data: {
-      'Conference Centre': [35.9, 32.0, 19.3, 14.9, 21.4],
-      'Hotel':             [11.0, 13.2,  5.9,  4.4,  8.4],
-      'Meeting Rooms':     [ 9.2, 20.9,  4.5,  3.1,  6.1],
-      'Historic / Landmark': [13.6,  7.7, 15.6,  8.8,  9.0],
-      'Rooftop':           [ 4.8,  5.2,  7.0, 12.5,  8.0],
-      'Outdoor':           [ 5.2,  3.8,  7.0, 19.0,  5.7],
-      'Bar':               [ 2.6,  1.6,  9.8,  7.1,  8.2],
-      'Restaurant':        [ 1.7,  1.2,  5.6,  5.4,  6.1]
-    }
-  },
-
-  // Slide 9: Venue Type YoY Trends (per event category)
+  // ── M. Venue Type YoY Trends ──
   venueTypeYoY: {
     years: [2022, 2023, 2024, 2025],
-    categories: {
-      'Conference': {
-        venueTypes: ['Conference Centre', 'Hotel', 'Meeting Rooms', 'Historic / Landmark', 'Rooftop', 'Outdoor', 'Bar', 'Restaurant'],
-        data: {
-          'Conference Centre': [32.6, 38.1, 34.5, 38.7],
-          'Hotel':             [14.0, 12.4,  8.5, 14.3],
-          'Meeting Rooms':     [ 8.1,  7.7, 10.9,  7.1],
-          'Historic / Landmark': [20.9, 12.4, 14.1, 10.1],
-          'Rooftop':           [ 2.3,  4.1,  5.1,  6.0],
-          'Outdoor':           [ 4.7,  4.6,  5.8,  4.8],
-          'Bar':               [ 5.8,  3.6,  1.7,  1.8],
-          'Restaurant':        [ 2.3,  2.1,  1.2,  2.4]
-        }
-      },
-      'Meeting': {
-        venueTypes: ['Conference Centre', 'Hotel', 'Meeting Rooms', 'Historic / Landmark', 'Rooftop', 'Outdoor', 'Bar', 'Restaurant'],
-        data: {
-          'Conference Centre': [29.3, 32.5, 31.4, 35.7],
-          'Hotel':             [12.8, 14.6, 11.7, 14.1],
-          'Meeting Rooms':     [20.5, 20.1, 22.4, 20.1],
-          'Historic / Landmark': [ 7.7,  7.8,  6.0, 10.1],
-          'Rooftop':           [ 5.9,  5.6,  5.0,  4.0],
-          'Outdoor':           [ 4.4,  5.6,  3.0,  2.0],
-          'Bar':               [ 0.4,  1.1,  3.7,  1.0],
-          'Restaurant':        [ 0.4,  1.1,  2.0,  1.0]
-        }
-      },
-      'Christmas Party': {
-        venueTypes: ['Conference Centre', 'Hotel', 'Meeting Rooms', 'Historic / Landmark', 'Rooftop', 'Outdoor', 'Bar', 'Restaurant'],
-        data: {
-          'Conference Centre': [ 7.9, 19.3, 21.1, 23.4],
-          'Hotel':             [ 7.9,  6.4,  6.0,  2.1],
-          'Meeting Rooms':     [ 2.6,  6.4,  4.5,  0.0],
-          'Historic / Landmark': [15.8, 13.6, 18.8, 12.8],
-          'Rooftop':           [ 5.3,  7.9,  7.5,  4.3],
-          'Outdoor':           [ 2.6,  8.6,  8.3,  2.1],
-          'Bar':               [13.2,  7.9, 10.5, 10.6],
-          'Restaurant':        [ 5.3,  7.1,  4.5,  4.3]
-        }
-      },
-      'Summer Party': {
-        venueTypes: ['Conference Centre', 'Hotel', 'Rooftop', 'Outdoor', 'Bar', 'Restaurant'],
-        data: {
-          'Conference Centre': [15.3, 14.6, 13.8, 15.8],
-          'Hotel':             [ 1.7,  6.3,  5.7,  4.0],
-          'Rooftop':           [11.9, 10.4, 16.1, 10.9],
-          'Outdoor':           [20.3, 27.1, 18.4, 14.9],
-          'Bar':               [ 6.8,  2.1, 10.3,  6.9],
-          'Restaurant':        [ 5.1,  4.2,  4.6,  6.9]
-        }
-      },
-      'Corporate Party': {
-        venueTypes: ['Conference Centre', 'Hotel', 'Meeting Rooms', 'Historic / Landmark', 'Rooftop', 'Outdoor', 'Bar', 'Restaurant'],
-        data: {
-          'Conference Centre': [21.5, 18.6, 20.2, 23.9],
-          'Hotel':             [ 8.6,  4.9, 10.1,  9.2],
-          'Meeting Rooms':     [ 9.7,  5.9,  5.9,  4.3],
-          'Historic / Landmark': [ 8.6,  7.8, 10.9,  8.6],
-          'Rooftop':           [ 8.6,  6.9, 10.1,  6.7],
-          'Outdoor':           [ 3.2,  7.8,  8.4,  3.7],
-          'Bar':               [ 5.4,  8.8,  5.9, 11.0],
-          'Restaurant':        [ 6.5,  2.9,  7.6,  6.7]
-        }
-      }
-    }
+    types: [
+      { type: 'Conference Centre', pcts: [51.0, 56.8, 58.6, 59.9] },
+      { type: 'Historic / Landmark', pcts: [20.8, 24.7, 24.5, 22.7] },
+      { type: 'Hotel', pcts: [17.9, 18.8, 17.8, 21.2] },
+      { type: 'Rooftop', pcts: [11.8, 13.0, 14.6, 13.6] },
+      { type: 'Bar', pcts: [8.7, 8.9, 10.4, 11.6] },
+      { type: 'Restaurant', pcts: [7.8, 8.0, 8.6, 9.4] },
+      { type: 'Meeting Rooms', pcts: [22.2, 22.7, 21.8, 18.4] }
+    ]
   },
 
-  // Slide 10: Repeat Business
-  repeatBusiness: {
-    labels:    ['1 year only', '2 years', '3 years', '4 years'],
-    companies: [18087, 2814, 829, 276],
-    share:     [82.2, 12.8, 3.8, 1.3]
-  },
-
-  // Slide 11: Hybrid Events
-  hybridTagging: {
-    years:   [2020, 2021, 2022, 2023, 2024, 2025],
-    percent: [0.0, 1.9, 4.8, 1.1, 0.0, 0.3]
-  }
+  // ── N. Venue Type Co-Occurrence ──
+  coOccurrence: [
+    { type: 'Hotel', alsoWith: [
+      { type: 'Conference Centre', pct: 92 },
+      { type: 'Outdoor', pct: 46 },
+      { type: 'Rooftop', pct: 43 }
+    ]},
+    { type: 'Rooftop', alsoWith: [
+      { type: 'Conference Centre', pct: 87 },
+      { type: 'Outdoor', pct: 72 },
+      { type: 'Hotel', pct: 51 }
+    ]},
+    { type: 'Bar', alsoWith: [
+      { type: 'Conference Centre', pct: 64 },
+      { type: 'Restaurant', pct: 52 },
+      { type: 'Outdoor', pct: 52 }
+    ]},
+    { type: 'Restaurant', alsoWith: [
+      { type: 'Conference Centre', pct: 69 },
+      { type: 'Bar', pct: 59 },
+      { type: 'Hotel', pct: 52 }
+    ]}
+  ]
 };
