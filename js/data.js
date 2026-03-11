@@ -96,7 +96,18 @@ const DATA = {
       { name: 'Summer Party',    pcts: [4.6, 3.0, 5.7, 5.8] },
       { name: 'Pop-Up',          pcts: [7.3, 4.1, 2.4, 5.9] },
       { name: 'Ticketed Event',  pcts: [3.7, 2.8, 0, 5.4] }
-    ]
+    ],
+    // Enquiry counts (all enquiry lines, not just confirmed) by category by year
+    enquiryCounts: {
+      'Conference':      [3827, 7868, 14924, 5328],
+      'Corporate Party': [6346, 8462, 8907, 8175],
+      'Meeting':         [6697, 5602, 4470, 5220],
+      'Christmas Party': [1420, 6940, 5397, 1548],
+      'Networking':      [5382, 3827, 1518, 5185],
+      'Summer Party':    [3192, 2422, 4243, 3509],
+      'Private Dining':  [2669, 2792, 4723, 2098],
+      'Award Ceremony':  [472, 1412, 2602, 1401]
+    }
   },
 
   // ── Seasonality ──
@@ -240,6 +251,17 @@ const DATA = {
       ]
     }
   },
+
+  // ── Spending by Industry Segment (median confirmed booking value, GBP) ──
+  // Coverage: ~51% of won bookinglines matched to a company segment
+  spendByIndustry: [
+    { segment: 'B2B', median: 3298, count: 242 },
+    { segment: 'Professional Services', median: 2805, count: 1241 },
+    { segment: 'B2C', median: 2200, count: 619 },
+    { segment: 'Technology', median: 2077, count: 988 },
+    { segment: 'Associations', median: 2056, count: 574 },
+    { segment: 'Agencies', median: 2000, count: 1207 }
+  ],
 
   // ── Booking Line Lost Reasons (grouped, % of all lost lines) ──
   lostReasons: {

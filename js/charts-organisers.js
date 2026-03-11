@@ -53,7 +53,7 @@ function initCharts() {
             order: 3
           },
           {
-            label: 'Median spend',
+            label: 'Average spend',
             data: DATA.bookingValues.median,
             borderColor: C.green,
             backgroundColor: C.green,
@@ -72,7 +72,7 @@ function initCharts() {
           legend: {
             labels: {
               color: legendColor(id),
-              filter: item => item.text === 'Median spend' || item.text === 'IQR (25th–75th)'
+              filter: item => item.text === 'Average spend' || item.text === 'IQR (25th–75th)'
             }
           },
           tooltip: {
@@ -99,6 +99,49 @@ function initCharts() {
     });
   }
 
+  // ── chartSpendByIndustry — Horizontal bar ──
+  if (document.getElementById('chartSpendByIndustry')) {
+    const id = 'chartSpendByIndustry';
+    const segs = DATA.spendByIndustry;
+    new Chart(document.getElementById(id), {
+      type: 'bar',
+      data: {
+        labels: segs.map(d => d.segment),
+        datasets: [{
+          label: 'Average spend',
+          data: segs.map(d => d.median),
+          backgroundColor: C.green,
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: { label: ctx => fmtGBP(ctx.parsed.x) }
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            grid: { color: gridColor(id) },
+            ticks: {
+              color: tickColor(id),
+              callback: v => fmtGBP(v)
+            }
+          },
+          y: {
+            grid: { display: false },
+            ticks: { color: tickColor(id) }
+          }
+        }
+      }
+    });
+  }
+
   // ── chartCostByType — Horizontal bar, top 10 categories ──
   if (document.getElementById('chartCostByType')) {
     const id = 'chartCostByType';
@@ -108,7 +151,7 @@ function initCharts() {
       data: {
         labels: top10.map(d => d.category),
         datasets: [{
-          label: 'Median spend',
+          label: 'Average spend',
           data: top10.map(d => d.median),
           backgroundColor: C.green,
           borderRadius: 4
@@ -214,7 +257,7 @@ function initCharts() {
             order: 3
           },
           {
-            label: 'Median lead time',
+            label: 'Average lead time',
             data: DATA.leadTimes.median,
             borderColor: C.green,
             backgroundColor: C.green,
@@ -233,7 +276,7 @@ function initCharts() {
           legend: {
             labels: {
               color: legendColor(id),
-              filter: item => item.text === 'Median lead time'
+              filter: item => item.text === 'Average lead time'
             }
           },
           tooltip: {
@@ -253,55 +296,6 @@ function initCharts() {
             ticks: {
               color: tickColor(id),
               callback: v => v + 'd'
-            }
-          }
-        }
-      }
-    });
-  }
-
-  // ── chartConversionLeadTime — Vertical bar ──
-  if (document.getElementById('chartConversionLeadTime')) {
-    const id = 'chartConversionLeadTime';
-    const buckets = DATA.leadTimes.conversionByLeadTime;
-    const maxPct = Math.max(...buckets.map(d => d.pct));
-    new Chart(document.getElementById(id), {
-      type: 'bar',
-      data: {
-        labels: buckets.map(d => d.bucket),
-        datasets: [{
-          label: 'Conversion rate',
-          data: buckets.map(d => d.pct),
-          backgroundColor: buckets.map(d => {
-            const ratio = d.pct / maxPct;
-            const r = Math.round(0 + (61 - 0) * (1 - ratio));
-            const g = Math.round(168 + (125 - 168) * (1 - ratio));
-            const b = Math.round(44 + (77 - 44) * (1 - ratio));
-            return `rgb(${r},${g},${b})`;
-          }),
-          borderRadius: 4
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: { label: ctx => ctx.parsed.y.toFixed(1) + '%' }
-          }
-        },
-        scales: {
-          x: {
-            grid: { display: false },
-            ticks: { color: tickColor(id), maxRotation: 45 }
-          },
-          y: {
-            beginAtZero: true,
-            grid: { color: gridColor(id) },
-            ticks: {
-              color: tickColor(id),
-              callback: v => v + '%'
             }
           }
         }
@@ -391,26 +385,74 @@ function initCharts() {
     });
   }
 
-  // ── chartCategoryTrend — Multi-line, top 6 categories ──
+  // ── Seasonal sparklines (4x small bar charts) ──
+  const seasonalTypes = [
+    { canvasId: 'chartSeasonXmas', key: 'Christmas Party' },
+    { canvasId: 'chartSeasonSummer', key: 'Summer Party' },
+    { canvasId: 'chartSeasonConf', key: 'Conference' },
+    { canvasId: 'chartSeasonCorpParty', key: 'Corporate Party' }
+  ];
+
+  seasonalTypes.forEach(({ canvasId, key }) => {
+    if (document.getElementById(canvasId)) {
+      const id = canvasId;
+      const values = DATA.seasonality.byType[key];
+      new Chart(document.getElementById(id), {
+        type: 'bar',
+        data: {
+          labels: DATA.seasonality.months,
+          datasets: [{
+            data: values,
+            backgroundColor: C.green,
+            borderRadius: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: { label: ctx => ctx.parsed.y + '%' }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: tickColor(id), font: { size: 9 } }
+            },
+            y: {
+              display: false,
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  });
+
+  // ── chartCategoryTrend — Multi-line, using enquiry counts with hidden y-axis ──
   if (document.getElementById('chartCategoryTrend')) {
     const id = 'chartCategoryTrend';
-    const top6Names = ['Conference', 'Meeting', 'Corporate Party', 'Screening', 'Christmas Party', 'Networking'];
-    const top6 = DATA.categoryMix.categories.filter(c => top6Names.includes(c.name));
+    const catNames = ['Conference', 'Corporate Party', 'Meeting', 'Christmas Party', 'Networking', 'Summer Party', 'Award Ceremony', 'Private Dining'];
+    const counts = DATA.categoryMix.enquiryCounts;
+    const datasets = catNames.filter(name => counts[name]).map((name, i) => ({
+      label: name,
+      data: counts[name],
+      borderColor: palette[i],
+      backgroundColor: palette[i],
+      pointRadius: 4,
+      pointHoverRadius: 6,
+      borderWidth: 2,
+      tension: 0.2,
+      fill: false
+    }));
+
     new Chart(document.getElementById(id), {
       type: 'line',
       data: {
         labels: DATA.categoryMix.years,
-        datasets: top6.map((cat, i) => ({
-          label: cat.name,
-          data: cat.pcts,
-          borderColor: palette[i],
-          backgroundColor: palette[i],
-          pointRadius: 4,
-          pointHoverRadius: 6,
-          borderWidth: 2,
-          tension: 0.2,
-          fill: false
-        }))
+        datasets: datasets
       },
       options: {
         responsive: true,
@@ -420,7 +462,7 @@ function initCharts() {
             labels: { color: legendColor(id) }
           },
           tooltip: {
-            callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '%' }
+            callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString() + ' enquiries' }
           }
         },
         scales: {
@@ -430,11 +472,7 @@ function initCharts() {
           },
           y: {
             beginAtZero: true,
-            grid: { color: gridColor(id) },
-            ticks: {
-              color: tickColor(id),
-              callback: v => v + '%'
-            }
+            display: false  // Hide y-axis — show shape/trend only
           }
         }
       }
@@ -515,7 +553,7 @@ function initCharts() {
     });
   }
 
-  // ── chartGroupSizes — Line chart, median over years ──
+  // ── chartGroupSizes — Line chart, average over years ──
   if (document.getElementById('chartGroupSizes')) {
     const id = 'chartGroupSizes';
     new Chart(document.getElementById(id), {
@@ -523,7 +561,7 @@ function initCharts() {
       data: {
         labels: DATA.groupSizes.years,
         datasets: [{
-          label: 'Median group size',
+          label: 'Average group size',
           data: DATA.groupSizes.median,
           borderColor: C.green,
           backgroundColor: C.green,
@@ -539,7 +577,7 @@ function initCharts() {
         plugins: {
           legend: { display: false },
           tooltip: {
-            callbacks: { label: ctx => 'Median: ' + ctx.parsed.y + ' people' }
+            callbacks: { label: ctx => 'Average: ' + ctx.parsed.y + ' people' }
           }
         },
         scales: {
@@ -566,7 +604,7 @@ function initCharts() {
       data: {
         labels: cats.map(d => d.category),
         datasets: [{
-          label: 'Median group size',
+          label: 'Average group size',
           data: cats.map(d => d.median),
           backgroundColor: C.green,
           borderRadius: 4
@@ -597,7 +635,7 @@ function initCharts() {
     });
   }
 
-  // ── chartXmasEnquiry — Line chart, enquiry + close month overlaid ──
+  // ── chartXmasEnquiry — Overlaid enquiry + close month ──
   if (document.getElementById('chartXmasEnquiry')) {
     const id = 'chartXmasEnquiry';
     new Chart(document.getElementById(id), {
@@ -639,52 +677,6 @@ function initCharts() {
           },
           tooltip: {
             callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '%' }
-          }
-        },
-        scales: {
-          x: {
-            grid: { color: gridColor(id) },
-            ticks: { color: tickColor(id) }
-          },
-          y: {
-            beginAtZero: true,
-            grid: { color: gridColor(id) },
-            ticks: {
-              color: tickColor(id),
-              callback: v => v + '%'
-            }
-          }
-        }
-      }
-    });
-  }
-
-  // ── chartXmasClose — Standalone close month line (if canvas exists separately) ──
-  if (document.getElementById('chartXmasClose')) {
-    const id = 'chartXmasClose';
-    new Chart(document.getElementById(id), {
-      type: 'line',
-      data: {
-        labels: DATA.xmasParty.months,
-        datasets: [{
-          label: 'Booking confirmed month',
-          data: DATA.xmasParty.closeMonth,
-          borderColor: C.amber,
-          backgroundColor: 'rgba(232,168,56,0.1)',
-          pointRadius: 4,
-          pointHoverRadius: 6,
-          borderWidth: 2.5,
-          fill: true,
-          tension: 0.3
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: { label: ctx => ctx.parsed.y.toFixed(1) + '%' }
           }
         },
         scales: {

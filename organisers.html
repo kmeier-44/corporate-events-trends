@@ -18,42 +18,27 @@
 
   <style>
     /* Page-specific overrides */
-    .xmas-grid {
+    .xmas-layout {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-top: 16px;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 32px;
+      align-items: start;
     }
-    .xmas-grid .chart-container {
+    .xmas-layout .chart-container {
       margin-top: 0;
     }
-    .xmas-stat-row {
+    .xmas-cards {
       display: flex;
-      gap: 16px;
-      margin-top: 16px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 14px;
     }
-    .xmas-stat-row .stat-card {
-      flex: 1;
-      min-width: 120px;
+    .xmas-cards .stat-card {
+      text-align: left;
+      padding: 16px 20px;
     }
-    .big-stat {
-      text-align: center;
-      margin-top: 16px;
-      padding: 16px 24px;
-      background: rgba(0, 168, 44, 0.12);
-      border-radius: 12px;
-    }
-    .big-stat .stat-value {
-      font-family: var(--font-heading);
-      font-weight: 800;
-      font-size: 2.2rem;
-      color: var(--hs-green);
-    }
-    .big-stat .stat-label {
-      font-size: 0.85rem;
-      opacity: 0.7;
-      margin-top: 4px;
+    .xmas-cards .stat-card.featured {
+      background: rgba(0, 168, 44, 0.15);
+      border-color: rgba(0, 168, 44, 0.3);
     }
     .venue-trend-cards {
       display: flex;
@@ -84,35 +69,92 @@
       margin-top: 4px;
       opacity: 0.7;
     }
+    .venue-trend-card .stat-detail {
+      font-size: 0.7rem;
+      margin-top: 2px;
+      opacity: 0.5;
+    }
     .slide-5-layout {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
-      gap: 32px;
+      gap: 28px;
       align-items: start;
+    }
+    .lead-time-stats-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      color: var(--hs-green);
     }
     .lead-time-stats {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
     .lead-time-stats .stat-card {
       text-align: left;
-      padding: 14px 18px;
+      padding: 12px 16px;
     }
     .lead-time-stats .stat-card .stat-value {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
     }
-    .conversion-chart-wrap {
+    .lead-time-stats .stat-card .stat-label {
+      font-size: 0.75rem;
+    }
+    .lead-time-stats .stat-card .stat-detail {
+      font-size: 0.72rem;
+    }
+    .seasonal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 20px;
       margin-top: 16px;
     }
-    .conversion-chart-wrap h3 {
-      font-size: 0.9rem;
-      margin-bottom: 8px;
+    .seasonal-grid .seasonal-cell {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 14px 16px 10px;
+    }
+    .seasonal-cell h4 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
       color: var(--hs-green);
     }
+    .seasonal-cell .chart-container {
+      margin-top: 0;
+      max-height: 120px;
+    }
+    .light-slide .seasonal-grid .seasonal-cell {
+      background: var(--hs-lightest);
+      border-color: var(--hs-light);
+    }
+    .light-slide .seasonal-cell h4 {
+      color: var(--hs-green);
+    }
+    .spend-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 32px;
+      align-items: start;
+    }
+    .industry-chart-wrap h3 {
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+    .industry-footnote {
+      font-size: 0.72rem;
+      opacity: 0.5;
+      margin-top: 8px;
+      font-style: italic;
+    }
     @media (max-width: 900px) {
-      .xmas-grid, .slide-5-layout { grid-template-columns: 1fr; }
-      .xmas-stat-row { flex-direction: column; }
+      .xmas-layout, .slide-5-layout, .spend-layout { grid-template-columns: 1fr; }
+      .seasonal-grid { grid-template-columns: 1fr; }
       .venue-trend-cards { flex-direction: column; }
     }
   </style>
@@ -131,7 +173,7 @@
       <div class="slide-inner">
         <span class="year-badge">2022–2025</span>
         <h1>Corporate Events Booking Trends</h1>
-        <p class="subtitle">Data-driven benchmarks to help you plan smarter, book earlier, and spend wisely</p>
+        <p class="subtitle">How the UK corporate events market is evolving — and what it means for your next event</p>
         <p style="margin-top: 24px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.5;">For Event Organisers</p>
       </div>
     </div>
@@ -145,12 +187,12 @@
         <div class="stat-grid">
           <div class="stat-card">
             <div class="stat-value">&pound;7,230</div>
-            <div class="stat-label">Median Booking Value 2025</div>
+            <div class="stat-label">Average Booking Value 2025</div>
             <div class="stat-detail">Up 157% since 2022</div>
           </div>
           <div class="stat-card">
             <div class="stat-value">84 days</div>
-            <div class="stat-label">Median Lead Time</div>
+            <div class="stat-label">Average Lead Time</div>
             <div class="stat-detail">Plan 3+ months for best rates</div>
           </div>
           <div class="stat-card">
@@ -160,13 +202,13 @@
           </div>
           <div class="stat-card">
             <div class="stat-value">&pound;102</div>
-            <div class="stat-label">Median Price Per Head</div>
+            <div class="stat-label">Average Price Per Head</div>
             <div class="stat-detail">Up 62% since 2022</div>
           </div>
         </div>
 
         <div class="callout">
-          <strong>The bottom line:</strong> Corporate event spend has more than doubled since 2022. Rising budgets mean greater competition for top venues — organisers who plan earlier and compare more options are getting the best results.
+          Corporate event spending has more than doubled in three years. This isn't just inflation — it reflects a fundamental shift in how companies invest in face-to-face experiences. Larger groups, higher-impact formats, and longer planning cycles are now the norm. For organisers, the message is clear: plan earlier, benchmark smarter, and compare more venues to get the best value from rising budgets.
         </div>
       </div>
     </div>
@@ -177,15 +219,25 @@
         <p class="section-label">SPENDING BENCHMARKS</p>
         <h2>What Companies Are Actually Spending</h2>
 
-        <div class="chart-container" style="max-height: 320px;">
-          <canvas id="chartSpending"></canvas>
+        <div class="spend-layout">
+          <div>
+            <div class="chart-container" style="max-height: 280px;">
+              <canvas id="chartSpending"></canvas>
+            </div>
+            <p class="insight">Price per head has risen in step, climbing from &pound;63 to &pound;102 over the same period. Budgets are growing, but so is the cost of delivering a great experience.</p>
+          </div>
+          <div class="industry-chart-wrap">
+            <h3>Average Spend by Industry</h3>
+            <div class="chart-container" style="max-height: 260px;">
+              <canvas id="chartSpendByIndustry"></canvas>
+            </div>
+            <p class="industry-footnote">Based on bookings matched to company segment data (~51% coverage)</p>
+          </div>
         </div>
 
         <div class="callout">
-          <strong>Median confirmed spend has more than doubled</strong> — from &pound;2,818 in 2022 to &pound;7,230 in 2025. The top quartile now exceeds &pound;21,000. The market is maturing, with larger, higher-value events becoming the norm.
+          Average confirmed spend has jumped from &pound;2,818 in 2022 to &pound;7,230 in 2025, with the top quartile now exceeding &pound;21,000. The picture varies by sector: B2B companies and professional services firms spend the most per booking, while agencies — who often book on behalf of clients — tend towards smaller individual bookings. Understanding where your industry sits helps set realistic budgets and negotiate effectively.
         </div>
-
-        <p class="insight">Price per head has risen in step, climbing from &pound;63 to &pound;102 over the same period. Budgets are growing, but so is the cost of delivering a great experience.</p>
       </div>
     </div>
 
@@ -197,7 +249,7 @@
 
         <div class="two-col">
           <div class="chart-col">
-            <h3>Median Total Spend</h3>
+            <h3>Average Confirmed Booking Value</h3>
             <div class="chart-container">
               <canvas id="chartCostByType"></canvas>
             </div>
@@ -211,7 +263,7 @@
         </div>
 
         <div class="callout">
-          <strong>Private events top &pound;18k median</strong>, while meetings come in under &pound;1k. Christmas parties and summer parties both cost &pound;100+ per head — budget accordingly for social and celebratory formats.
+          These figures are based on confirmed booking values — what companies actually paid, not initial budgets. Private events and award ceremonies command the highest total spend, reflecting their scale and prestige requirements. But the per-head picture tells a different story: private dining and Christmas parties top the list at over &pound;100 per head, driven by premium food and drink packages. If you're planning a social or celebratory event, budget accordingly — the per-head cost often surprises.
         </div>
       </div>
     </div>
@@ -224,49 +276,45 @@
 
         <div class="slide-5-layout">
           <div>
-            <div class="chart-container" style="max-height: 260px;">
+            <div class="chart-container" style="max-height: 300px;">
               <canvas id="chartLeadTimes"></canvas>
             </div>
 
-            <div class="conversion-chart-wrap">
-              <h3>Earlier Bookings Convert Better</h3>
-              <div class="chart-container" style="max-height: 180px;">
-                <canvas id="chartConversionLeadTime"></canvas>
+            <div class="callout" style="margin-top: 16px;">
+              Starting earlier doesn't just reduce stress — it gives you access to better venues and stronger negotiating power. The most popular dates fill months in advance, especially for large-format events. Organisers who plan ahead consistently report more choice and better pricing.
+            </div>
+          </div>
+
+          <div>
+            <p class="lead-time-stats-title">Average Lead Times by Event Type</p>
+            <div class="lead-time-stats">
+              <div class="stat-card">
+                <div class="stat-value">155 days</div>
+                <div class="stat-label">Award Ceremonies</div>
+                <div class="stat-detail">High-profile events with complex logistics — start 5+ months out to secure prestige venues</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">114 days</div>
+                <div class="stat-label">Conferences</div>
+                <div class="stat-detail">Large capacity venues book up fast — begin your search nearly 4 months ahead</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">104 days</div>
+                <div class="stat-label">Summer Parties</div>
+                <div class="stat-detail">Peak-season demand means the best outdoor and rooftop spaces go early</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">103 days</div>
+                <div class="stat-label">Christmas Parties</div>
+                <div class="stat-detail">December availability shrinks fast — 3+ months lead time is now standard</div>
               </div>
             </div>
           </div>
-
-          <div class="lead-time-stats">
-            <div class="stat-card">
-              <div class="stat-value">84 days</div>
-              <div class="stat-label">Median Lead Time (2025)</div>
-              <div class="stat-detail">Up from 60 days in 2022</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">155 days</div>
-              <div class="stat-label">Award Ceremonies</div>
-              <div class="stat-detail">Plan 5+ months ahead</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">114 days</div>
-              <div class="stat-label">Conferences</div>
-              <div class="stat-detail">Nearly 4 months lead time</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">103 days</div>
-              <div class="stat-label">Christmas Parties</div>
-              <div class="stat-detail">3+ months is the norm</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="callout">
-          <strong>Lead times have grown 40% since 2022.</strong> Award ceremonies need 5+ months. Confirmation rates nearly double when you book 4+ months out compared to under 2 weeks.
         </div>
       </div>
     </div>
 
-    <!-- ========== SLIDE 6: SEASONALITY ========== -->
+    <!-- ========== SLIDE 6: SEASONALITY OVERVIEW ========== -->
     <div class="section dark-slide" data-tooltip="Seasonality">
       <div class="slide-inner">
         <p class="section-label">SEASONALITY</p>
@@ -288,32 +336,71 @@
         </div>
 
         <div class="callout">
-          <strong>Thursday is the most popular event day</strong> — accounting for 29% of all confirmed bookings. Nov/Dec is peak season with 26% of all events. June and Sep/Oct are secondary peaks. If you need flexibility, target quieter months like January, April, or August.
+          The corporate events calendar follows predictable rhythms driven by budget cycles and seasonal traditions. November and December account for over a quarter of all events, fuelled by Christmas parties and year-end celebrations. June and September/October form secondary peaks as companies book summer socials and post-holiday conferences. Thursday dominates as the preferred event day — close enough to the weekend to feel celebratory, but still a working day. If you need flexibility on pricing and availability, January, April, and August are consistently the quietest months.
         </div>
       </div>
     </div>
 
-    <!-- ========== SLIDE 7: CATEGORY TRENDS ========== -->
-    <div class="section light-slide" data-tooltip="Category Trends">
+    <!-- ========== SLIDE 7: SEASONAL PATTERNS (NEW) ========== -->
+    <div class="section light-slide" data-tooltip="Seasonal Patterns">
+      <div class="slide-inner">
+        <p class="section-label">SEASONAL PATTERNS</p>
+        <h2>Every Event Type Has Its Season</h2>
+
+        <div class="seasonal-grid">
+          <div class="seasonal-cell">
+            <h4>Christmas Parties</h4>
+            <div class="chart-container">
+              <canvas id="chartSeasonXmas"></canvas>
+            </div>
+          </div>
+          <div class="seasonal-cell">
+            <h4>Summer Parties</h4>
+            <div class="chart-container">
+              <canvas id="chartSeasonSummer"></canvas>
+            </div>
+          </div>
+          <div class="seasonal-cell">
+            <h4>Conferences</h4>
+            <div class="chart-container">
+              <canvas id="chartSeasonConf"></canvas>
+            </div>
+          </div>
+          <div class="seasonal-cell">
+            <h4>Corporate Parties</h4>
+            <div class="chart-container">
+              <canvas id="chartSeasonCorpParty"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout">
+          Understanding these seasonal fingerprints is key to smart planning. Christmas parties are almost entirely concentrated in December, which creates intense competition for venues. Summer parties spread across June–September, giving slightly more flexibility. Conferences follow a twin-peak pattern in June and September, avoiding the summer holiday lull. Corporate parties are the most evenly distributed — their Q4 spike reflects end-of-year celebrations, but they run year-round. Knowing when your event type peaks helps you plan ahead of the rush and secure better options.
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 8: CATEGORY TRENDS ========== -->
+    <div class="section dark-slide" data-tooltip="Category Trends">
       <div class="slide-inner">
         <p class="section-label">CATEGORY TRENDS</p>
         <h2>How the Event Mix Is Shifting</h2>
 
-        <div class="chart-container" style="max-height: 360px;">
+        <div class="chart-container" style="max-height: 340px;">
           <canvas id="chartCategoryTrend"></canvas>
         </div>
 
         <div class="callout">
-          <strong>Conferences surged post-COVID but are normalising.</strong> Corporate parties and networking events are on the rise. Meetings are steadily declining as a share of the mix — companies are investing more in higher-impact event formats.
+          The shape of corporate events is changing. Conferences have seen the most dramatic growth — enquiry volumes quadrupled between 2022 and 2024 as companies doubled down on in-person knowledge sharing and networking. Corporate parties remain the steadiest category, reflecting consistent demand for team celebrations. Meetings, once the dominant format, have declined as companies shift budgets towards higher-impact, more experiential gatherings. Summer parties and award ceremonies are both on upward trajectories, signalling a broader move towards events that inspire and reward.
         </div>
       </div>
     </div>
 
-    <!-- ========== SLIDE 8: VENUE SHOPPING ========== -->
-    <div class="section dark-slide" data-tooltip="Venue Sourcing">
+    <!-- ========== SLIDE 9: VENUE SOURCING ========== -->
+    <div class="section light-slide" data-tooltip="Venue Sourcing">
       <div class="slide-inner">
         <p class="section-label">VENUE SOURCING</p>
-        <h2>How Companies Compare Venues</h2>
+        <h2>Number of Venues Considered Per Enquiry</h2>
 
         <div class="two-col">
           <div class="chart-col">
@@ -323,40 +410,43 @@
             </div>
           </div>
           <div class="chart-col">
-            <h3>Venue Types Trending Up</h3>
+            <h3>Venue Types Gaining Share of Shortlists</h3>
             <div class="venue-trend-cards">
               <div class="venue-trend-card">
-                <div class="stat-value">+4pp</div>
+                <div class="stat-value">+4%</div>
                 <div class="stat-label">Hotels</div>
+                <div class="stat-detail">Share of shortlists</div>
               </div>
               <div class="venue-trend-card">
-                <div class="stat-value">+3pp</div>
+                <div class="stat-value">+3%</div>
                 <div class="stat-label">Bars</div>
+                <div class="stat-detail">Share of shortlists</div>
               </div>
               <div class="venue-trend-card">
-                <div class="stat-value">+2.5pp</div>
+                <div class="stat-value">+2.5%</div>
                 <div class="stat-label">Rooftops</div>
+                <div class="stat-detail">Share of shortlists</div>
               </div>
             </div>
-            <p class="insight" style="margin-top: 16px;">Hotels, bars, and restaurants are gaining share in venue shortlists. Meeting rooms are declining as organisers shift to more experiential settings.</p>
+            <p class="insight" style="margin-top: 16px;">Hotels, bars, and rooftops are appearing on more shortlists year on year. Meeting rooms are declining as organisers shift towards more experiential and versatile settings.</p>
           </div>
         </div>
 
         <div class="callout">
-          <strong>Organisers compare 73% more venues than in 2022</strong> — up from 3.7 to 6.4 per enquiry. Casting a wider net is now the norm. Use shortlisting tools to compare efficiently.
+          Organisers now compare 73% more venues than they did in 2022 — up from 3.7 to 6.4 per enquiry. This isn't indecision; it's smart sourcing. With higher budgets at stake, companies are investing more time in finding the right fit. The shift towards hotels, bars, and rooftops reflects a growing preference for venues that offer atmosphere and flexibility, not just function. If you're sourcing venues, cast a wide net early — the best options go to organisers who compare and act quickly.
         </div>
       </div>
     </div>
 
-    <!-- ========== SLIDE 9: GROUP SIZES ========== -->
-    <div class="section light-slide" data-tooltip="Group Sizes">
+    <!-- ========== SLIDE 10: GROUP SIZES ========== -->
+    <div class="section dark-slide" data-tooltip="Group Sizes">
       <div class="slide-inner">
         <p class="section-label">GROUP SIZES</p>
         <h2>How Big Are Corporate Events?</h2>
 
         <div class="two-col">
           <div class="chart-col">
-            <h3>Median Group Size Over Time</h3>
+            <h3>Average Group Size Over Time</h3>
             <div class="chart-container">
               <canvas id="chartGroupSizes"></canvas>
             </div>
@@ -370,82 +460,66 @@
         </div>
 
         <div class="callout">
-          <strong>Median group size has grown from 50 to 70.</strong> Award ceremonies average 200 guests, while meetings are typically 20. Larger events need earlier planning and bigger venue shortlists.
+          Average group sizes have grown from 50 to 70 people since 2022, and the top quartile now reaches 150. This steady increase has real implications for planning: larger groups need bigger venues with more lead time, and they drive up per-event spend even when per-head costs stay flat. Award ceremonies and gala dinners skew largest at 160–200 guests, while meetings and private dining stay intimate at 20–30. If your event is growing, factor in the venue capacity constraints — the most popular large-format venues book out months ahead.
         </div>
       </div>
     </div>
 
-    <!-- ========== SLIDE 10: CHRISTMAS PARTY ========== -->
+    <!-- ========== SLIDE 11: CHRISTMAS PARTY ========== -->
     <div class="section accent-slide" data-tooltip="Christmas Parties">
       <div class="slide-inner">
         <p class="section-label">CHRISTMAS PARTIES</p>
-        <h2>The Christmas Party Booking Cycle</h2>
+        <h2>The Christmas Party Playbook</h2>
 
-        <div class="xmas-grid">
+        <div class="xmas-layout">
           <div>
-            <h3>When Enquiries Arrive</h3>
-            <div class="chart-container" style="max-height: 200px;">
+            <h3>When Enquiries Arrive vs When Bookings Confirm</h3>
+            <div class="chart-container" style="max-height: 240px;">
               <canvas id="chartXmasEnquiry"></canvas>
             </div>
           </div>
-          <div>
-            <h3>When Bookings Close</h3>
-            <div class="chart-container" style="max-height: 200px;">
-              <canvas id="chartXmasClose"></canvas>
+
+          <div class="xmas-cards">
+            <div class="stat-card featured">
+              <div class="stat-value">Book by July</div>
+              <div class="stat-label">For the Best Selection</div>
+              <div class="stat-detail">47% of enquiries arrive Sep–Oct, but the best venues are already taken by then</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">50–100 people</div>
+              <div class="stat-label">Most Common Group Size</div>
+              <div class="stat-detail">35% of Christmas parties fall in this range, with a median of 90</div>
             </div>
           </div>
         </div>
 
-        <div class="xmas-stat-row">
-          <div class="stat-card">
-            <div class="stat-value">80–90</div>
-            <div class="stat-label">Median Group Size</div>
-            <div class="stat-detail">Growing to 90 in 2024/25</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">35%</div>
-            <div class="stat-label">Groups of 51–100</div>
-            <div class="stat-detail">Largest segment</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">23%</div>
-            <div class="stat-label">Groups of 101–200</div>
-            <div class="stat-detail">Nearly 1 in 4</div>
-          </div>
-        </div>
-
-        <div class="big-stat">
-          <div class="stat-value">9%</div>
-          <div class="stat-label">of Christmas party booking lines lost to "Date not available"</div>
-        </div>
-
         <div class="callout">
-          <strong>Book by July for the best selection.</strong> 47% of Christmas party enquiries arrive in Sep–Oct, but the best venues fill their December calendar well before then. Group sizes are growing — median is now 90. The bigger your party, the earlier you need to act.
+          Christmas parties are the most time-sensitive events in the corporate calendar. Nearly half of all enquiries arrive in September and October — but by then, the most popular December dates at sought-after venues are already booked. Our data shows that 9% of Christmas party booking lines are lost purely because the desired date wasn't available. The takeaway is simple: start your search in the spring, confirm by July, and you'll have the widest choice of venues and dates. With median group sizes now at 90 people, early planning isn't optional — it's the difference between your first-choice venue and whatever's left.
         </div>
       </div>
     </div>
 
-    <!-- ========== SLIDE 11: KEY TAKEAWAYS & CTA ========== -->
+    <!-- ========== SLIDE 12: KEY TAKEAWAYS & CTA ========== -->
     <div class="section cta-slide" data-tooltip="Key Takeaways">
       <div class="slide-inner">
         <h2>Plan Smarter in 2026</h2>
 
         <div class="insights-grid">
           <div class="insight-card">
-            <h3>Start Early</h3>
-            <p>Lead times have grown to 84 days. Book 3+ months out for the best availability and rates.</p>
+            <h3>Start Earlier Than You Think</h3>
+            <p>Average lead times now sit at 84 days, up 40% since 2022. The best venues fill up months ahead, especially for conferences and seasonal events. Starting 3–4 months out gives you real choice.</p>
           </div>
           <div class="insight-card">
-            <h3>Compare More Venues</h3>
-            <p>The typical organiser now compares 6+ venues. Cast a wide net to find the right fit and best value.</p>
+            <h3>Cast a Wider Net</h3>
+            <p>Organisers now compare 6+ venues per enquiry, up from fewer than 4 in 2022. With higher budgets at stake, thorough comparison shopping pays off in both quality and value.</p>
           </div>
           <div class="insight-card">
-            <h3>Budget for Growth</h3>
-            <p>Median spend has grown 157%. Price per head is now &pound;102. Plan budgets with current benchmarks, not last year's.</p>
+            <h3>Benchmark Your Budget</h3>
+            <p>Average spend varies widely by event type and industry. Use these benchmarks to set realistic budgets — and know that the market has moved significantly since pre-2023.</p>
           </div>
           <div class="insight-card">
-            <h3>Christmas Parties: Book by July</h3>
-            <p>Venues fill up fast. 47% of enquiries arrive Sep–Oct, but the best dates go earlier. Don't leave it late.</p>
+            <h3>Know Your Season</h3>
+            <p>Every event type has its peak. Christmas parties need spring planning; conferences compete for June and September dates. Understanding seasonal patterns helps you avoid the crunch.</p>
           </div>
         </div>
 
@@ -485,6 +559,7 @@
         'Cost by Type',
         'Lead Times',
         'Seasonality',
+        'Seasonal Patterns',
         'Category Trends',
         'Venue Sourcing',
         'Group Sizes',
