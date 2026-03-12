@@ -14,23 +14,23 @@ const DATA = {
     indexMedian: [100, 160, 204, 257] // 2022 = 100
   },
 
-  // ── Booking Values by Event Type ──
+  // ── Booking Values by Event Type (median2022 from Query A) ──
   valuesByCategory: [
-    { category: 'Private Event', median: 18222, n: 50 },
-    { category: 'Award Ceremony', median: 17043, n: 63 },
-    { category: 'Christmas Party', median: 12500, n: 184 },
-    { category: 'Ticketed Event', median: 11667, n: 93 },
-    { category: 'Summer Party', median: 11250, n: 137 },
-    { category: 'Networking', median: 10819, n: 140 },
-    { category: 'Conference', median: 10499, n: 376 },
+    { category: 'Private Event', median: 18222, median2022: 4264, n: 50 },
+    { category: 'Award Ceremony', median: 17043, median2022: 11000, n: 63 },
+    { category: 'Christmas Party', median: 12500, median2022: 10176, n: 184 },
+    { category: 'Ticketed Event', median: 11667, median2022: 2337, n: 93 },
+    { category: 'Summer Party', median: 11250, median2022: 3214, n: 137 },
+    { category: 'Networking', median: 10819, median2022: 7702, n: 140 },
+    { category: 'Conference', median: 10499, median2022: 9150, n: 376 },
     { category: 'Gala Dinner', median: 9010, n: 26 },
-    { category: 'Corporate Party', median: 5000, n: 249 },
-    { category: 'Private Dining', median: 4702, n: 161 },
-    { category: 'Presentation', median: 4174, n: 76 },
-    { category: 'Pop-Up', median: 4100, n: 130 },
-    { category: 'Product Launch', median: 3800, n: 41 },
-    { category: 'Screening', median: 2880, n: 232 },
-    { category: 'Meeting', median: 828, n: 513 }
+    { category: 'Corporate Party', median: 5000, median2022: 2585, n: 249 },
+    { category: 'Private Dining', median: 4702, median2022: 3172, n: 161 },
+    { category: 'Presentation', median: 4174, median2022: 1648, n: 76 },
+    { category: 'Pop-Up', median: 4100, median2022: 1833, n: 130 },
+    { category: 'Product Launch', median: 3800, median2022: 3600, n: 41 },
+    { category: 'Screening', median: 2880, median2022: 1403, n: 232 },
+    { category: 'Meeting', median: 828, median2022: 660, n: 513 }
   ],
 
   // ── Price Per Head ──
@@ -60,16 +60,16 @@ const DATA = {
     p25: [27, 33, 45, 40],
     p75: [111, 126, 156, 160],
     byCategory: [
-      { category: 'Award Ceremony', median: 155, p25: 86, p75: 264 },
-      { category: 'Gala Dinner', median: 138, p25: 86, p75: 173 },
-      { category: 'Conference', median: 114, p25: 62, p75: 189 },
-      { category: 'Summer Party', median: 104, p25: 64, p75: 147 },
-      { category: 'Christmas Party', median: 103, p25: 70, p75: 169 },
-      { category: 'Networking', median: 84, p25: 47, p75: 154 },
-      { category: 'Private Dining', median: 82, p25: 50, p75: 139 },
-      { category: 'Corporate Party', median: 72, p25: 34, p75: 130 },
-      { category: 'Pop-Up', median: 60, p25: 28, p75: 115 },
-      { category: 'Meeting', median: 42, p25: 17, p75: 86 }
+      { category: 'Award Ceremony', median: 155, median2022: null, p25: 86, p75: 264 },
+      { category: 'Gala Dinner', median: 138, median2022: null, p25: 86, p75: 173 },
+      { category: 'Conference', median: 114, median2022: 74, p25: 62, p75: 189 },
+      { category: 'Summer Party', median: 104, median2022: 90, p25: 64, p75: 147 },
+      { category: 'Christmas Party', median: 103, median2022: 103, p25: 70, p75: 169 },
+      { category: 'Networking', median: 84, median2022: 62, p25: 47, p75: 154 },
+      { category: 'Private Dining', median: 82, median2022: 64, p25: 50, p75: 139 },
+      { category: 'Corporate Party', median: 72, median2022: 55, p25: 34, p75: 130 },
+      { category: 'Pop-Up', median: 60, median2022: 66, p25: 28, p75: 115 },
+      { category: 'Meeting', median: 42, median2022: 29, p25: 17, p75: 86 }
     ],
     // Earlier bookings convert better
     conversionByLeadTime: [
@@ -119,6 +119,13 @@ const DATA = {
       'Christmas Party': [4, 0, 2, 1, 0, 0, 1, 0, 2, 0, 10, 80],
       'Summer Party':    [1, 1, 0, 5, 4, 26, 29, 10, 14, 1, 3, 6],
       'Corporate Party': [3, 3, 5, 7, 6, 9, 6, 4, 9, 14, 16, 16]
+    },
+    // When bookings are confirmed (close month distribution %)
+    closeByType: {
+      'Conference':      [9.6, 9.9, 10.1, 6.5, 7.0, 7.0, 8.4, 10.1, 9.7, 7.9, 7.7, 6.1],
+      'Christmas Party': [3.8, 3.4, 2.6, 3.2, 4.1, 4.4, 4.4, 6.8, 13.2, 21.8, 24.3, 7.9],
+      'Summer Party':    [3.2, 6.2, 13.6, 8.8, 16.2, 16.6, 16.2, 3.9, 5.2, 3.6, 4.2, 2.3],
+      'Corporate Party': [8.1, 8.0, 8.3, 7.3, 8.6, 8.9, 7.3, 10.0, 9.5, 9.8, 7.5, 6.7]
     }
   },
 
@@ -233,6 +240,8 @@ const DATA = {
     enquiryMonth: [1.9, 1.6, 3.3, 3.1, 4.5, 6.0, 9.5, 12.2, 23.2, 23.4, 8.8, 2.5],
     closeMonth:   [3.1, 2.6, 3.1, 3.6, 6.2, 4.1, 3.1, 8.8, 17.6, 22.3, 17.6, 7.8],
     eventMonth:   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10.4, 79.8],
+    // Average group size by enquiry month (larger groups enquire earlier)
+    groupSizeByEnquiryMonth: [216, 208, 228, 181, 183, 179, 158, 161, 147, 129, 114, 199],
     // Group sizes — big venues get booked up first
     groupSize: {
       median: 80, p25: 50, p75: 148,

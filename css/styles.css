@@ -385,6 +385,83 @@ p.insight {
   opacity: 0.35;
 }
 
+/* ── Hide fullpage.js watermark ── */
+.fp-watermark { display: none !important; }
+
+/* ── Trend arrows (lead times, venue sourcing) ── */
+.trend-arrow {
+  font-size: 0.6em;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.trend-arrow.up { color: var(--hs-green); }
+.trend-arrow.down { color: var(--hs-red); }
+
+/* ── Two-column callout text ── */
+.callout-two-col {
+  column-count: 2;
+  column-gap: 32px;
+}
+
+/* ── Deep-dive text-heavy slide ── */
+.deep-dive-text {
+  column-count: 2;
+  column-gap: 40px;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  margin-top: 16px;
+}
+.deep-dive-text p { margin-bottom: 14px; }
+.dark-slide .deep-dive-text { color: rgba(255,255,255,0.78); }
+.pull-quote {
+  background: rgba(0,168,44,0.12);
+  border-left: 3px solid var(--hs-green);
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--hs-green);
+  column-span: all;
+}
+
+/* ── Declining venue trend card ── */
+.venue-trend-card.declining .stat-value { color: var(--hs-red); }
+
+/* ── Sparkline legend ── */
+.sparkline-legend {
+  font-size: 0.65rem;
+  margin-top: 4px;
+  opacity: 0.55;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.sparkline-legend .dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: middle;
+}
+.sparkline-legend .dot.enquiry { background: var(--hs-green); }
+.sparkline-legend .dot.close { background: var(--hs-amber); }
+
+/* ── Ideal booking window overlay label ── */
+.booking-window-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--hs-green);
+  opacity: 0.7;
+  text-align: center;
+  margin-top: 2px;
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .slide-inner { padding: 40px 30px 30px; }
@@ -394,4 +471,9 @@ p.insight {
   .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .chart-row, .two-col, .two-col-wide-left, .insights-grid { grid-template-columns: 1fr; }
   .stat-card .stat-value { font-size: 1.5rem; }
+  .callout-two-col { column-count: 1; }
+  .deep-dive-text { column-count: 1; }
+  .seasonal-grid { grid-template-columns: 1fr !important; }
+  .xmas-layout, .slide-5-layout, .spend-layout { grid-template-columns: 1fr !important; }
+  .venue-trend-cards { flex-direction: column !important; }
 }

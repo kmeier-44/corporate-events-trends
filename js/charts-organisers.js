@@ -22,7 +22,55 @@ function tickColor(id) { return isDark(id) ? 'rgba(255,255,255,0.5)' : 'rgba(0,0
 function legendColor(id) { return isDark(id) ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)'; }
 const fmtGBP = v => '\u00A3' + v.toLocaleString('en-GB');
 
+// ── Dynamic Lead Time Cards with trend arrows ──
+function buildLeadTimeCards() {
+  const container = document.getElementById('leadTimeCards');
+  if (!container) return;
+
+  const descriptions = {
+    'Award Ceremony': 'High-profile events with complex logistics — start 5+ months out to secure prestige venues',
+    'Gala Dinner': 'Large formal events demanding premium venues — begin your search early',
+    'Conference': 'Large capacity venues book up fast — begin your search nearly 4 months ahead',
+    'Summer Party': 'Peak-season demand means the best outdoor and rooftop spaces go early',
+    'Christmas Party': 'December availability shrinks fast — 3+ months lead time is now standard',
+    'Networking': 'Growing lead times as networking events become larger and more popular',
+    'Private Dining': 'Intimate events with specific venue requirements — plan well ahead',
+    'Corporate Party': 'Versatile category but popular venues still need advance booking',
+    'Pop-Up': 'Flexible format but trending shorter lead times — act fast',
+    'Meeting': 'Shortest lead times, but planning ahead still secures better rooms'
+  };
+
+  // Show top 5 categories with data
+  const cats = DATA.leadTimes.byCategory.slice(0, 5);
+  cats.forEach(cat => {
+    const card = document.createElement('div');
+    card.className = 'stat-card';
+
+    let arrowHtml = '';
+    if (cat.median2022 !== null && cat.median2022 !== undefined) {
+      const diff = cat.median - cat.median2022;
+      if (diff > 0) {
+        arrowHtml = '<span class="trend-arrow up">\u2191 +' + diff + ' days</span>';
+      } else if (diff < 0) {
+        arrowHtml = '<span class="trend-arrow down">\u2193 ' + diff + ' days</span>';
+      } else {
+        arrowHtml = '<span class="trend-arrow" style="opacity:0.5;">— unchanged</span>';
+      }
+    }
+
+    card.innerHTML =
+      '<div class="stat-value">' + cat.median + ' days' + arrowHtml + '</div>' +
+      '<div class="stat-label">' + cat.category + '</div>' +
+      '<div class="stat-detail">' + (descriptions[cat.category] || '') + '</div>';
+
+    container.appendChild(card);
+  });
+}
+
 function initCharts() {
+
+  // ── Build dynamic lead time cards ──
+  buildLeadTimeCards();
 
   // ── chartSpending — Line with IQR band ──
   if (document.getElementById('chartSpending')) {
@@ -142,7 +190,7 @@ function initCharts() {
     });
   }
 
-  // ── chartCostByType — Horizontal bar, top 10 categories ──
+  // ── chartCostByType — Horizontal bar with historical tooltip ──
   if (document.getElementById('chartCostByType')) {
     const id = 'chartCostByType';
     const top10 = DATA.valuesByCategory.slice(0, 10);
@@ -164,7 +212,18 @@ function initCharts() {
         plugins: {
           legend: { display: false },
           tooltip: {
-            callbacks: { label: ctx => fmtGBP(ctx.parsed.x) }
+            callbacks: {
+              label: ctx => {
+                const cat = top10[ctx.dataIndex];
+                let label = fmtGBP(ctx.parsed.x);
+                if (cat.median2022) {
+                  const pctChange = Math.round(((cat.median - cat.median2022) / cat.median2022) * 100);
+                  const arrow = pctChange >= 0 ? '\u2191' : '\u2193';
+                  label += '  ' + arrow + ' ' + (pctChange >= 0 ? '+' : '') + pctChange + '% since 2022';
+                }
+                return label;
+              }
+            }
           }
         },
         scales: {
@@ -385,7 +444,7 @@ function initCharts() {
     });
   }
 
-  // ── Seasonal sparklines (4x small bar charts) ──
+  // ── Seasonal sparklines (4x bar + line combo charts) ──
   const seasonalTypes = [
     { canvasId: 'chartSeasonXmas', key: 'Christmas Party' },
     { canvasId: 'chartSeasonSummer', key: 'Summer Party' },
@@ -396,16 +455,42 @@ function initCharts() {
   seasonalTypes.forEach(({ canvasId, key }) => {
     if (document.getElementById(canvasId)) {
       const id = canvasId;
-      const values = DATA.seasonality.byType[key];
+      const enquiryValues = DATA.seasonality.byType[key];
+      const closeValues = DATA.seasonality.closeByType ? DATA.seasonality.closeByType[key] : null;
+
+      const datasets = [
+        {
+          label: 'Enquiry month',
+          data: enquiryValues,
+          backgroundColor: 'rgba(0,168,44,0.6)',
+          borderRadius: 3,
+          order: 2
+        }
+      ];
+
+      // Add close-date overlay line if data exists
+      if (closeValues) {
+        datasets.push({
+          label: 'Close month',
+          data: closeValues,
+          type: 'line',
+          borderColor: C.amber,
+          backgroundColor: C.amber,
+          pointRadius: 2,
+          pointHoverRadius: 4,
+          borderWidth: 2,
+          borderDash: [4, 2],
+          fill: false,
+          tension: 0.3,
+          order: 1
+        });
+      }
+
       new Chart(document.getElementById(id), {
         type: 'bar',
         data: {
           labels: DATA.seasonality.months,
-          datasets: [{
-            data: values,
-            backgroundColor: C.green,
-            borderRadius: 3
-          }]
+          datasets: datasets
         },
         options: {
           responsive: true,
@@ -413,7 +498,12 @@ function initCharts() {
           plugins: {
             legend: { display: false },
             tooltip: {
-              callbacks: { label: ctx => ctx.parsed.y + '%' }
+              callbacks: {
+                label: ctx => {
+                  const prefix = ctx.dataset.label || '';
+                  return prefix + ': ' + ctx.parsed.y + '%';
+                }
+              }
             }
           },
           scales: {
@@ -635,38 +725,89 @@ function initCharts() {
     });
   }
 
-  // ── chartXmasEnquiry — Overlaid enquiry + close month ──
+  // ── chartXmasEnquiry — Overlaid enquiry + close month + group size ──
   if (document.getElementById('chartXmasEnquiry')) {
     const id = 'chartXmasEnquiry';
+    const datasets = [
+      {
+        label: 'Enquiry month',
+        data: DATA.xmasParty.enquiryMonth,
+        borderColor: C.green,
+        backgroundColor: 'rgba(0,168,44,0.1)',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.3,
+        yAxisID: 'y'
+      },
+      {
+        label: 'Booking confirmed',
+        data: DATA.xmasParty.closeMonth,
+        borderColor: C.amber,
+        backgroundColor: C.amber,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        borderWidth: 2.5,
+        borderDash: [6, 3],
+        fill: false,
+        tension: 0.3,
+        yAxisID: 'y'
+      }
+    ];
+
+    // Add group size overlay if data exists
+    if (DATA.xmasParty.groupSizeByEnquiryMonth) {
+      datasets.push({
+        label: 'Avg group size',
+        data: DATA.xmasParty.groupSizeByEnquiryMonth,
+        borderColor: C.blue,
+        backgroundColor: C.blue,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        borderWidth: 2,
+        borderDash: [3, 3],
+        fill: false,
+        tension: 0.3,
+        yAxisID: 'y1'
+      });
+    }
+
+    const scales = {
+      x: {
+        grid: { color: gridColor(id) },
+        ticks: { color: tickColor(id) }
+      },
+      y: {
+        beginAtZero: true,
+        position: 'left',
+        grid: { color: gridColor(id) },
+        ticks: {
+          color: tickColor(id),
+          callback: v => v + '%'
+        }
+      }
+    };
+
+    // Add secondary axis for group size
+    if (DATA.xmasParty.groupSizeByEnquiryMonth) {
+      scales.y1 = {
+        beginAtZero: true,
+        position: 'right',
+        title: { display: true, text: 'Avg group size', color: tickColor(id), font: { size: 10 } },
+        grid: { drawOnChartArea: false },
+        ticks: {
+          color: C.blue,
+          font: { size: 10 }
+        }
+      };
+    }
+
     new Chart(document.getElementById(id), {
       type: 'line',
       data: {
         labels: DATA.xmasParty.months,
-        datasets: [
-          {
-            label: 'Enquiry month',
-            data: DATA.xmasParty.enquiryMonth,
-            borderColor: C.green,
-            backgroundColor: 'rgba(0,168,44,0.1)',
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            borderWidth: 2.5,
-            fill: true,
-            tension: 0.3
-          },
-          {
-            label: 'Booking confirmed',
-            data: DATA.xmasParty.closeMonth,
-            borderColor: C.amber,
-            backgroundColor: C.amber,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            borderWidth: 2.5,
-            borderDash: [6, 3],
-            fill: false,
-            tension: 0.3
-          }
-        ]
+        datasets: datasets
       },
       options: {
         responsive: true,
@@ -676,23 +817,15 @@ function initCharts() {
             labels: { color: legendColor(id) }
           },
           tooltip: {
-            callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '%' }
-          }
-        },
-        scales: {
-          x: {
-            grid: { color: gridColor(id) },
-            ticks: { color: tickColor(id) }
-          },
-          y: {
-            beginAtZero: true,
-            grid: { color: gridColor(id) },
-            ticks: {
-              color: tickColor(id),
-              callback: v => v + '%'
+            callbacks: {
+              label: ctx => {
+                if (ctx.dataset.yAxisID === 'y1') return ctx.dataset.label + ': ' + ctx.parsed.y + ' people';
+                return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '%';
+              }
             }
           }
-        }
+        },
+        scales: scales
       }
     });
   }
