@@ -260,21 +260,34 @@ p.insight {
   min-height: 0;
 }
 
-/* ── Insight callout ── */
+/* ── Slide body text (plain, no box) ── */
 .callout {
+  padding: 0;
+  margin-top: 16px;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  text-align: justify;
+}
+.dark-slide .callout {
+  color: rgba(255,255,255,0.8);
+}
+.callout strong { color: var(--hs-green); }
+
+/* ── Tip / takeaway box (green border, for actual callouts) ── */
+.tip-box {
   background: rgba(0, 168, 44, 0.1);
   border-left: 3px solid var(--hs-green);
   padding: 14px 20px;
   border-radius: 0 8px 8px 0;
-  margin-top: 20px;
+  margin-top: 16px;
   font-size: 0.9rem;
   line-height: 1.6;
 }
-.dark-slide .callout {
+.dark-slide .tip-box {
   background: rgba(0, 168, 44, 0.08);
   color: rgba(255,255,255,0.8);
 }
-.callout strong { color: var(--hs-green); }
 
 /* ── Key insights grid ── */
 .insights-grid {
@@ -399,19 +412,39 @@ p.insight {
 .trend-arrow.up { color: var(--hs-green); }
 .trend-arrow.down { color: var(--hs-red); }
 
-/* ── Two-column callout text ── */
+/* ── Two-column text grid (explicit column control) ── */
+.text-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  text-align: justify;
+}
 .callout-two-col {
   column-count: 2;
   column-gap: 32px;
+  text-align: justify;
 }
 
-/* ── Deep-dive text-heavy slide ── */
+/* ── Deep-dive grid (explicit L/R columns) ── */
+.deep-dive-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  margin-top: 16px;
+  text-align: justify;
+}
+.deep-dive-grid p { margin-bottom: 14px; }
+.dark-slide .deep-dive-grid { color: rgba(255,255,255,0.78); }
+/* Legacy class kept for compat */
 .deep-dive-text {
   column-count: 2;
   column-gap: 40px;
   font-size: 0.92rem;
   line-height: 1.75;
   margin-top: 16px;
+  text-align: justify;
 }
 .deep-dive-text p { margin-bottom: 14px; }
 .dark-slide .deep-dive-text { color: rgba(255,255,255,0.78); }
@@ -472,6 +505,8 @@ p.insight {
   .chart-row, .two-col, .two-col-wide-left, .insights-grid { grid-template-columns: 1fr; }
   .stat-card .stat-value { font-size: 1.5rem; }
   .callout-two-col { column-count: 1; }
+  .text-two-col { grid-template-columns: 1fr; }
+  .deep-dive-grid { grid-template-columns: 1fr; }
   .deep-dive-text { column-count: 1; }
   .seasonal-grid { grid-template-columns: 1fr !important; }
   .xmas-layout, .slide-5-layout, .spend-layout { grid-template-columns: 1fr !important; }

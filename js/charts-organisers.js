@@ -460,7 +460,7 @@ function initCharts() {
 
       const datasets = [
         {
-          label: 'Enquiry month',
+          label: 'Event date',
           data: enquiryValues,
           backgroundColor: 'rgba(0,168,44,0.6)',
           borderRadius: 3,
