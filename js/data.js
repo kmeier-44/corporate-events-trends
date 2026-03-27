@@ -320,23 +320,93 @@ const DATA = {
   // -- Industry Profiles (via companies.segment mapping) --
   // Source: Won booking lines summed per booking, mapped via companies.segment → industry group
   // Period: 2022-2025
+  // Industry profiles with cross-tabulated event type data (byEventType).
+  // byEventType keys match eventTypeProfiles keys. Only included where sample is sufficient.
+  // Comparisons show e.g. "what Financial Services spends on meetings" vs the overall meetings median.
   industryProfiles: [
     { industry: 'Financial Services', medianSpend: 11500, p25: 4540, p75: 30724, pph: 112, groupSize: 100, leadDays: 98,
-      hubspotValues: ['CAPITAL_MARKETS','INVESTMENT_MANAGEMENT','FINANCIAL_SERVICES','BANKING','INSURANCE','ACCOUNTING'] },
+      hubspotValues: ['CAPITAL_MARKETS','INVESTMENT_MANAGEMENT','FINANCIAL_SERVICES','BANKING','INSURANCE','ACCOUNTING'],
+      byEventType: {
+        'conference': { spend: 33598, pph: 192, groupSize: 200 },
+        'meeting': { spend: 2572, pph: 88, groupSize: 25 },
+        'christmasParty': { spend: 15800, pph: 110, groupSize: 135 },
+        'summerParty': { spend: 28194, pph: 158, groupSize: 250 },
+        'networkingEvent': { spend: 14000, pph: 125, groupSize: 100 }
+      }
+    },
     { industry: 'Professional Services', medianSpend: 4781, p25: 2073, p75: 15362, pph: 98, groupSize: 50, leadDays: 79,
-      hubspotValues: ['MANAGEMENT_CONSULTING','LAW_PRACTICE','LEGAL_SERVICES','HUMAN_RESOURCES','STAFFING_AND_RECRUITING','MARKET_RESEARCH'] },
+      hubspotValues: ['MANAGEMENT_CONSULTING','LAW_PRACTICE','LEGAL_SERVICES','HUMAN_RESOURCES','STAFFING_AND_RECRUITING','MARKET_RESEARCH'],
+      byEventType: {
+        'conference': { spend: 11267, pph: 110, groupSize: 75 },
+        'meeting': { spend: 2488, pph: 111, groupSize: 20 },
+        'christmasParty': { spend: 17045, pph: 110, groupSize: 130 },
+        'corporateParty': { spend: 3620, pph: 97, groupSize: 50 },
+        'summerParty': { spend: 4438, pph: 83, groupSize: 80 },
+        'networkingEvent': { spend: 10221, pph: 78, groupSize: 105 },
+        'corporatePrivateDining': { spend: 3413, pph: 183, groupSize: 20 }
+      }
+    },
     { industry: 'Technology', medianSpend: 8043, p25: 1966, p75: 18732, pph: 108, groupSize: 70, leadDays: 98,
-      hubspotValues: ['COMPUTER_SOFTWARE','INFORMATION_TECHNOLOGY_AND_SERVICES','TELECOMMUNICATIONS'] },
+      hubspotValues: ['COMPUTER_SOFTWARE','INFORMATION_TECHNOLOGY_AND_SERVICES','TELECOMMUNICATIONS'],
+      byEventType: {
+        'conference': { spend: 15667, pph: 130, groupSize: 100 },
+        'meeting': { spend: 1430, pph: 76, groupSize: 20 },
+        'christmasParty': { spend: 12000, pph: 117, groupSize: 110 },
+        'corporateParty': { spend: 2015, pph: 50, groupSize: 55 },
+        'summerParty': { spend: 11952, pph: 101, groupSize: 120 },
+        'networkingEvent': { spend: 10062, pph: 113, groupSize: 100 },
+        'corporatePrivateDining': { spend: 5644, pph: 129, groupSize: 34 }
+      }
+    },
     { industry: 'Education & Training', medianSpend: 7150, p25: 1541, p75: 23076, pph: 86, groupSize: 100, leadDays: 105,
-      hubspotValues: ['PROFESSIONAL_TRAINING_COACHING','HIGHER_EDUCATION','EDUCATION_MANAGEMENT'] },
+      hubspotValues: ['PROFESSIONAL_TRAINING_COACHING','HIGHER_EDUCATION','EDUCATION_MANAGEMENT'],
+      byEventType: {
+        'conference': { spend: 9600, pph: 72, groupSize: 100 },
+        'meeting': { spend: 523, pph: 47, groupSize: 11 },
+        'corporateParty': { spend: 2148, pph: 33, groupSize: 38 },
+        'networkingEvent': { spend: 19563, pph: 92, groupSize: 100 },
+        'corporatePrivateDining': { spend: 3226, pph: 83, groupSize: 75 }
+      }
+    },
     { industry: 'Retail & Consumer', medianSpend: 7313, p25: 1243, p75: 16694, pph: 76, groupSize: 77, leadDays: 74,
-      hubspotValues: ['RETAIL','CONSUMER_SERVICES','CONSUMER_GOODS','APPAREL_FASHION','LUXURY_GOODS_JEWELRY'] },
+      hubspotValues: ['RETAIL','CONSUMER_SERVICES','CONSUMER_GOODS','APPAREL_FASHION','LUXURY_GOODS_JEWELRY'],
+      byEventType: {
+        'conference': { spend: 9404, pph: 80, groupSize: 115 },
+        'meeting': { spend: 828, pph: 57, groupSize: 22 },
+        'christmasParty': { spend: 16839, pph: 141, groupSize: 110 },
+        'corporateParty': { spend: 5223, pph: 65, groupSize: 60 },
+        'awardCeremony': { spend: 16925, pph: 81, groupSize: 200 },
+        'networkingEvent': { spend: 4385, pph: 44, groupSize: 100 },
+        'corporatePrivateDining': { spend: 16320, pph: 160, groupSize: 55 }
+      }
+    },
     { industry: 'Property & Construction', medianSpend: 4098, p25: 1075, p75: 10104, pph: 77, groupSize: 42, leadDays: 71,
-      hubspotValues: ['REAL_ESTATE','CONSTRUCTION','CIVIL_ENGINEERING','ARCHITECTURE_PLANNING'] },
+      hubspotValues: ['REAL_ESTATE','CONSTRUCTION','CIVIL_ENGINEERING','ARCHITECTURE_PLANNING'],
+      byEventType: {
+        'conference': { spend: 6069, pph: 76, groupSize: 80 },
+        'meeting': { spend: 1100, pph: 72, groupSize: 20 },
+        'christmasParty': { spend: 9714, pph: 115, groupSize: 70 }
+      }
+    },
     { industry: 'Media & Marketing', medianSpend: 5500, p25: 1666, p75: 15300, pph: 79, groupSize: 60, leadDays: 65,
-      hubspotValues: ['MARKETING_AND_ADVERTISING','PUBLIC_RELATIONS_AND_COMMUNICATIONS','PUBLISHING','ENTERTAINMENT'] },
+      hubspotValues: ['MARKETING_AND_ADVERTISING','PUBLIC_RELATIONS_AND_COMMUNICATIONS','PUBLISHING','ENTERTAINMENT'],
+      byEventType: {
+        'conference': { spend: 8000, pph: 91, groupSize: 100 },
+        'meeting': { spend: 1381, pph: 62, groupSize: 20 },
+        'christmasParty': { spend: 10833, pph: 80, groupSize: 130 },
+        'corporateParty': { spend: 10000, pph: 65, groupSize: 120 },
+        'summerParty': { spend: 7587, pph: 79, groupSize: 100 },
+        'awardCeremony': { spend: 14328, pph: 51, groupSize: 280 },
+        'networkingEvent': { spend: 5337, pph: 81, groupSize: 70 },
+        'corporatePrivateDining': { spend: 5319, pph: 225, groupSize: 20 }
+      }
+    },
     { industry: 'Healthcare & Pharma', medianSpend: 3800, p25: 417, p75: 12000, pph: 45, groupSize: 70, leadDays: 61,
-      hubspotValues: ['HOSPITAL_HEALTH_CARE','PHARMACEUTICALS','COSMETICS'] }
+      hubspotValues: ['HOSPITAL_HEALTH_CARE','PHARMACEUTICALS','COSMETICS'],
+      byEventType: {
+        'meeting': { spend: 400, pph: 21, groupSize: 20 }
+      }
+    }
   ],
 
   // -- Event Type Profiles (from won booking lines, 2022-2025) --

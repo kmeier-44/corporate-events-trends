@@ -521,76 +521,92 @@ function initCharts() {
     }
   });
 
-  // ── chartCategoryTrend — Multi-line, enquiry volume index (2022=100) ──
+  // ── chartCategoryTrend — Horizontal bar, % change in enquiry volume 2022→2025 ──
   if (document.getElementById('chartCategoryTrend')) {
     const id = 'chartCategoryTrend';
-    const catNames = ['Conference', 'Corporate Party', 'Meeting', 'Christmas Party', 'Networking', 'Summer Party', 'Award Ceremony', 'Private Dining'];
     const indexes = DATA.categoryMix.enquiryIndex;
-    const datasets = catNames.filter(name => indexes[name]).map((name, i) => ({
-      label: name,
-      data: indexes[name],
-      borderColor: palette[i],
-      backgroundColor: palette[i],
-      pointRadius: 4,
-      pointHoverRadius: 6,
-      borderWidth: 2,
-      tension: 0.2,
-      fill: false
-    }));
+    const marketGrowth = DATA.marketVolume ? DATA.marketVolume.enquiryIndex[3] - 100 : null;
 
-    // Add market total as a dashed reference line
-    if (DATA.marketVolume) {
-      datasets.push({
-        label: 'Total Market',
-        data: DATA.marketVolume.enquiryIndex,
-        borderColor: 'rgba(255,255,255,0.35)',
-        backgroundColor: 'transparent',
-        pointRadius: 0,
-        borderWidth: 1.5,
-        borderDash: [6, 4],
-        tension: 0.2,
-        fill: false
-      });
-    }
+    // Build array of {name, change} and sort descending by change
+    const items = Object.keys(indexes).map(name => ({
+      name: name,
+      change: indexes[name][3] - 100  // 2025 index minus baseline
+    })).sort((a, b) => b.change - a.change);
 
-    new Chart(document.getElementById(id), {
-      type: 'line',
+    const barColors = items.map(item =>
+      marketGrowth !== null && item.change >= marketGrowth
+        ? C.green                          // above market
+        : 'rgba(255, 255, 255, 0.25)'     // below market
+    );
+
+    const chart = new Chart(document.getElementById(id), {
+      type: 'bar',
       data: {
-        labels: DATA.categoryMix.years,
-        datasets: datasets
+        labels: items.map(d => d.name),
+        datasets: [{
+          label: '% change since 2022',
+          data: items.map(d => d.change),
+          backgroundColor: barColors,
+          borderRadius: 4,
+          barThickness: 26
+        }]
       },
       options: {
+        indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: {
-            labels: { color: legendColor(id) }
-          },
+          legend: { display: false },
           tooltip: {
             callbacks: {
               label: ctx => {
-                const val = ctx.parsed.y;
-                const change = val - 100;
-                const sign = change >= 0 ? '+' : '';
-                return ctx.dataset.label + ': ' + val + ' (' + sign + change + '% vs 2022)';
+                const val = ctx.parsed.x;
+                return (val >= 0 ? '+' : '') + val + '% vs 2022';
               }
             }
-          }
+          },
+          // Draw a vertical reference line for total market growth
+          annotation: undefined  // handled via custom plugin below
         },
         scales: {
           x: {
             grid: { color: gridColor(id) },
-            ticks: { color: tickColor(id) }
-          },
-          y: {
-            grid: { color: gridColor(id) },
             ticks: {
               color: tickColor(id),
-              callback: v => v === 100 ? '2022 baseline' : v
+              callback: v => (v >= 0 ? '+' : '') + v + '%'
             }
+          },
+          y: {
+            grid: { display: false },
+            ticks: { color: tickColor(id), font: { size: 12 } }
           }
         }
-      }
+      },
+      plugins: marketGrowth !== null ? [{
+        id: 'marketLine',
+        afterDraw: function (chart) {
+          const xScale = chart.scales.x;
+          const yScale = chart.scales.y;
+          const ctx = chart.ctx;
+          const x = xScale.getPixelForValue(marketGrowth);
+
+          ctx.save();
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([6, 4]);
+          ctx.beginPath();
+          ctx.moveTo(x, yScale.top);
+          ctx.lineTo(x, yScale.bottom);
+          ctx.stroke();
+
+          // Label
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+          ctx.font = '11px ' + (Chart.defaults.font.family || 'sans-serif');
+          ctx.textAlign = 'center';
+          ctx.fillText('Market +' + marketGrowth + '%', x, yScale.top - 6);
+          ctx.restore();
+        }
+      }] : []
     });
   }
 

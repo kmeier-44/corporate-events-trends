@@ -163,16 +163,16 @@
 
     // Inject industry comparison if we have an industry match
     if (industryProfile) {
-      injectIndustryComparison(slide, profile, industryProfile);
+      injectIndustryComparison(slide, profile, industryProfile, key);
     }
   }
 
   // ── Industry comparison insights injected into event type slides ──
-  function injectIndustryComparison(slide, eventProfile, indProfile) {
+  function injectIndustryComparison(slide, eventProfile, indProfile, eventTypeKey) {
     var container = slide.querySelector('.pe-industry-comparison');
     if (!container) return;
 
-    var insights = generateComparisonInsights(eventProfile, indProfile);
+    var insights = generateComparisonInsights(eventProfile, indProfile, eventTypeKey);
     if (insights.length === 0) return;
 
     // Build heading
@@ -220,47 +220,57 @@
   }
 
   // ── Generate comparison data points ──
-  // Direction: how the viewer's INDUSTRY compares to this event type's average
-  function generateComparisonInsights(eventProfile, indProfile) {
+  // Uses industry x event type cross-tab data (byEventType) for spend, PPH, and group size.
+  // This compares e.g. "what Financial Services spends on meetings" vs "what everyone spends on meetings".
+  // Cards only appear when cross-tab data is available — no fallback to industry overall.
+  // Lead time uses industry overall (cross-tab not available).
+  function generateComparisonInsights(eventProfile, indProfile, eventTypeKey) {
     var insights = [];
+    var crossTab = indProfile.byEventType && indProfile.byEventType[eventTypeKey];
 
-    // Spend comparison (industry vs event type)
-    var spendDelta = indProfile.medianSpend - eventProfile.spend.median;
-    var spendPct = Math.round((spendDelta / eventProfile.spend.median) * 100);
-    insights.push({
-      label: 'Your Industry Spend',
-      delta: (spendPct >= 0 ? '+' : '') + spendPct + '%',
-      detail: formatCurrency(indProfile.medianSpend) + ' vs ' + formatCurrency(eventProfile.spend.median) + ' event type median',
-      direction: spendPct >= 0 ? 'higher' : 'lower'
-    });
+    function formatDelta(pct) {
+      if (Math.abs(pct) > 200) {
+        return pct > 0 ? 'Much higher' : 'Much lower';
+      }
+      return (pct >= 0 ? '+' : '') + pct + '%';
+    }
 
-    // PPH comparison (industry vs event type)
-    var pphDelta = indProfile.pph - eventProfile.pph;
-    var pphPct = Math.round((pphDelta / eventProfile.pph) * 100);
-    insights.push({
-      label: 'Your Per Head Cost',
-      delta: (pphPct >= 0 ? '+' : '') + pphPct + '%',
-      detail: formatCurrency(indProfile.pph) + ' vs ' + formatCurrency(eventProfile.pph) + ' event type average',
-      direction: pphPct >= 0 ? 'higher' : 'lower'
-    });
+    // Only show spend, PPH, and group size cards when we have cross-tab data
+    if (crossTab) {
+      // Spend comparison
+      var spendPct = Math.round(((crossTab.spend - eventProfile.spend.median) / eventProfile.spend.median) * 100);
+      insights.push({
+        label: 'Your Industry Spend',
+        delta: formatDelta(spendPct),
+        detail: formatCurrency(crossTab.spend) + ' vs ' + formatCurrency(eventProfile.spend.median) + ' overall median',
+        direction: spendPct >= 0 ? 'higher' : 'lower'
+      });
 
-    // Group size comparison (industry vs event type)
-    var groupDelta = indProfile.groupSize - eventProfile.groupSize.median;
-    var groupPct = Math.round((groupDelta / eventProfile.groupSize.median) * 100);
-    insights.push({
-      label: 'Your Group Size',
-      delta: (groupPct >= 0 ? '+' : '') + groupPct + '%',
-      detail: indProfile.groupSize + ' vs ' + eventProfile.groupSize.median + ' event type average',
-      direction: groupPct >= 0 ? 'larger' : 'smaller'
-    });
+      // PPH comparison
+      var pphPct = Math.round(((crossTab.pph - eventProfile.pph) / eventProfile.pph) * 100);
+      insights.push({
+        label: 'Your Per Head Cost',
+        delta: formatDelta(pphPct),
+        detail: formatCurrency(crossTab.pph) + ' vs ' + formatCurrency(eventProfile.pph) + ' overall median',
+        direction: pphPct >= 0 ? 'higher' : 'lower'
+      });
 
-    // Lead time comparison (industry vs event type)
-    var leadDelta = indProfile.leadDays - eventProfile.leadDays.median;
-    var leadPct = Math.round((leadDelta / eventProfile.leadDays.median) * 100);
+      // Group size comparison
+      var groupPct = Math.round(((crossTab.groupSize - eventProfile.groupSize.median) / eventProfile.groupSize.median) * 100);
+      insights.push({
+        label: 'Your Group Size',
+        delta: formatDelta(groupPct),
+        detail: crossTab.groupSize + ' vs ' + eventProfile.groupSize.median + ' overall median',
+        direction: groupPct >= 0 ? 'larger' : 'smaller'
+      });
+    }
+
+    // Lead time — always uses industry overall (not available per event type in cross-tab)
+    var leadPct = Math.round(((indProfile.leadDays - eventProfile.leadDays.median) / eventProfile.leadDays.median) * 100);
     insights.push({
       label: 'Your Lead Time',
-      delta: (leadPct >= 0 ? '+' : '') + leadPct + '%',
-      detail: indProfile.leadDays + ' vs ' + eventProfile.leadDays.median + ' days event type average',
+      delta: formatDelta(leadPct),
+      detail: indProfile.leadDays + ' days vs ' + eventProfile.leadDays.median + ' days overall',
       direction: leadPct >= 0 ? 'longer' : 'shorter'
     });
 
