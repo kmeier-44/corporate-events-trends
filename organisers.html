@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Data Behind Better Events | Corporate Events Booking Trends 2022–2025 | Hire Space</title>
+  <meta name="description" content="Spending benchmarks, lead times, and seasonal patterns from 40,000+ corporate enquiries — plan your next corporate event with confidence.">
+
+  <!-- Fonts (loaded via styles.css @import, but preconnect for speed) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- fullPage.js CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.25/fullpage.min.css">
+
+  <!-- Brand stylesheet -->
+  <link rel="stylesheet" href="css/styles.css?v=3">
+
+  <!-- Personalisation: loading overlay (must be injected before DOM ready) -->
+  <script>
+  (function() {
+    if (new URLSearchParams(window.location.search).get('cid')) {
+      document.write('<div class="personalise-overlay" id="personalise-overlay"><div class="personalise-overlay__inner"><div class="personalise-overlay__spinner"></div><div class="personalise-overlay__text">Preparing your personalised report...</div></div></div>');
+    }
+  })();
+  </script>
+
+  <style>
+    /* Page-specific overrides */
+    .xmas-layout {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 32px;
+      align-items: start;
+    }
+    .xmas-layout .chart-container {
+      margin-top: 0;
+    }
+    .xmas-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .xmas-cards .stat-card {
+      text-align: left;
+      padding: 16px 20px;
+    }
+    .xmas-cards .stat-card.featured {
+      background: rgba(0, 168, 44, 0.15);
+      border-color: rgba(0, 168, 44, 0.3);
+    }
+    .venue-trend-cards {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .venue-trend-card {
+      flex: 1;
+      min-width: 100px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 14px 16px;
+      text-align: center;
+    }
+    .venue-trend-card .stat-value {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: var(--hs-green);
+    }
+    .venue-trend-card .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 4px;
+      opacity: 0.7;
+    }
+    .venue-trend-card .stat-detail {
+      font-size: 0.7rem;
+      margin-top: 2px;
+      opacity: 0.5;
+    }
+    .slide-5-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+    .lead-time-stats-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: var(--hs-green);
+    }
+    .lead-time-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .lead-time-stats .stat-card {
+      text-align: left;
+      padding: 8px 14px;
+    }
+    .lead-time-stats .stat-card .stat-value {
+      font-size: 1.15rem;
+    }
+    .lead-time-stats .stat-card .stat-label {
+      font-size: 0.7rem;
+    }
+    .lead-time-stats .stat-card .stat-detail {
+      font-size: 0.65rem;
+      line-height: 1.3;
+    }
+    .preferred-badge {
+      display: inline-block;
+      font-size: 0.55rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--hs-green);
+      background: rgba(0, 168, 44, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 2px;
+    }
+    .seasonal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 20px;
+      margin-top: 16px;
+    }
+    .seasonal-grid .seasonal-cell {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 14px 16px 10px;
+    }
+    .seasonal-cell h4 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      color: var(--hs-green);
+    }
+    .seasonal-cell .chart-container {
+      margin-top: 0;
+      max-height: 120px;
+    }
+    .light-slide .seasonal-grid .seasonal-cell {
+      background: rgba(255, 255, 255, 0.85);
+      border: none;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+      padding: 16px 18px 12px;
+    }
+    .light-slide .seasonal-cell h4 {
+      color: var(--hs-green);
+    }
+    .spend-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 32px;
+      align-items: start;
+    }
+    .industry-chart-wrap h3 {
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+    .industry-footnote {
+      font-size: 0.72rem;
+      opacity: 0.5;
+      margin-top: 8px;
+      font-style: italic;
+    }
+    .event-type-trends-takeaway {
+      font-size: 0.72rem;
+      opacity: 0.5;
+      margin-top: 20px;
+      font-style: italic;
+    }
+    @media (max-width: 900px) {
+      .xmas-layout, .slide-5-layout, .spend-layout { grid-template-columns: 1fr; }
+      .seasonal-grid { grid-template-columns: 1fr; }
+      .venue-trend-cards { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fixed logo -->
+  <div class="logo-fixed">
+    <img id="logoImg" src="assets/logo-white.png" alt="Hire Space">
+  </div>
+
+  <!-- Sticky CTA (appears after title slide) -->
+  <div class="sticky-cta" id="stickyCta">
+    <a href="https://hirespace.com/search" class="sticky-cta__btn" target="_blank" rel="noopener">
+      Start Your Venue Search <span>&rarr;</span>
+    </a>
+  </div>
+
+  <div id="fullpage">
+
+    <!-- ========== SLIDE 1: TITLE ========== -->
+    <div class="section title-slide" data-tooltip="">
+      <div class="slide-bg"></div>
+      <div class="slide-inner">
+        <span class="year-badge">Powered by Real Booking Data</span>
+        <h1>The Data Behind Better Events</h1>
+        <p class="subtitle">Spending benchmarks, lead times, and seasonal patterns from 40,000+ corporate enquiries — so you can plan with confidence</p>
+        <p style="margin-top: 24px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.5;">For Event Organisers</p>
+      </div>
+      <div class="scroll-indicator" onclick="fullpage_api.moveSectionDown()">
+        <span class="scroll-indicator__text">Scroll to explore</span>
+        <div class="scroll-indicator__arrow"></div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 2: EXECUTIVE SUMMARY ========== -->
+    <div class="section dark-slide" data-tooltip="At a Glance">
+      <div class="slide-inner">
+        <p class="section-label">AT A GLANCE</p>
+        <h2>The Corporate Events Market at a Glance</h2>
+
+        <div class="callout">
+          Corporate event spending has risen by over a third since 2023, with median bookings now exceeding &pound;11,000. This reflects a sustained shift towards higher-impact formats and longer planning cycles. Lead times have grown, organisers are comparing more venues, and price per head has remained above &pound;100 for three consecutive years. For organisers, the message is clear: plan earlier, benchmark smarter, and compare more venues to get the best value from rising budgets.
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-value">+34%</div>
+            <div class="stat-label">Booking Values</div>
+            <div class="stat-detail">&pound;8,562 &rarr; &pound;11,500 since 2023</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">+25%</div>
+            <div class="stat-label">Venues Compared</div>
+            <div class="stat-detail">2.8 &rarr; 3.5 per enquiry since 2022</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">+7%</div>
+            <div class="stat-label">Price Per Head</div>
+            <div class="stat-detail">&pound;101 &rarr; &pound;108 since 2023</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">+19%</div>
+            <div class="stat-label">Lead Times</div>
+            <div class="stat-detail">93 &rarr; 111 days since 2022</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 3: WHAT COMPANIES SPEND ========== -->
+    <div class="section light-slide" data-tooltip="Spending">
+      <div class="slide-inner">
+        <p class="section-label">SPENDING BENCHMARKS</p>
+        <h2>What Companies Are Actually Spending</h2>
+
+        <div class="callout text-two-col">
+          <div>Average confirmed spend has risen from &pound;8,562 in 2023 to &pound;11,500 in 2025, with the top quartile now exceeding &pound;21,000. Travel, media, and property companies lead the way, investing significantly more per booking than other sectors.</div>
+          <div>Understanding where your industry sits on this spectrum helps set realistic budgets, benchmark against peers, and negotiate effectively with venues.</div>
+        </div>
+
+        <div class="spend-layout">
+          <div>
+            <div class="chart-container" style="max-height: 280px;">
+              <canvas id="chartSpending"></canvas>
+            </div>
+            <p class="insight">Price per head sits at &pound;101–&pound;108 across 2023–2025. Budgets are growing, but so is the cost of delivering a great experience.</p>
+          </div>
+          <div class="industry-chart-wrap">
+            <h3>Average Spend by Industry</h3>
+            <div class="chart-container" style="max-height: 260px;">
+              <canvas id="chartSpendByIndustry"></canvas>
+            </div>
+            <p class="industry-footnote">Based on bookings matched to company segment data (~51% coverage)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 4: COST BY EVENT TYPE ========== -->
+    <div class="section dark-slide" data-tooltip="Cost by Type">
+      <div class="slide-inner">
+        <p class="section-label">COST BY EVENT TYPE</p>
+        <h2>What Different Events Cost</h2>
+
+        <div class="callout text-two-col">
+          <div>Exhibitions and product launches command the highest total spend, often exceeding &pound;15,000 per booking. Gala dinners and award ceremonies follow close behind. Per-head costs tell a different story — product launches, exhibitions, and networking events top the list at &pound;125+ per head.</div>
+          <div>Christmas parties and private dining also carry premium per-head costs, driven by food and drink packages. If you're planning a social or celebratory event, budget accordingly — the per-head cost often surprises first-time organisers.</div>
+        </div>
+
+        <div class="two-col">
+          <div class="chart-col">
+            <h3>Average Confirmed Booking Value</h3>
+            <div class="chart-container">
+              <canvas id="chartCostByType"></canvas>
+            </div>
+          </div>
+          <div class="chart-col">
+            <h3>Price Per Head</h3>
+            <div class="chart-container">
+              <canvas id="chartPricePerHead"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 5: LEAD TIMES ========== -->
+    <div class="section light-slide" data-tooltip="Lead Times">
+      <div class="slide-inner">
+        <p class="section-label">LEAD TIMES</p>
+        <h2>When to Start Planning</h2>
+
+        <div class="slide-5-layout">
+          <div style="display: flex; flex-direction: column;">
+            <div class="callout" style="margin-top: 0; font-size: 0.82rem;">
+              Starting earlier gives you access to better venues and stronger negotiating power. The most popular dates fill months in advance, especially for large-format events.
+            </div>
+            <div class="chart-container" style="flex: 1; min-height: 0;">
+              <canvas id="chartLeadTimes"></canvas>
+            </div>
+          </div>
+
+          <div>
+            <p class="lead-time-stats-title">Average Lead Times by Event Type</p>
+            <div id="leadTimeCards" class="lead-time-stats">
+              <!-- Dynamically generated by charts-organisers.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 6: SEASONALITY OVERVIEW ========== -->
+    <div class="section dark-slide" data-tooltip="Seasonality">
+      <div class="slide-inner">
+        <p class="section-label">SEASONALITY</p>
+        <h2>When Events Happen</h2>
+
+        <div class="callout text-two-col">
+          <div>The corporate events calendar follows predictable rhythms driven by budget cycles and seasonal traditions. November and December account for over a quarter of all events, fuelled by Christmas parties and year-end celebrations. June and September/October form secondary peaks as companies book summer socials and post-holiday conferences.</div>
+          <div>Thursday dominates as the preferred event day — close enough to the weekend to feel celebratory, but still a working day. If you need flexibility on pricing and availability, January, April, and August are consistently the quietest months.</div>
+        </div>
+
+        <div class="two-col">
+          <div class="chart-col">
+            <h3>Monthly Distribution</h3>
+            <div class="chart-container">
+              <canvas id="chartSeasonality"></canvas>
+            </div>
+          </div>
+          <div class="chart-col">
+            <h3>Day of Week</h3>
+            <div class="chart-container">
+              <canvas id="chartDayOfWeek"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 7: SEASONAL PATTERNS ========== -->
+    <div class="section light-slide" data-tooltip="Seasonal Patterns">
+      <div class="slide-inner">
+        <p class="section-label">SEASONAL PATTERNS</p>
+        <h2>Every Event Type Has Its Season</h2>
+
+        <div class="callout text-two-col">
+          <div>Understanding these seasonal fingerprints is key to smart planning. Christmas parties are almost entirely concentrated in December, which creates intense competition for venues. Summer parties spread across June–September, giving slightly more flexibility.</div>
+          <div>Conferences follow a twin-peak pattern in June and September, avoiding the summer holiday lull. Corporate parties are the most evenly distributed — their Q4 spike reflects end-of-year celebrations, but they run year-round.</div>
+        </div>
+
+        <div class="seasonal-grid">
+          <div class="seasonal-cell">
+            <h4>Christmas Parties</h4>
+            <div class="chart-container">
+              <canvas id="chartSeasonXmas"></canvas>
+            </div>
+            <div class="sparkline-legend">
+              <span><span class="dot enquiry"></span> Event date</span>
+              <span><span class="dot close"></span> Close month</span>
+            </div>
+          </div>
+          <div class="seasonal-cell">
+            <h4>Summer Parties</h4>
+            <div class="chart-container">
+              <canvas id="chartSeasonSummer"></canvas>
+            </div>
+            <div class="sparkline-legend">
+              <span><span class="dot enquiry"></span> Event date</span>
+              <span><span class="dot close"></span> Close month</span>
+            </div>
+          </div>
+          <div class="seasonal-cell">
+            <h4>Conferences</h4>
+            <div class="chart-container">
+              <canvas id="chartSeasonConf"></canvas>
+            </div>
+            <div class="sparkline-legend">
+              <span><span class="dot enquiry"></span> Event date</span>
+              <span><span class="dot close"></span> Close month</span>
+            </div>
+          </div>
+          <div class="seasonal-cell">
+            <h4>Corporate Parties</h4>
+            <div class="chart-container">
+              <canvas id="chartSeasonCorpParty"></canvas>
+            </div>
+            <div class="sparkline-legend">
+              <span><span class="dot enquiry"></span> Event date</span>
+              <span><span class="dot close"></span> Close month</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 8: CATEGORY TRENDS ========== -->
+    <div class="section dark-slide" data-tooltip="Category Trends">
+      <div class="slide-inner">
+        <p class="section-label">CATEGORY TRENDS</p>
+        <h2>How the Event Mix Is Shifting</h2>
+
+        <div class="callout text-two-col">
+          <div>The shape of corporate events is changing. Conferences have seen the most dramatic growth in share — rising from 12% to 34% of enquiries between 2022 and 2024 as companies doubled down on in-person knowledge sharing.</div>
+          <div>Corporate parties remain the steadiest category, holding roughly 10% of share throughout. Meetings have declined as a proportion as companies shift budgets towards higher-impact, more experiential formats.</div>
+        </div>
+
+        <div class="chart-container" style="max-height: 340px;">
+          <canvas id="chartCategoryTrend"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 9: VENUE SOURCING ========== -->
+    <div class="section light-slide" data-tooltip="Venue Sourcing">
+      <div class="slide-inner">
+        <p class="section-label">VENUE SOURCING</p>
+        <h2>Increasing Venue Option Exploration</h2>
+
+        <div class="callout text-two-col">
+          <div>Organisers now compare 25% more venues than they did in 2022 — up from 2.8 to 3.5 per enquiry. This isn't indecision; it's smart sourcing. With higher budgets at stake, companies are investing more time in finding the right fit.</div>
+          <div>The shift towards hotels, bars, and rooftops reflects a growing preference for venues that offer atmosphere and flexibility, not just function. If you're sourcing venues, cast a wide net early — the best options go to organisers who compare and act quickly.</div>
+        </div>
+
+        <div class="two-col">
+          <div class="chart-col">
+            <h3>Venues Per Enquiry (Over Time)</h3>
+            <div class="chart-container">
+              <canvas id="chartVenueShopping"></canvas>
+            </div>
+          </div>
+          <div class="chart-col" id="venue-type-trends">
+            <h3>Venue Types Gaining Share</h3>
+            <div class="venue-trend-cards">
+              <div class="venue-trend-card">
+                <div class="stat-value">+4.3%</div>
+                <div class="stat-label">Hotels</div>
+                <div class="stat-detail">14.2% &rarr; 18.5%</div>
+              </div>
+              <div class="venue-trend-card">
+                <div class="stat-value">+2.5%</div>
+                <div class="stat-label">Restaurants</div>
+                <div class="stat-detail">9.2% &rarr; 11.7%</div>
+              </div>
+              <div class="venue-trend-card">
+                <div class="stat-value">+2.4%</div>
+                <div class="stat-label">Rooftops</div>
+                <div class="stat-detail">9.7% &rarr; 12.1%</div>
+              </div>
+              <div class="venue-trend-card">
+                <div class="stat-value">+2.0%</div>
+                <div class="stat-label">Bars</div>
+                <div class="stat-detail">9.8% &rarr; 11.8%</div>
+              </div>
+            </div>
+            <h3 style="margin-top: 20px;">Venue Types Declining</h3>
+            <div class="venue-trend-cards">
+              <div class="venue-trend-card declining">
+                <div class="stat-value">-5.7%</div>
+                <div class="stat-label">Historic / Landmark</div>
+                <div class="stat-detail">31.6% &rarr; 25.9%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 10: GROUP SIZES ========== -->
+    <div class="section dark-slide" data-tooltip="Group Sizes">
+      <div class="slide-inner">
+        <p class="section-label">GROUP SIZES</p>
+        <h2>How Big Are Corporate Events?</h2>
+
+        <div class="callout text-two-col">
+          <div>Median group sizes sit at 150 people, with the top quartile reaching 250–300 guests. These are substantial events with real logistical demands — larger groups need bigger venues with more lead time, and they drive up per-event spend even when per-head costs stay flat.</div>
+          <div>Gala dinners and award ceremonies skew largest at 200+ guests, while meetings and private dining stay more intimate at 75–80. If your event is on the larger end, factor in venue capacity constraints early — the most popular large-format venues book out months ahead.</div>
+        </div>
+
+        <div class="two-col">
+          <div class="chart-col">
+            <h3>Average Group Size Over Time</h3>
+            <div class="chart-container">
+              <canvas id="chartGroupSizes"></canvas>
+            </div>
+          </div>
+          <div class="chart-col">
+            <h3>By Event Category</h3>
+            <div class="chart-container">
+              <canvas id="chartGroupByType"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 11: CHRISTMAS PARTY ========== -->
+    <div class="section accent-slide" data-tooltip="Christmas Parties">
+      <div class="slide-inner">
+        <p class="section-label">CHRISTMAS PARTIES</p>
+        <h2>The Christmas Party Playbook</h2>
+
+        <div class="callout text-two-col">
+          <div>Christmas parties are the most time-sensitive events in the corporate calendar. Nearly half of all enquiries arrive in September and October — but by then, the most popular December dates at sought-after venues are already booked. Our data shows that a significant proportion of booking lines are lost purely because the desired date wasn't available.</div>
+          <div>There's a clear pattern in group sizes too: the earliest enquiries tend to be for significantly larger groups. These organisers know that securing an exceptional venue for 100+ guests in December requires early commitment. As the year progresses, average group sizes decline — later enquirers are typically planning for smaller gatherings. Start your search in the spring, confirm by summer, and you'll have the widest choice of venues and dates.</div>
+        </div>
+
+        <div class="xmas-layout">
+          <div>
+            <h3>When Enquiries Arrive vs When Bookings Confirm</h3>
+            <div class="chart-container" style="max-height: 240px;">
+              <canvas id="chartXmasEnquiry"></canvas>
+            </div>
+          </div>
+
+          <div class="xmas-cards">
+            <div class="stat-card featured">
+              <div class="stat-value">Book by July</div>
+              <div class="stat-label">For the Best Selection</div>
+              <div class="stat-detail">47% of enquiries arrive Sep–Oct, but the best venues are already taken by then</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">50–100 people</div>
+              <div class="stat-label">Most Common Group Size</div>
+              <div class="stat-detail">35% of Christmas parties fall in this range, with a median of 90</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== PERSONALISED: EVENT TYPE SLIDES (hidden by default) ========== -->
+
+    <div class="section dark-slide personalised-hidden" id="personalised-event-conference" data-tooltip="Your Conferences" style="display:none">
+      <div class="slide-inner">
+        <p class="section-label">YOUR EVENT TYPE</p>
+        <h2>Conference Benchmarks</h2>
+        <div class="callout"><span class="pe-tip"></span></div>
+        <div class="stat-grid stat-grid--3col">
+          <div class="stat-card">
+            <div class="stat-value pe-spend-median"></div>
+            <div class="stat-label">Median Spend</div>
+            <div class="stat-detail">Range: <span class="pe-spend-range"></span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value pe-pph"></div>
+            <div class="stat-label">Per Head</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value pe-group-median"></div>
+            <div class="stat-label">Typical Group Size</div>
+            <div class="stat-detail">Range: <span class="pe-group-range"></span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value pe-lead-median"></div>
+            <div class="stat-label">Lead Time</div>
+            <div class="stat-detail">Range: <span class="pe-lead-range"></span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value pe-peak-months"></div>
+            <div class="stat-label">Peak Months</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value pe-peak-day"></div>
+            <div class="stat-label">Most Popular Day</div>
+          </div>
+        </div>
+        <div class="pe-industry-comparison"></div>
+        <!-- sample size footnote removed -->
+      </div>
+    </div>
+
+    <div class="section light-slide personalised-hidden" id="personalised-event-christmasParty" data-tooltip="Your Christmas Parties" style="display:none">
+      <div class="slide-inner">
+        <p class="section-label">YOUR EVENT TYPE</p>
+        <h2>Christmas Party Benchmarks</h2>
+        <div class="callout"><span class="pe-tip"></span></div>
+        <div class="stat-grid stat-grid--3col">
+          <div class="stat-card"><div class="stat-value pe-spend-median"></div><div class="stat-label">Median Spend</div><div class="stat-detail">Range: <span class="pe-spend-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-pph"></div><div class="stat-label">Per Head</div></div>
+          <div class="stat-card"><div class="stat-value pe-group-median"></div><div class="stat-label">Typical Group Size</div><div class="stat-detail">Range: <span class="pe-group-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-lead-median"></div><div class="stat-label">Lead Time</div><div class="stat-detail">Range: <span class="pe-lead-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-months"></div><div class="stat-label">Peak Months</div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-day"></div><div class="stat-label">Most Popular Day</div></div>
+        </div>
+        <div class="pe-industry-comparison"></div>
+        <!-- sample size footnote removed -->
+      </div>
+    </div>
+
+    <div class="section dark-slide personalised-hidden" id="personalised-event-corporateParty" data-tooltip="Your Corporate Parties" style="display:none">
+      <div class="slide-inner">
+        <p class="section-label">YOUR EVENT TYPE</p>
+        <h2>Corporate Party Benchmarks</h2>
+        <div class="callout"><span class="pe-tip"></span></div>
+        <div class="stat-grid stat-grid--3col">
+          <div class="stat-card"><div class="stat-value pe-spend-median"></div><div class="stat-label">Median Spend</div><div class="stat-detail">Range: <span class="pe-spend-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-pph"></div><div class="stat-label">Per Head</div></div>
+          <div class="stat-card"><div class="stat-value pe-group-median"></div><div class="stat-label">Typical Group Size</div><div class="stat-detail">Range: <span class="pe-group-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-lead-median"></div><div class="stat-label">Lead Time</div><div class="stat-detail">Range: <span class="pe-lead-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-months"></div><div class="stat-label">Peak Months</div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-day"></div><div class="stat-label">Most Popular Day</div></div>
+        </div>
+        <div class="pe-industry-comparison"></div>
+        <!-- sample size footnote removed -->
+      </div>
+    </div>
+
+    <div class="section light-slide personalised-hidden" id="personalised-event-summerParty" data-tooltip="Your Summer Parties" style="display:none">
+      <div class="slide-inner">
+        <p class="section-label">YOUR EVENT TYPE</p>
+        <h2>Summer Party Benchmarks</h2>
+        <div class="callout"><span class="pe-tip"></span></div>
+        <div class="stat-grid stat-grid--3col">
+          <div class="stat-card"><div class="stat-value pe-spend-median"></div><div class="stat-label">Median Spend</div><div class="stat-detail">Range: <span class="pe-spend-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-pph"></div><div class="stat-label">Per Head</div></div>
+          <div class="stat-card"><div class="stat-value pe-group-median"></div><div class="stat-label">Typical Group Size</div><div class="stat-detail">Range: <span class="pe-group-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-lead-median"></div><div class="stat-label">Lead Time</div><div class="stat-detail">Range: <span class="pe-lead-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-months"></div><div class="stat-label">Peak Months</div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-day"></div><div class="stat-label">Most Popular Day</div></div>
+        </div>
+        <div class="pe-industry-comparison"></div>
+        <!-- sample size footnote removed -->
+      </div>
+    </div>
+
+    <div class="section dark-slide personalised-hidden" id="personalised-event-networkingEvent" data-tooltip="Your Networking Events" style="display:none">
+      <div class="slide-inner">
+        <p class="section-label">YOUR EVENT TYPE</p>
+        <h2>Networking Event Benchmarks</h2>
+        <div class="callout"><span class="pe-tip"></span></div>
+        <div class="stat-grid stat-grid--3col">
+          <div class="stat-card"><div class="stat-value pe-spend-median"></div><div class="stat-label">Median Spend</div><div class="stat-detail">Range: <span class="pe-spend-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-pph"></div><div class="stat-label">Per Head</div></div>
+          <div class="stat-card"><div class="stat-value pe-group-median"></div><div class="stat-label">Typical Group Size</div><div class="stat-detail">Range: <span class="pe-group-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-lead-median"></div><div class="stat-label">Lead Time</div><div class="stat-detail">Range: <span class="pe-lead-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-months"></div><div class="stat-label">Peak Months</div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-day"></div><div class="stat-label">Most Popular Day</div></div>
+        </div>
+        <div class="pe-industry-comparison"></div>
+        <!-- sample size footnote removed -->
+      </div>
+    </div>
+
+    <div class="section light-slide personalised-hidden" id="personalised-event-awardCeremony" data-tooltip="Your Award Ceremonies" style="display:none">
+      <div class="slide-inner">
+        <p class="section-label">YOUR EVENT TYPE</p>
+        <h2>Award Ceremony Benchmarks</h2>
+        <div class="callout"><span class="pe-tip"></span></div>
+        <div class="stat-grid stat-grid--3col">
+          <div class="stat-card"><div class="stat-value pe-spend-median"></div><div class="stat-label">Median Spend</div><div class="stat-detail">Range: <span class="pe-spend-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-pph"></div><div class="stat-label">Per Head</div></div>
+          <div class="stat-card"><div class="stat-value pe-group-median"></div><div class="stat-label">Typical Group Size</div><div class="stat-detail">Range: <span class="pe-group-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-lead-median"></div><div class="stat-label">Lead Time</div><div class="stat-detail">Range: <span class="pe-lead-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-months"></div><div class="stat-label">Peak Months</div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-day"></div><div class="stat-label">Most Popular Day</div></div>
+        </div>
+        <div class="pe-industry-comparison"></div>
+        <!-- sample size footnote removed -->
+      </div>
+    </div>
+
+    <div class="section dark-slide personalised-hidden" id="personalised-event-meeting" data-tooltip="Your Meetings" style="display:none">
+      <div class="slide-inner">
+        <p class="section-label">YOUR EVENT TYPE</p>
+        <h2>Meeting Benchmarks</h2>
+        <div class="callout"><span class="pe-tip"></span></div>
+        <div class="stat-grid stat-grid--3col">
+          <div class="stat-card"><div class="stat-value pe-spend-median"></div><div class="stat-label">Median Spend</div><div class="stat-detail">Range: <span class="pe-spend-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-pph"></div><div class="stat-label">Per Head</div></div>
+          <div class="stat-card"><div class="stat-value pe-group-median"></div><div class="stat-label">Typical Group Size</div><div class="stat-detail">Range: <span class="pe-group-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-lead-median"></div><div class="stat-label">Lead Time</div><div class="stat-detail">Range: <span class="pe-lead-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-months"></div><div class="stat-label">Peak Months</div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-day"></div><div class="stat-label">Most Popular Day</div></div>
+        </div>
+        <div class="pe-industry-comparison"></div>
+        <!-- sample size footnote removed -->
+      </div>
+    </div>
+
+    <div class="section light-slide personalised-hidden" id="personalised-event-corporatePrivateDining" data-tooltip="Your Private Dining" style="display:none">
+      <div class="slide-inner">
+        <p class="section-label">YOUR EVENT TYPE</p>
+        <h2>Private Dining Benchmarks</h2>
+        <div class="callout"><span class="pe-tip"></span></div>
+        <div class="stat-grid stat-grid--3col">
+          <div class="stat-card"><div class="stat-value pe-spend-median"></div><div class="stat-label">Median Spend</div><div class="stat-detail">Range: <span class="pe-spend-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-pph"></div><div class="stat-label">Per Head</div></div>
+          <div class="stat-card"><div class="stat-value pe-group-median"></div><div class="stat-label">Typical Group Size</div><div class="stat-detail">Range: <span class="pe-group-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-lead-median"></div><div class="stat-label">Lead Time</div><div class="stat-detail">Range: <span class="pe-lead-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-months"></div><div class="stat-label">Peak Months</div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-day"></div><div class="stat-label">Most Popular Day</div></div>
+        </div>
+        <div class="pe-industry-comparison"></div>
+        <!-- sample size footnote removed -->
+      </div>
+    </div>
+
+    <div class="section dark-slide personalised-hidden" id="personalised-event-galaDinner" data-tooltip="Your Gala Dinners" style="display:none">
+      <div class="slide-inner">
+        <p class="section-label">YOUR EVENT TYPE</p>
+        <h2>Gala Dinner Benchmarks</h2>
+        <div class="callout"><span class="pe-tip"></span></div>
+        <div class="stat-grid stat-grid--3col">
+          <div class="stat-card"><div class="stat-value pe-spend-median"></div><div class="stat-label">Median Spend</div><div class="stat-detail">Range: <span class="pe-spend-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-pph"></div><div class="stat-label">Per Head</div></div>
+          <div class="stat-card"><div class="stat-value pe-group-median"></div><div class="stat-label">Typical Group Size</div><div class="stat-detail">Range: <span class="pe-group-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-lead-median"></div><div class="stat-label">Lead Time</div><div class="stat-detail">Range: <span class="pe-lead-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-months"></div><div class="stat-label">Peak Months</div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-day"></div><div class="stat-label">Most Popular Day</div></div>
+        </div>
+        <div class="pe-industry-comparison"></div>
+        <!-- sample size footnote removed -->
+      </div>
+    </div>
+
+    <div class="section light-slide personalised-hidden" id="personalised-event-productLaunch" data-tooltip="Your Product Launches" style="display:none">
+      <div class="slide-inner">
+        <p class="section-label">YOUR EVENT TYPE</p>
+        <h2>Product Launch Benchmarks</h2>
+        <div class="callout"><span class="pe-tip"></span></div>
+        <div class="stat-grid stat-grid--3col">
+          <div class="stat-card"><div class="stat-value pe-spend-median"></div><div class="stat-label">Median Spend</div><div class="stat-detail">Range: <span class="pe-spend-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-pph"></div><div class="stat-label">Per Head</div></div>
+          <div class="stat-card"><div class="stat-value pe-group-median"></div><div class="stat-label">Typical Group Size</div><div class="stat-detail">Range: <span class="pe-group-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-lead-median"></div><div class="stat-label">Lead Time</div><div class="stat-detail">Range: <span class="pe-lead-range"></span></div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-months"></div><div class="stat-label">Peak Months</div></div>
+          <div class="stat-card"><div class="stat-value pe-peak-day"></div><div class="stat-label">Most Popular Day</div></div>
+        </div>
+        <div class="pe-industry-comparison"></div>
+        <!-- sample size footnote removed -->
+      </div>
+    </div>
+
+    <!-- ========== PERSONALISED: INDUSTRY SLIDE (hidden by default) ========== -->
+
+    <div class="section dark-slide personalised-hidden" id="personalised-industry" data-tooltip="Your Industry" style="display:none">
+      <div class="slide-inner">
+        <p class="section-label">YOUR INDUSTRY</p>
+        <h2>How <span class="pi-industry-name"></span> Companies Book Events</h2>
+
+        <div class="spend-layout">
+          <div>
+            <div class="stat-grid" style="grid-template-columns: repeat(2, 1fr);">
+              <div class="stat-card">
+                <div class="stat-value pi-spend-median"></div>
+                <div class="stat-label">Median Spend</div>
+                <div class="stat-detail">Range: <span class="pi-spend-range"></span></div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value pi-pph"></div>
+                <div class="stat-label">Per Head</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value pi-group-size"></div>
+                <div class="stat-label">Typical Group Size</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value pi-lead-days"></div>
+                <div class="stat-label">Average Lead Time</div>
+              </div>
+            </div>
+            <div class="chart-container" style="max-height: 200px;">
+              <canvas id="chartIndustryCompare"></canvas>
+            </div>
+          </div>
+
+          <div>
+            <div class="pi-market-comparison"></div>
+            <!-- venue type trends now personalised on slide 9 -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== PERSONALISED: EVENT TYPE TRENDS BY INDUSTRY (hidden by default) ========== -->
+
+    <div class="section light-slide personalised-hidden" id="personalised-event-type-trends" data-tooltip="Event Type Trends" style="display:none">
+      <div class="slide-inner">
+        <p class="section-label">YOUR INDUSTRY</p>
+        <h2>How Event Preferences Are Shifting</h2>
+
+        <div class="callout" style="margin-bottom: 20px;">
+          These trends show which event formats are growing or shrinking in popularity within your industry, based on the share of total enquiries. Significant shifts signal changing priorities — and may help you anticipate what venues and formats to invest in.
+        </div>
+
+        <div class="event-type-trends-content">
+          <!-- Populated dynamically by personalise.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 12: THE BIG PICTURE (NEW) ========== -->
+    <div class="section dark-slide" data-tooltip="The Big Picture">
+      <div class="slide-inner">
+        <p class="section-label">THE BIG PICTURE</p>
+        <h2>What It All Means</h2>
+
+        <div class="deep-dive-grid">
+          <div>
+            <p>The corporate events market has undergone a structural transformation since 2022. Median booking values have risen by over a third since 2023, with the top quartile now exceeding &pound;21,000. This isn't simply inflationary — it reflects a decisive shift towards higher-impact formats and more ambitious experiences. Companies are investing more per event because they're asking more of each gathering: stronger networking outcomes, more memorable settings, and better alignment with brand values.</p>
+
+            <div class="pull-quote">Organisers who plan 3+ months ahead consistently secure better venues, stronger pricing, and more date flexibility.</div>
+
+            <p>Lead time expansion tells its own story. With average planning horizons now at 111 days — and conferences requiring nearly four months — early planners enjoy a compounding advantage. They access a wider pool of venues, negotiate from a position of strength, and avoid the scramble that drives up costs in peak season.</p>
+          </div>
+          <div>
+            <p>Venue sourcing behaviour has matured significantly. Organisers now compare an average of 3.5 venues per enquiry, up 25% from 2022, signalling a more sophisticated market where due diligence is the norm. The shift towards experiential venue types — rooftops, bars, restaurants — over traditional meeting rooms reflects broader workplace culture changes. Events are increasingly about creating moments that matter, not just filling a calendar slot.</p>
+
+            <p>Seasonal concentration remains one of the biggest challenges. Over a quarter of all events cluster into November and December, creating intense competition for venues and driving up prices. Understanding your event type's seasonal fingerprint — and planning counter-cyclically where possible — remains one of the simplest ways to get better value and more choice. This is especially pronounced for Christmas parties, where the largest groups start planning in Q1 while late enquirers in October face limited availability.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SLIDE 13: KEY TAKEAWAYS & CTA ========== -->
+    <div class="section cta-slide" data-tooltip="Key Takeaways">
+      <div class="slide-bg"></div>
+      <div class="slide-inner">
+        <h2>Plan Smarter in 2026</h2>
+
+        <div class="insights-grid">
+          <div class="insight-card">
+            <h3>Start Earlier Than You Think</h3>
+            <p>Average lead times now sit at 111 days, up 19% since 2022. The best venues fill up months ahead, especially for conferences and seasonal events. Starting 3–4 months out gives you real choice.</p>
+          </div>
+          <div class="insight-card">
+            <h3>Cast a Wider Net</h3>
+            <p>Organisers now compare 3.5 venues per enquiry on average, up 25% from 2.8 in 2022. With higher budgets at stake, thorough comparison shopping pays off in both quality and value.</p>
+          </div>
+          <div class="insight-card">
+            <h3>Benchmark Your Budget</h3>
+            <p>Average spend varies widely by event type and industry. Use these benchmarks to set realistic budgets — and know that the market has moved significantly since pre-2023.</p>
+          </div>
+          <div class="insight-card">
+            <h3>Know Your Season</h3>
+            <p>Every event type has its peak. Christmas parties need spring planning; conferences compete for June and September dates. Understanding seasonal patterns helps you avoid the crunch.</p>
+          </div>
+        </div>
+
+        <a href="https://hirespace.com/search" class="cta-btn" target="_blank" rel="noopener">Start Your Venue Search &rarr;</a>
+      </div>
+      <p class="source-line">Source: Hire Space confirmed booking data, 2022–2025.</p>
+    </div>
+
+  </div><!-- /fullpage -->
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- fullPage.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.25/fullpage.min.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+
+  <!-- Data -->
+  <script src="js/data.js"></script>
+
+  <!-- Personalisation (fetches contact data, shows/hides slides) -->
+  <script src="js/personalise.js"></script>
+
+  <!-- Chart initialisation (built separately) -->
+  <script src="js/charts-organisers.js?v=2"></script>
+
+  <!-- fullPage.js init -->
+  <script>
+    function initFullpage() {
+      // Remove any still-hidden personalised slides before fullPage init
+      var hidden = document.querySelectorAll('.personalised-hidden');
+      hidden.forEach(function(el) { el.remove(); });
+
+      // Build tooltip list dynamically from visible sections
+      var sections = document.querySelectorAll('#fullpage > .section');
+      var tooltips = [];
+      sections.forEach(function(s) {
+        tooltips.push(s.getAttribute('data-tooltip') || '');
+      });
+
+      var totalSections = sections.length;
+
+      new fullpage('#fullpage', {
+        autoScrolling: true,
+        navigation: true,
+        navigationPosition: 'right',
+        navigationTooltips: tooltips,
+        showActiveTooltip: false,
+        scrollingSpeed: 700,
+        css3: true,
+        fitToSection: true,
+        keyboardScrolling: true,
+        animateAnchor: true,
+        recordHistory: false,
+        controlArrows: false,
+        verticalCentered: true,
+        scrollOverflow: true,
+
+        afterLoad: function(origin, destination) {
+          // Trigger chart animations when slides come into view
+          var event = new CustomEvent('slideVisible', { detail: { index: destination.index } });
+          document.dispatchEvent(event);
+
+          // Logo swap: colour on light slides, white on dark/accent/cta
+          var section = destination.item;
+          var logoImg = document.getElementById('logoImg');
+          if (logoImg) {
+            if (section.classList.contains('light-slide')) {
+              logoImg.src = 'assets/logo-colour.png';
+            } else {
+              logoImg.src = 'assets/logo-white.png';
+            }
+          }
+
+          // Sticky CTA: show after title slide, hide on title + last slide
+          var stickyCta = document.getElementById('stickyCta');
+          if (stickyCta) {
+            if (destination.index > 0 && destination.index < totalSections - 1) {
+              stickyCta.classList.add('sticky-cta--visible');
+            } else {
+              stickyCta.classList.remove('sticky-cta--visible');
+            }
+            // Swap to solid green on light slides for contrast
+            if (section.classList.contains('light-slide')) {
+              stickyCta.classList.add('sticky-cta--light');
+            } else {
+              stickyCta.classList.remove('sticky-cta--light');
+            }
+          }
+        }
+      });
+    }
+
+    // If personalisation is active, wait for it before init
+    if (window._personaliseReady) {
+      window._personaliseReady.then(initFullpage);
+    } else {
+      initFullpage();
+    }
+  </script>
+
+</body>
+</html>

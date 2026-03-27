@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Events Booking Trends 2022-2025 | Hire Space</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --hs-green: #00A82C;
+      --hs-green-hover: #53B04B;
+      --hs-dark: #282A30;
+      --hs-darkest: #1d1f24;
+      --hs-white: #FFFFFF;
+      --hs-lightest: #F7F9FC;
+      --hs-border: #BBBDBF;
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: var(--hs-darkest);
+      color: var(--hs-white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Nunito Sans', sans-serif;
+    }
+
+    .page {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px 40px;
+    }
+
+    .logo {
+      margin-bottom: 56px;
+    }
+
+    .logo img {
+      height: 32px;
+      display: block;
+    }
+
+    .title {
+      font-size: 2.6rem;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--hs-border);
+      text-align: center;
+      max-width: 560px;
+      line-height: 1.6;
+      margin-bottom: 56px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      width: 100%;
+      max-width: 820px;
+    }
+
+    .card {
+      background: var(--hs-dark);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 44px 36px;
+      text-decoration: none;
+      color: var(--hs-white);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--hs-green);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--hs-green);
+      box-shadow: 0 0 30px rgba(0, 168, 44, 0.15), 0 8px 32px rgba(0, 0, 0, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(0, 168, 44, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .card-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--hs-green);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .card h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: var(--hs-border);
+      line-height: 1.6;
+      margin-bottom: 28px;
+      flex: 1;
+    }
+
+    .card-cta {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--hs-green);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease, gap 0.2s ease;
+    }
+
+    .card:hover .card-cta {
+      color: var(--hs-green-hover);
+      gap: 10px;
+    }
+
+    .card-cta svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    @media (max-width: 680px) {
+      .title {
+        font-size: 1.8rem;
+      }
+
+      .subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 40px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .card {
+        padding: 32px 28px;
+      }
+
+      .logo {
+        margin-bottom: 40px;
+      }
+
+      .logo img {
+        height: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <div class="logo">
+      <img src="assets/logo-white.png" alt="Hire Space">
+    </div>
+
+    <h1 class="title">Corporate Events Booking Trends 2022&#8211;2025</h1>
+    <p class="subtitle">Data-driven insights from thousands of confirmed corporate event bookings</p>
+
+    <div class="cards">
+      <a href="organisers.html" class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h2>For Event Organisers</h2>
+        <p>How to plan smarter: benchmarks, trends, and timing insights</p>
+        <span class="card-cta">
+          View report
+          <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <a href="venues.html" class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h2>For Venues</h2>
+        <p>How to win more bookings: market intelligence and demand patterns</p>
+        <span class="card-cta">
+          View report
+          <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    Source: Hire Space confirmed booking data, 2022&#8211;2025
+  </footer>
+
+</body>
+</html>
