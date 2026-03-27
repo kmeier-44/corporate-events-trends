@@ -1,31 +1,23 @@
 // ============================================================
-// Category Mix — % of won bookings by category, by year
+// Category Mix — Confirmed bookings by category, by year
 // ============================================================
-// SOURCE: MongoDB — bookings collection
-// METHOD: Won bookings, grouped by category slug per year
-// NOTE: Category slugs need mapping to display names (see README.md)
-// UPDATED: 27 March 2026 — switched from bookinglines to bookings
+// SOURCE: MongoDB — bookinglines collection
+// METHOD: Confirmed BLs (situation:"Con"), grouped by category slug per year.
+//         Used to understand which event types are booked most.
+// NOTE: This query produces raw counts for analysis. The data.js output now uses
+//       volume INDEXES (2022=100) via run_bookinglines.py and 10-enquiry-counts.js,
+//       not proportions. See those files for the current methodology.
+// UPDATED: 27 March 2026 — clarified role vs new index-based approach
 
-db.bookings.aggregate([
+db.bookinglines.aggregate([
   { $match: {
-    status: "won",
+    situation: "Con",
+    venueId: { $type: "int" },
     eventdate: { $gte: 1704067200000, $lt: 1735689600000 } // 2024
   }},
   { $group: { _id: "$category", count: { $sum: 1 } }},
   { $sort: { count: -1 }}
 ])
-
-// Results (25 March 2026 — from bookinglines, TO BE RE-RUN):
-// 2022 (14415 total): Conference 12.2%, Networking 12.3%, Corp Party 10.8%, Summer 10.4%
-// 2023 (20415 total): Christmas 18.4%, Conference 16.5%, Networking 8.9%
-// 2024 (22068 total): Conference 34.0%, Christmas 14.8%, Priv Dining 8.2%
-// 2025 (21692 total): Screening 12.4%, Conference 12.1%, Networking 11.6%
-//
-// data.js categoryMix.categories:
-//   Conference:      [12.2, 16.5, 34.0, 12.1]
-//   Christmas Party: [4.9, 18.4, 14.8, 4.0]
-//   Corporate Party: [10.8, 8.2, 6.5, 10.2]
-//   etc.
 
 // Category slug mapping:
 // Conference       → category-conference

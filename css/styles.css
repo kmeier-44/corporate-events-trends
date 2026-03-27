@@ -870,7 +870,9 @@ p.insight {
   font-size: 0.9rem;
   color: var(--hs-green);
   margin-bottom: 10px;
-  margin-top: 18px;
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 168, 44, 0.15);
 }
 .pe-comparison-grid {
   display: grid;

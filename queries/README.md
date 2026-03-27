@@ -45,8 +45,14 @@ Python dependencies: `pymongo`, `snowflake-connector-python`
 | `categoryMix.enquiryIndex` | MongoDB | `run_bookinglines.py` | Enquiry volume index per category (2022=100) |
 | `categoryMix.wonIndex` | MongoDB | `run_bookinglines.py` | Won booking volume index per category (2022=100) |
 | `venueTypePricing` | Snowflake | — | Not yet validated from Snowflake |
+| `industryProfiles.byEventType` | MongoDB | `industry_event_type_spend.py` | Cross-tab: spend, PPH, group size per industry × event type |
+| `venueTypeConfirmed` | Snowflake | `run_snowflake.py` | Confirmed BL volume index by venue type (2022=100) |
+| `venueTypeEnquiry` | Snowflake | `run_snowflake.py` | Enquiry BL volume index by venue type (2022=100) |
 | `venueTypesByIndustry` | Snowflake | `16-industry-venue-types.sql` | ALL BLs + VENUES (boolean type cols) + HUBSPOT.COMPANIES; 2022–23 vs 2024–25 share |
 | `eventTypesByIndustry` | Snowflake | `17-industry-event-types.sql` | ALL BLs (CATEGORY) + HUBSPOT.COMPANIES; 2022–23 vs 2024–25 share |
+| `repeatBookings` | MongoDB | `09-repeat-bookings.js` | Repeat booking rates by year |
+| `categoryMix` (proportions) | MongoDB | `10-enquiry-counts.js` | Raw enquiry counts by category (used to derive indexes) |
+| Badge count | MongoDB | `12-total-counts.js` | Total bookings/enquiries for slide 1 badge |
 
 ## Schema Reference
 
