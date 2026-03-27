@@ -1,10 +1,14 @@
+-- ⚠️  DEPRECATED — 27 March 2026
+-- These CONTRACT-based queries have been replaced by run_bookinglines.py
+-- which uses MongoDB booking lines (99.5% coverage vs ~20% here).
+-- Kept for reference only. See README.md for current methodology.
+--
+-- Original description:
 -- Snowflake queries for booking values, PPH, values by category,
 -- spend by industry, and conversion by lead time
 -- Database: HIRE_SPACE.CORE_DATA
 -- Source: CONTRACT table joined to BOOKINGS (for category, eventdate, people)
 -- Coverage: ~19-23% of bookings (2023-2025). 2022 omitted (1.1% coverage).
--- UPDATED: 27 March 2026 — switched from BOOKING_LINES to BOOKINGS for
---          category/eventdate/people. Uses STATUS = 'won' on BOOKINGS.
 
 -- =====================================================
 -- 1. BOOKING VALUES (fully signed, latest per booking)

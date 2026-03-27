@@ -1,11 +1,12 @@
+-- ⚠️  DEPRECATED — 27 March 2026
+-- Industry profiles now come from run_bookinglines.py using MongoDB booking lines
+-- + companies.segment mapping. Kept for reference only.
+--
 -- ============================================================
 -- Industry Profiles — Spend, PPH, group size, lead time by HubSpot industry
 -- ============================================================
 -- SOURCE: Snowflake — CONTRACT + BOOKINGS + CORE_DATA.COMPANIES + HUBSPOT.COMPANIES
--- JOIN:   BOOKINGS.COMPANYDATA___ID → CORE_DATA.COMPANIES._ID
---         CORE_DATA.COMPANIES.HUBSPOTID → SEGMENT_EVENTS.HUBSPOT.COMPANIES.HS_OBJECT_ID
 -- PERIOD: 2023-2025 (fully signed contracts only)
--- UPDATED: 27 March 2026 — switched from BOOKING_LINES to BOOKINGS
 
 -- The SEGMENT_EVENTS.HUBSPOT.COMPANIES table contains HubSpot's standard
 -- INDUSTRY field (e.g. COMPUTER_SOFTWARE, FINANCIAL_SERVICES, etc.).

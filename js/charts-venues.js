@@ -98,39 +98,65 @@ function initCharts() {
     });
   }
 
-  // ── vChartCategoryTrend — Multi-line, top 6 categories ──
+  // ── vChartCategoryTrend — Multi-line, enquiry volume index (2022=100) ──
   if (document.getElementById('vChartCategoryTrend')) {
     const id = 'vChartCategoryTrend';
-    const d = DATA.categoryMix;
-    const top6 = d.categories.slice(0, 6);
+    const catNames = ['Conference', 'Corporate Party', 'Meeting', 'Christmas Party', 'Networking', 'Summer Party', 'Award Ceremony', 'Private Dining'];
+    const indexes = DATA.categoryMix.enquiryIndex;
+    const datasets = catNames.filter(name => indexes[name]).map((name, i) => ({
+      label: name,
+      data: indexes[name],
+      borderColor: palette[i],
+      backgroundColor: palette[i],
+      borderWidth: 2.5,
+      pointRadius: 4,
+      pointHoverRadius: 6,
+      tension: 0.3
+    }));
+
+    // Add market total as a dashed reference line
+    if (DATA.marketVolume) {
+      datasets.push({
+        label: 'Total Market',
+        data: DATA.marketVolume.enquiryIndex,
+        borderColor: 'rgba(255,255,255,0.35)',
+        backgroundColor: 'transparent',
+        pointRadius: 0,
+        borderWidth: 1.5,
+        borderDash: [6, 4],
+        tension: 0.3,
+        fill: false
+      });
+    }
+
     new Chart(document.getElementById(id), {
       type: 'line',
       data: {
-        labels: d.years,
-        datasets: top6.map((cat, i) => ({
-          label: cat.name,
-          data: cat.pcts,
-          borderColor: palette[i],
-          backgroundColor: palette[i],
-          borderWidth: 2.5,
-          pointRadius: 4,
-          pointHoverRadius: 6,
-          tension: 0.3
-        }))
+        labels: DATA.categoryMix.years,
+        datasets: datasets
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
           legend: { labels: { color: legendColor(id) } },
-          tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const val = ctx.parsed.y;
+                const diff = val - 100;
+                const sign = diff >= 0 ? '+' : '';
+                return ctx.dataset.label + ': ' + val + ' (' + sign + diff + '% vs 2022)';
+              }
+            }
+          }
         },
         scales: {
           x: { grid: { color: gridColor(id) }, ticks: { color: tickColor(id) } },
           y: {
             grid: { color: gridColor(id) },
-            ticks: { color: tickColor(id), callback: v => v + '%' },
-            beginAtZero: true
+            ticks: { color: tickColor(id) },
+            suggestedMin: 40
           }
         }
       }
@@ -287,7 +313,7 @@ function initCharts() {
     });
   }
 
-  // ── vChartMarketShare — Multi-line, venue type confirmed % ──
+  // ── vChartMarketShare — Multi-line, venue type confirmed volume index (2022=100) ──
   if (document.getElementById('vChartMarketShare')) {
     const id = 'vChartMarketShare';
     const d = DATA.venueTypeConfirmed;
@@ -298,7 +324,7 @@ function initCharts() {
         labels: d.years,
         datasets: types.map((t, i) => ({
           label: t.type,
-          data: t.pcts,
+          data: t.index,
           borderColor: palette[i],
           backgroundColor: palette[i],
           borderWidth: 2.5,
@@ -312,14 +338,25 @@ function initCharts() {
         maintainAspectRatio: false,
         plugins: {
           legend: { labels: { color: legendColor(id) } },
-          tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } }
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const val = ctx.parsed.y;
+                const change = val - 100;
+                const sign = change >= 0 ? '+' : '';
+                return ctx.dataset.label + ': ' + val + ' (' + sign + change + '% vs 2022)';
+              }
+            }
+          }
         },
         scales: {
           x: { grid: { color: gridColor(id) }, ticks: { color: tickColor(id) } },
           y: {
             grid: { color: gridColor(id) },
-            ticks: { color: tickColor(id), callback: v => v + '%' },
-            beginAtZero: true
+            ticks: {
+              color: tickColor(id),
+              callback: v => v === 100 ? '2022 baseline' : v
+            }
           }
         }
       }

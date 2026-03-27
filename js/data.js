@@ -1,64 +1,64 @@
 // Corporate Events Booking Trends 2022-2025
-// Data extracted from Hire Space MongoDB + Snowflake (March 2026)
-// All monetary values based on fully signed contracts (actual spend)
+// Data extracted from Hire Space MongoDB (March 2026)
+// Monetary values from won booking lines summed per won booking (99.5% coverage)
+// Currency: GBP (localPrice converted via FX rates where price field empty)
 // Numbers shown as proportions/indexes where competitively sensitive
 // Non-corporate categories (birthday parties, weddings) excluded
-// NOTE: Booking values, PPH, values by category, and spend by industry
-//       validated via Snowflake CONTRACT table (fully signed, latest per booking)
-//       Coverage: ~19-23% of bookings (2023-2025). 2022 omitted due to low coverage (1.1%)
+// NOTE: Switched from Snowflake CONTRACT (20% coverage) to booking lines (99.5%)
+//       in March 2026 for better statistical representation across all event sizes
 
 const DATA = {
 
-  // -- Booking Values (actual confirmed spend, GBP) --
+  // -- Booking Values (sum of won booking line prices per booking, GBP) --
   bookingValues: {
-    years: [2023, 2024, 2025],
-    median: [8625, 10650, 11000],
-    p25: [3371, 3408, 4201],
-    p75: [16376, 20000, 20603],
-    indexMedian: [100, 123, 128] // 2023 = 100
+    years: [2022, 2023, 2024, 2025],
+    median: [2303, 3801, 4150, 6000],
+    p25: [609, 1000, 1122, 1324],
+    p75: [8814, 11560, 13760, 18053],
+    indexMedian: [61, 100, 109, 158] // 2023 = 100
   },
 
   // -- Booking Values by Event Type --
   valuesByCategory: [
-    { category: 'Exhibition', median: 22582 },
-    { category: 'Private Event', median: 18629 },
-    { category: 'Product Launch', median: 15833 },
-    { category: 'Gala Dinner', median: 15750 },
-    { category: 'Award Ceremony', median: 13438 },
-    { category: 'Networking', median: 13333 },
-    { category: 'Christmas Party', median: 12650 },
-    { category: 'Conference', median: 12447 },
-    { category: 'Ticketed Event', median: 12260 },
-    { category: 'Summer Party', median: 11426 },
-    { category: 'Corporate Party', median: 10032 },
-    { category: 'Pop-Up', median: 7851 },
-    { category: 'Screening', median: 7390 },
-    { category: 'Private Dining', median: 4851 },
-    { category: 'Presentation', median: 4400 },
-    { category: 'Meeting', median: 4392 }
+    { category: 'Award Ceremony', median: 18900 },
+    { category: 'Christmas Party', median: 12150 },
+    { category: 'Conference', median: 10001 },
+    { category: 'Gala Dinner', median: 8437 },
+    { category: 'Summer Party', median: 8073 },
+    { category: 'Networking', median: 7895 },
+    { category: 'Exhibition', median: 4822 },
+    { category: 'Private Dining', median: 3543 },
+    { category: 'Pop-Up', median: 2408 },
+    { category: 'Presentation', median: 2290 },
+    { category: 'Corporate Party', median: 2110 },
+    { category: 'Private Event', median: 1800 },
+    { category: 'Ticketed Event', median: 1431 },
+    { category: 'Product Launch', median: 1303 },
+    { category: 'Screening', median: 1000 },
+    { category: 'Meeting', median: 905 }
   ],
 
   // -- Price Per Head --
   pricePerHead: {
-    years: [2023, 2024, 2025],
-    median: [105, 113, 110],
+    years: [2022, 2023, 2024, 2025],
+    median: [53, 70, 74, 89],
     byCategory: [
-      { category: 'Product Launch', median: 158 },
-      { category: 'Meeting', median: 140 },
-      { category: 'Networking', median: 127 },
-      { category: 'Exhibition', median: 127 },
-      { category: 'Pop-Up', median: 125 },
-      { category: 'Private Dining', median: 122 },
-      { category: 'Private Event', median: 118 },
-      { category: 'Christmas Party', median: 116 },
-      { category: 'Corporate Party', median: 109 },
-      { category: 'Presentation', median: 106 },
-      { category: 'Ticketed Event', median: 105 },
-      { category: 'Gala Dinner', median: 102 },
-      { category: 'Screening', median: 99 },
-      { category: 'Conference', median: 98 },
-      { category: 'Summer Party', median: 96 },
-      { category: 'Award Ceremony', median: 75 }
+      { category: 'Christmas Party', median: 112 },
+      { category: 'Private Dining', median: 103 },
+      { category: 'Award Ceremony', median: 94 },
+      { category: 'Conference', median: 91 },
+      { category: 'Networking', median: 89 },
+      { category: 'Summer Party', median: 83 },
+      { category: 'Exhibition', median: 55 },
+      { category: 'Meeting', median: 54 },
+      { category: 'Pop-Up', median: 42 },
+      { category: 'Gala Dinner', median: 42 },
+      { category: 'Private Event', median: 36 },
+      { category: 'Presentation', median: 34 },
+      { category: 'Corporate Party', median: 30 },
+      { category: 'Screening', median: 30 },
+      { category: 'Product Launch', median: 27 },
+      { category: 'Ticketed Event', median: 20 }
     ]
   },
 
@@ -91,31 +91,39 @@ const DATA = {
     ]
   },
 
-  // -- Category Mix (% of won corporate bookings) --
+  // -- Market Volume (total corporate enquiries + won bookings, 2022=100) --
+  marketVolume: {
+    years: [2022, 2023, 2024, 2025],
+    enquiryIndex: [100, 83, 100, 178],   // Total corporate enquiries
+    wonIndex: [100, 94, 114, 102]         // Total won corporate bookings
+  },
+
+  // -- Category Trends (volume indexes, 2022=100) --
+  // Enquiry volume index shows absolute growth/decline per event type
+  // Won volume index shows confirmed booking growth/decline
   categoryMix: {
     years: [2022, 2023, 2024, 2025],
-    categories: [
-      { name: 'Meeting',         pcts: [22.9, 23.7, 22.8, 20.1] },
-      { name: 'Conference',      pcts: [17.5, 21.3, 23.8, 21.7] },
-      { name: 'Christmas Party', pcts: [8.2, 13.7, 9.5, 11.4] },
-      { name: 'Corporate Party', pcts: [8.9, 9.6, 9.5, 9.4] },
-      { name: 'Private Dining',  pcts: [4.9, 5.0, 9.0, 6.5] },
-      { name: 'Networking',      pcts: [7.3, 6.8, 7.3, 7.2] },
-      { name: 'Summer Party',    pcts: [4.4, 3.2, 6.4, 4.3] },
-      { name: 'Pop-Up',          pcts: [6.0, 3.3, 1.8, 4.2] },
-      { name: 'Award Ceremony',  pcts: [0, 2.5, 3.4, 0] },
-      { name: 'Screening',       pcts: [4.3, 0, 0, 2.5] }
-    ],
-    // Enquiry proportions (% of that year's total enquiries) by category by year
-    enquiryCounts: {
-      'Conference':      [18.7, 20.1, 20.8, 12.3],
-      'Corporate Party': [21.1, 26.9, 27.3, 27.0],
-      'Meeting':         [25.0, 20.0, 17.6, 23.5],
-      'Christmas Party': [9.7, 11.4, 8.3, 6.9],
-      'Networking':      [10.5, 7.5, 4.8, 12.6],
-      'Summer Party':    [5.7, 5.1, 8.6, 7.3],
-      'Private Dining':  [8.0, 6.6, 8.7, 7.3],
-      'Award Ceremony':  [1.3, 2.4, 3.9, 3.1]
+    // Enquiry volume index (2022 = 100) — all bookings, not just won
+    enquiryIndex: {
+      'Conference':      [100, 103, 131, 95],
+      'Corporate Party': [100, 121, 152, 184],
+      'Meeting':         [100, 77, 83, 135],
+      'Christmas Party': [100, 112, 101, 103],
+      'Networking':      [100, 68, 54, 173],
+      'Summer Party':    [100, 85, 177, 185],
+      'Private Dining':  [100, 78, 128, 131],
+      'Award Ceremony':  [100, 173, 344, 338]
+    },
+    // Won booking volume index (2022 = 100) — confirmed bookings only
+    wonIndex: {
+      'Conference':      [100, 114, 155, 126],
+      'Corporate Party': [100, 101, 121, 107],
+      'Meeting':         [100, 97, 114, 89],
+      'Christmas Party': [100, 157, 132, 142],
+      'Networking':      [100, 88, 114, 100],
+      'Summer Party':    [100, 69, 166, 100],
+      'Private Dining':  [100, 95, 210, 133],
+      'Award Ceremony':  [100, 173, 282, 173]
     }
   },
 
@@ -184,32 +192,35 @@ const DATA = {
     { type: 'Meeting Rooms', median: 1797 }
   ],
 
-  // -- Venue Type YoY (% of confirmed bookings with that type) --
+  // -- Venue Type Confirmed (volume index, 2022=100, won bookings with venue type) --
   venueTypeConfirmed: {
     years: [2022, 2023, 2024, 2025],
     types: [
-      { type: 'Conference Centre', pcts: [51.0, 56.8, 58.6, 59.9] },
-      { type: 'Historic / Landmark', pcts: [20.8, 24.7, 24.5, 22.7] },
-      { type: 'Hotel', pcts: [17.9, 18.8, 17.8, 21.2] },
-      { type: 'Rooftop', pcts: [11.8, 13.0, 14.6, 13.6] },
-      { type: 'Bar', pcts: [8.7, 8.9, 10.4, 11.6] },
-      { type: 'Restaurant', pcts: [7.8, 8.0, 8.6, 9.4] },
-      { type: 'Meeting Rooms', pcts: [22.2, 22.7, 21.8, 18.4] }
+      { type: 'Hotel', index: [100, 128, 156, 161] },
+      { type: 'Conference Centre', index: [100, 113, 147, 138] },
+      { type: 'Bar', index: [100, 89, 138, 143] },
+      { type: 'Rooftop', index: [100, 109, 155, 134] },
+      { type: 'Restaurant', index: [100, 102, 136, 136] },
+      { type: 'Outdoor', index: [100, 122, 151, 133] },
+      { type: 'Historic / Landmark', index: [100, 114, 144, 124] },
+      { type: 'Meeting Rooms', index: [100, 103, 124, 104] }
     ]
   },
 
-  // -- Venue Type Enquiry Trends (% of all enquiry lines with that type) --
+  // -- Venue Type Enquiry (volume index, 2022=100, all enquiry lines with venue type) --
+  // Note: total enquiry line volume declined to index 83 by 2025 — types above 83 are gaining share
   venueTypeEnquiry: {
     years: [2022, 2023, 2024, 2025],
+    marketIndex: [100, 87, 84, 83],  // Total enquiry line volume reference
     types: [
-      { type: 'Conference Centre', pcts: [53.1, 56.9, 58.0, 57.1] },
-      { type: 'Historic / Landmark', pcts: [31.6, 32.1, 30.0, 25.9] },
-      { type: 'Hotel', pcts: [14.2, 15.3, 15.9, 18.5] },
-      { type: 'Outdoor', pcts: [15.0, 13.7, 13.7, 14.4] },
-      { type: 'Meeting Rooms', pcts: [14.3, 14.2, 14.6, 14.9] },
-      { type: 'Rooftop', pcts: [9.7, 8.5, 10.3, 12.1] },
-      { type: 'Bar', pcts: [9.8, 9.3, 9.3, 11.8] },
-      { type: 'Restaurant', pcts: [9.2, 8.9, 8.9, 11.7] }
+      { type: 'Hotel', index: [100, 103, 104, 119] },
+      { type: 'Restaurant', index: [100, 87, 88, 118] },
+      { type: 'Rooftop', index: [100, 87, 96, 107] },
+      { type: 'Bar', index: [100, 81, 80, 105] },
+      { type: 'Conference Centre', index: [100, 104, 104, 99] },
+      { type: 'Meeting Rooms', index: [100, 96, 98, 97] },
+      { type: 'Outdoor', index: [100, 85, 85, 89] },
+      { type: 'Historic / Landmark', index: [100, 99, 91, 77] }
     ]
   },
 
@@ -265,16 +276,16 @@ const DATA = {
   },
 
   // -- Spending by Industry (median confirmed booking value, GBP) --
-  // Source: Snowflake CONTRACT (fully signed) + HUBSPOT.COMPANIES.INDUSTRY
-  // Join: CORE_DATA.COMPANIES.HUBSPOTID = HUBSPOT.COMPANIES.HS_OBJECT_ID
+  // Source: Won booking lines summed per booking, mapped via companies.segment
   spendByIndustry: [
-    { segment: 'Property & Construction', median: 13438 },
-    { segment: 'Education & Training', median: 11976 },
-    { segment: 'Media & Marketing', median: 11968 },
-    { segment: 'Technology', median: 10924 },
-    { segment: 'Retail & Consumer', median: 9710 },
-    { segment: 'Financial Services', median: 7060 },
-    { segment: 'Professional Services', median: 4608 }
+    { segment: 'Financial Services', median: 11500 },
+    { segment: 'Technology', median: 8043 },
+    { segment: 'Retail & Consumer', median: 7313 },
+    { segment: 'Education & Training', median: 7150 },
+    { segment: 'Media & Marketing', median: 5500 },
+    { segment: 'Professional Services', median: 4781 },
+    { segment: 'Property & Construction', median: 4098 },
+    { segment: 'Healthcare & Pharma', median: 3800 }
   ],
 
   // -- Booking Line Lost Reasons (grouped, % of all lost lines) --
@@ -306,124 +317,123 @@ const DATA = {
     }
   },
 
-  // -- Industry Profiles (HubSpot INDUSTRY via Snowflake) --
-  // Source: CONTRACT (fully signed) -> BOOKINGS -> CORE_DATA.COMPANIES -> HUBSPOT.COMPANIES
-  // Join: CORE_DATA.COMPANIES.HUBSPOTID = SEGMENT_EVENTS.HUBSPOT.COMPANIES.HS_OBJECT_ID
-  // Period: 2023-2025
+  // -- Industry Profiles (via companies.segment mapping) --
+  // Source: Won booking lines summed per booking, mapped via companies.segment → industry group
+  // Period: 2022-2025
   industryProfiles: [
-    { industry: 'Financial Services', medianSpend: 7060, p25: 2976, p75: 15355, pph: 125, groupSize: 50, leadDays: 100,
+    { industry: 'Financial Services', medianSpend: 11500, p25: 4540, p75: 30724, pph: 112, groupSize: 100, leadDays: 98,
       hubspotValues: ['CAPITAL_MARKETS','INVESTMENT_MANAGEMENT','FINANCIAL_SERVICES','BANKING','INSURANCE','ACCOUNTING'] },
-    { industry: 'Professional Services', medianSpend: 4608, p25: 2141, p75: 10107, pph: 105, groupSize: 55, leadDays: 90,
+    { industry: 'Professional Services', medianSpend: 4781, p25: 2073, p75: 15362, pph: 98, groupSize: 50, leadDays: 79,
       hubspotValues: ['MANAGEMENT_CONSULTING','LAW_PRACTICE','LEGAL_SERVICES','HUMAN_RESOURCES','STAFFING_AND_RECRUITING','MARKET_RESEARCH'] },
-    { industry: 'Technology', medianSpend: 10924, p25: 4940, p75: 16925, pph: 124, groupSize: 100, leadDays: 108,
+    { industry: 'Technology', medianSpend: 8043, p25: 1966, p75: 18732, pph: 108, groupSize: 70, leadDays: 98,
       hubspotValues: ['COMPUTER_SOFTWARE','INFORMATION_TECHNOLOGY_AND_SERVICES','TELECOMMUNICATIONS'] },
-    { industry: 'Education & Training', medianSpend: 11976, p25: 5234, p75: 23063, pph: 85, groupSize: 120, leadDays: 105,
+    { industry: 'Education & Training', medianSpend: 7150, p25: 1541, p75: 23076, pph: 86, groupSize: 100, leadDays: 105,
       hubspotValues: ['PROFESSIONAL_TRAINING_COACHING','HIGHER_EDUCATION','EDUCATION_MANAGEMENT'] },
-    { industry: 'Retail & Consumer', medianSpend: 9710, p25: 3658, p75: 20828, pph: 85, groupSize: 130, leadDays: 110,
+    { industry: 'Retail & Consumer', medianSpend: 7313, p25: 1243, p75: 16694, pph: 76, groupSize: 77, leadDays: 74,
       hubspotValues: ['RETAIL','CONSUMER_SERVICES','CONSUMER_GOODS','APPAREL_FASHION','LUXURY_GOODS_JEWELRY'] },
-    { industry: 'Property & Construction', medianSpend: 13438, p25: 8200, p75: 22591, pph: 90, groupSize: 140, leadDays: 136,
+    { industry: 'Property & Construction', medianSpend: 4098, p25: 1075, p75: 10104, pph: 77, groupSize: 42, leadDays: 71,
       hubspotValues: ['REAL_ESTATE','CONSTRUCTION','CIVIL_ENGINEERING','ARCHITECTURE_PLANNING'] },
-    { industry: 'Media & Marketing', medianSpend: 11968, p25: 8750, p75: 18900, pph: 84, groupSize: 165, leadDays: 191,
+    { industry: 'Media & Marketing', medianSpend: 5500, p25: 1666, p75: 15300, pph: 79, groupSize: 60, leadDays: 65,
       hubspotValues: ['MARKETING_AND_ADVERTISING','PUBLIC_RELATIONS_AND_COMMUNICATIONS','PUBLISHING','ENTERTAINMENT'] },
-    { industry: 'Healthcare & Pharma', medianSpend: 12620, p25: 8500, p75: 16963, pph: 121, groupSize: 145, leadDays: 148,
+    { industry: 'Healthcare & Pharma', medianSpend: 3800, p25: 417, p75: 12000, pph: 45, groupSize: 70, leadDays: 61,
       hubspotValues: ['HOSPITAL_HEALTH_CARE','PHARMACEUTICALS','COSMETICS'] }
   ],
 
-  // -- Event Type Profiles (Snowflake CONTRACT, 2023-2025) --
+  // -- Event Type Profiles (from won booking lines, 2022-2025) --
   // For personalised deep-dive slides per event type
   eventTypeProfiles: {
     'conference': {
       hubspotValue: 'conferences',
       label: 'Conference',
-      spend: { median: 12447, p25: 5330, p75: 24918 },
-      pph: 98, groupSize: { median: 140, p25: 80, p75: 200 },
-      leadDays: { median: 140, p25: 87, p75: 220 },
+      spend: { median: 10001, p25: 2719, p75: 23094 },
+      pph: 91, groupSize: { median: 100, p25: 50, p75: 192 },
+      leadDays: { median: 98, p25: 54, p75: 180 },
       peakMonths: ['Jun', 'Sep', 'Nov'], peakDay: 'Wed',
-      tip: 'Conferences typically require 4-5 months lead time. Start early to access the best large-capacity venues, especially for autumn and summer events.'
+      tip: 'Conferences typically require 3+ months lead time. Start early to access the best large-capacity venues, especially for autumn and summer events.'
     },
     'christmasParty': {
       hubspotValue: 'christmas-parties',
       label: 'Christmas Party',
-      spend: { median: 12650, p25: 7266, p75: 21781 },
-      pph: 116, groupSize: { median: 120, p25: 100, p75: 200 },
-      leadDays: { median: 114, p25: 72, p75: 202 },
+      spend: { median: 12150, p25: 5298, p75: 20724 },
+      pph: 111, groupSize: { median: 100, p25: 60, p75: 150 },
+      leadDays: { median: 100, p25: 66, p75: 162 },
       peakMonths: ['Dec', 'Nov'], peakDay: 'Thu',
       tip: 'December dates at top venues book out by summer. Enquire by Q2 for the best selection, especially for groups over 100.'
     },
     'corporateParty': {
       hubspotValue: 'corporate-parties',
       label: 'Corporate Party',
-      spend: { median: 10032, p25: 3967, p75: 17094 },
-      pph: 109, groupSize: { median: 100, p25: 50, p75: 150 },
-      leadDays: { median: 96, p25: 62, p75: 176 },
+      spend: { median: 2110, p25: 746, p75: 5192 },
+      pph: 30, groupSize: { median: 60, p25: 40, p75: 100 },
+      leadDays: { median: 63, p25: 33, p75: 113 },
       peakMonths: ['Nov', 'Dec', 'Oct'], peakDay: 'Sat',
       tip: 'Corporate parties peak in Q4 but run year-round. Saturday is the most popular day, so book early for weekend availability.'
     },
     'summerParty': {
       hubspotValue: 'summer-parties',
       label: 'Summer Party',
-      spend: { median: 11426, p25: 5436, p75: 21640 },
-      pph: 96, groupSize: { median: 120, p25: 85, p75: 200 },
-      leadDays: { median: 102, p25: 69, p75: 155 },
+      spend: { median: 8073, p25: 3126, p75: 20054 },
+      pph: 83, groupSize: { median: 112, p25: 60, p75: 200 },
+      leadDays: { median: 103, p25: 57, p75: 148 },
       peakMonths: ['Jul', 'Jun', 'Sep'], peakDay: 'Thu',
       tip: 'Outdoor and rooftop venues are in high demand for summer. Book 3+ months ahead for the best al fresco options.'
     },
     'networkingEvent': {
       hubspotValue: 'networking-events',
       label: 'Networking Event',
-      spend: { median: 13333, p25: 5800, p75: 23518 },
-      pph: 127, groupSize: { median: 100, p25: 50, p75: 150 },
-      leadDays: { median: 111, p25: 60, p75: 206 },
+      spend: { median: 7895, p25: 2542, p75: 17289 },
+      pph: 88, groupSize: { median: 80, p25: 50, p75: 150 },
+      leadDays: { median: 90, p25: 51, p75: 149 },
       peakMonths: ['Dec', 'Nov', 'Sep'], peakDay: 'Thu',
-      tip: 'Networking events have high per-head costs. Flexible layouts and breakout areas are key - consider venues with multiple zones.'
+      tip: 'Networking events benefit from flexible layouts and breakout areas. Consider venues with multiple zones to encourage natural interaction.'
     },
     'awardCeremony': {
       hubspotValue: 'awards-ceremonies',
       label: 'Award Ceremony',
-      spend: { median: 13438, p25: 5323, p75: 28486 },
-      pph: 75, groupSize: { median: 200, p25: 180, p75: 300 },
-      leadDays: { median: 188, p25: 112, p75: 284 },
+      spend: { median: 18900, p25: 4805, p75: 32913 },
+      pph: 93, groupSize: { median: 200, p25: 100, p75: 300 },
+      leadDays: { median: 136, p25: 77, p75: 236 },
       peakMonths: ['Jun', 'Nov', 'Sep'], peakDay: 'Thu',
-      tip: 'Award ceremonies have the longest lead times of any event type. With 200+ guests typical, securing a large-format venue requires booking 6+ months ahead.'
+      tip: 'Award ceremonies have the longest lead times of any event type. With 200+ guests typical, securing a large-format venue requires booking 4+ months ahead.'
     },
     'meeting': {
       hubspotValue: 'meetings',
       label: 'Meeting',
-      spend: { median: 4392, p25: 1520, p75: 8544 },
-      pph: 140, groupSize: { median: 25, p25: 14, p75: 44 },
-      leadDays: { median: 64, p25: 27, p75: 120 },
+      spend: { median: 905, p25: 300, p75: 2916 },
+      pph: 54, groupSize: { median: 18, p25: 8, p75: 31 },
+      leadDays: { median: 32, p25: 14, p75: 71 },
       peakMonths: ['Oct', 'Nov', 'Jun'], peakDay: 'Wed',
-      tip: 'Meetings have the highest per-head cost despite smaller budgets. Planning 2+ months ahead gives access to premium meeting rooms and better day delegate rates.'
+      tip: 'Meetings are the most frequent event type on our platform. Planning 1+ month ahead gives access to premium meeting rooms and better day delegate rates.'
     },
     'corporatePrivateDining': {
       hubspotValue: 'private-dining',
       label: 'Private Dining',
-      spend: { median: 4851, p25: 2145, p75: 12112 },
-      pph: 122, groupSize: { median: 40, p25: 20, p75: 90 },
-      leadDays: { median: 89, p25: 56, p75: 147 },
+      spend: { median: 3543, p25: 1870, p75: 8333 },
+      pph: 102, groupSize: { median: 33, p25: 20, p75: 60 },
+      leadDays: { median: 68, p25: 33, p75: 122 },
       peakMonths: ['Nov', 'Jun', 'Oct'], peakDay: 'Wed',
-      tip: 'Private dining is intimate but premium - per-head costs exceed 120 pounds. The best private dining rooms seat 20-40 and book up fast in Q4.'
+      tip: 'Private dining delivers a premium per-head experience. The best private dining rooms seat 20-40 and book up fast in Q4.'
     },
     'galaDinner': {
       hubspotValue: null,
       label: 'Gala Dinner',
-      spend: { median: 15750, p25: 7472, p75: 21112 },
-      pph: 102, groupSize: { median: 200, p25: 158, p75: 230 },
-      leadDays: { median: 157, p25: 138, p75: 254 },
+      spend: { median: 8437, p25: 1796, p75: 20494 },
+      pph: 41, groupSize: { median: 150, p25: 90, p75: 220 },
+      leadDays: { median: 151, p25: 80, p75: 236 },
       peakMonths: ['Jul', 'May', 'Nov'], peakDay: 'Thu',
-      tip: 'Gala dinners are large-scale formal events - typical groups of 200+ mean only a handful of venues can accommodate them. Start planning 5+ months out.'
+      tip: 'Gala dinners are large-scale formal events - typical groups of 150+ mean only a handful of venues can accommodate them. Start planning 5+ months out.'
     },
     'productLaunch': {
       hubspotValue: 'product-launches',
       label: 'Product Launch',
-      spend: { median: 15833, p25: 9584, p75: 18908 },
-      pph: 158, groupSize: { median: 80, p25: 40, p75: 110 },
-      leadDays: { median: 82, p25: 44, p75: 94 },
+      spend: { median: 1303, p25: 307, p75: 10060 },
+      pph: 27, groupSize: { median: 40, p25: 30, p75: 135 },
+      leadDays: { median: 58, p25: 32, p75: 103 },
       peakMonths: ['Jul', 'Oct', 'Jun'], peakDay: 'Thu',
-      tip: 'Product launches have the highest per-head cost of any event type. Despite shorter lead times, venues with AV infrastructure and branding flexibility are in high demand.'
+      tip: 'Product launches demand venues with strong AV infrastructure and branding flexibility. Despite shorter lead times, the best creative spaces are in high demand.'
     }
     // HubSpot values without dedicated profiles (insufficient data):
-    // exhibitions (n=6), team-building, workshops, away-days
+    // exhibitions (n=14), team-building, workshops, away-days
   },
 
   // -- Venue Types by Industry (Snowflake, ALL bookings 2022-2025) --

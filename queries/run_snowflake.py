@@ -1,3 +1,9 @@
+# ⚠️  DEPRECATED — 27 March 2026
+# Financial data (booking values, PPH, category/industry spend) now comes from
+# run_bookinglines.py using MongoDB booking lines (99.5% coverage).
+# This script is kept for reference and for queries that still need Snowflake
+# (e.g. conversion by lead time, venue type trends).
+
 import snowflake.connector, os, statistics
 
 pw = os.environ.get("SNOWFLAKE_PASSWORD", "")

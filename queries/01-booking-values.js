@@ -1,21 +1,13 @@
+// ⚠️  DEPRECATED — 27 March 2026
+// Booking values now come from run_bookinglines.py using MongoDB booking lines
+// (price field on won BLs, 99.5% coverage). Kept for historical reference.
+//
 // ============================================================
 // Booking Values, PPH, Values by Category, Spend by Industry
 // ============================================================
 // SOURCE: Snowflake — HIRE_SPACE.CORE_DATA.CONTRACT + BOOKINGS
-// METHOD: Fully signed contracts, latest per booking (deduped),
-//         joined to BOOKINGS for event date, people, category.
+// METHOD: Fully signed contracts, latest per booking (deduped)
 // COVERAGE: ~19-23% of bookings (2023-2025). 2022 omitted (1.1%).
-// UPDATED: 27 March 2026 — switched from BOOKING_LINES to BOOKINGS
-//
-// Why CONTRACT? MongoDB has no reliable actual-spend field.
-// - manualPrice: deprecated, only ~4K pre-2020 docs
-// - budget: enquiry budget, not actual spend
-// - invoices: commission amounts (~10%), only ~6% coverage
-// - proposal-costs: venue proposals, mostly cost=0
-//
-// Why fully signed + latest? A booking can have multiple contracts
-// (drafts, revisions). We take STATUS = 'fully signed' and pick
-// the most recently signed one per booking.
 
 // ── SNOWFLAKE: Booking Values ──────────────────────────────
 

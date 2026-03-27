@@ -1,10 +1,12 @@
+-- ⚠️  DEPRECATED — 27 March 2026
+-- Event type profiles now come from run_bookinglines.py using MongoDB booking lines.
+-- Kept for reference only.
+--
 -- ============================================================
 -- Event Type Profiles — Spend, PPH, group size, lead time per category
 -- ============================================================
 -- SOURCE: Snowflake — CONTRACT + BOOKINGS
 -- PERIOD: 2023-2025 (fully signed contracts only)
--- UPDATED: 27 March 2026 — switched from BOOKING_LINES to BOOKINGS for
---          category/eventdate/people. Uses STATUS = 'won' on BOOKINGS.
 
 WITH latest_contract AS (
     SELECT BOOKINGID, TOTALCOSTEXCTAX,

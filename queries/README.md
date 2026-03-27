@@ -5,8 +5,10 @@
 This report shows corporate event booking trends from 2022–2025, published at `organisers.html`. All data lives in `js/data.js` and is rendered by Chart.js via `js/charts-organisers.js`.
 
 The data comes from two sources:
-- **MongoDB** (primary) — Hire Space production `bookinglines` collection
-- **Snowflake** (for financial data) — `HIRE_SPACE.CORE_DATA.CONTRACT` table
+- **MongoDB** (primary) — Hire Space production `bookings` + `bookinglines` collections
+- **Snowflake** — Used for venue type trends, industry venue/event type breakdowns, and conversion by lead time
+
+**Financial data (booking values, PPH, spend by category/industry)** was switched from Snowflake CONTRACT table (~20% coverage) to MongoDB booking lines (99.5% coverage) on 27 March 2026. See `run_bookinglines.py` for the current methodology.
 
 ## How to Refresh the Data
 
@@ -24,10 +26,12 @@ Python dependencies: `pymongo`, `snowflake-connector-python`
 
 | data.js section | Source | Query file | Notes |
 |----------------|--------|------------|-------|
-| `bookingValues` | Snowflake | `01-booking-values.js` | CONTRACT table, fully signed, latest per booking |
-| `valuesByCategory` | Snowflake | `01-booking-values.js` | Same CONTRACT methodology |
-| `pricePerHead` | Snowflake | `01-booking-values.js` | CONTRACT value / people |
-| `spendByIndustry` | Snowflake | `01-booking-values.js` | CONTRACT + COMPANIES.SEGMENT |
+| `bookingValues` | MongoDB | `run_bookinglines.py` | Sum of won BL prices per won booking (99.5% coverage) |
+| `valuesByCategory` | MongoDB | `run_bookinglines.py` | Same BL methodology, by category |
+| `pricePerHead` | MongoDB | `run_bookinglines.py` | BL total value / people |
+| `spendByIndustry` | MongoDB | `run_bookinglines.py` | BL values + companies.segment mapping |
+| `industryProfiles` | MongoDB | `run_bookinglines.py` | BL values + companies.segment → industry group |
+| `eventTypeProfiles` | MongoDB | `run_bookinglines.py` | BL values per category with spend, PPH, group, lead |
 | `conversionByLeadTime` | Snowflake | `11-conversion-by-lead-time.js` | BL creation date vs event date |
 | `leadTimes` | MongoDB | `03-lead-times.js` | timestamp → eventdate, booking-level |
 | `groupSizes` | MongoDB | `02-group-sizes.js` | `people` field, booking-level |
@@ -35,13 +39,12 @@ Python dependencies: `pymongo`, `snowflake-connector-python`
 | `seasonality` | MongoDB | `05-seasonality.js` | Event month distribution |
 | `dayOfWeek` | MongoDB | `06-day-of-week.js` | Event day distribution |
 | `venueShopping` | MongoDB | `04-venue-shopping.js` | Distinct venues per booking |
-| ~~`repeatBookings`~~ | ~~MongoDB~~ | ~~`09-repeat-bookings.js`~~ | Removed — not used in any report |
 | `xmasParty` | MongoDB | `08-christmas-party.js` | Enquiry month, group sizes |
 | `lostReasons` | MongoDB | `validate_all.py` | `reasonLost` field on Int BLs |
-| `enquiryCounts` | MongoDB | `10-enquiry-counts.js` | Proportions (%) of bookings by category |
+| `marketVolume` | MongoDB | `run_bookinglines.py` | Total market enquiry + won indexes (2022=100) |
+| `categoryMix.enquiryIndex` | MongoDB | `run_bookinglines.py` | Enquiry volume index per category (2022=100) |
+| `categoryMix.wonIndex` | MongoDB | `run_bookinglines.py` | Won booking volume index per category (2022=100) |
 | `venueTypePricing` | Snowflake | — | Not yet validated from Snowflake |
-| `industryProfiles` | Snowflake | `14-industry-profiles.sql` | CONTRACT + HUBSPOT.COMPANIES via HUBSPOTID |
-| `eventTypeProfiles` | Snowflake | `15-event-type-profiles.sql` | CONTRACT + BOOKING_LINES, peaks from all confirmed BLs |
 | `venueTypesByIndustry` | Snowflake | `16-industry-venue-types.sql` | ALL BLs + VENUES (boolean type cols) + HUBSPOT.COMPANIES; 2022–23 vs 2024–25 share |
 | `eventTypesByIndustry` | Snowflake | `17-industry-event-types.sql` | ALL BLs (CATEGORY) + HUBSPOT.COMPANIES; 2022–23 vs 2024–25 share |
 
@@ -141,18 +144,25 @@ Python dependencies: `pymongo`, `snowflake-connector-python`
 | `_ID` | Company ID |
 | `SEGMENT` | e.g. `tech-medium`, `profServices-financial`, `agency-events` |
 
-## Snowflake: Booking Value Methodology
+## Booking Value Methodology (current — MongoDB booking lines)
+
+**Script:** `run_bookinglines.py`
 
 The methodology for deriving actual booking spend:
 
-1. **Filter contracts**: `STATUS = 'fully signed'` and `TOTALCOSTEXCTAX > 0`
-2. **Deduplicate**: Take the latest signed contract per booking (by `FULLYSIGNEDTIMESTAMP DESC`, then `META__CREATEDAT DESC`)
-3. **Join to BLs**: Via `BOOKINGID` to get event date, people, category
-4. **Aggregate at booking level**: One BL per booking (MIN eventdate, MAX people, MIN category)
+1. **Get won bookings**: `bookings` collection, `status: 'won'`, event date 2022–2025, excluding non-corporate categories
+2. **Get won booking lines**: `bookinglines` collection, `status: 'won'`, matching bookingId
+3. **Price field**: Use `price` if > 0 (GBP). If `price` is 0/null, fall back to `localPrice` converted to GBP via `localCurrency` exchange rate
+4. **Sum per booking**: Sum all won BL prices per booking (97.3% of bookings have exactly 1 won BL)
+5. **Aggregate**: Median, p25, p75 by year, by category, by industry (via companies.segment)
 
-**Coverage**: ~19-23% of confirmed bookings (2023-2025). 2022 has only 1.1% coverage (contracts weren't widely used) so is omitted from financial figures.
+**Coverage**: 99.5% of won bookings have at least one priced booking line (n=3,210 of 3,256 for 2022–2025).
 
-**Bias**: Contract-based values skew toward larger/more formal bookings. This is intentional — the report targets organisers of these larger events.
+**Currency**: 98.3% of won BLs have `price > 0` (already GBP). For the rest, `localPrice` is converted using approximate mid-market FX rates. Currencies: GBP (6,028), EUR (216), USD (50), plus 25 other currencies in small numbers.
+
+### Previous methodology (Snowflake CONTRACT — deprecated)
+
+The old approach used `HIRE_SPACE.CORE_DATA.CONTRACT` with `STATUS = 'fully signed'`, latest per booking. This had only ~20% coverage and skewed toward larger bookings. Queries preserved in `13-snowflake-booking-values.sql`, `14-industry-profiles.sql`, `15-event-type-profiles.sql` for reference.
 
 ## Snowflake: Industry Data
 
@@ -205,13 +215,15 @@ The following values in `organisers.html` are hardcoded (not driven by data.js) 
 
 | Location | Current Value | data.js source |
 |----------|--------------|----------------|
-| Slide 2 stat cards | +34% Booking Values, £8,562 → £11,500 | `bookingValues.median` |
+| Slide 2 stat cards | +58% Booking Values, £3,801 → £6,000 | `bookingValues.median` |
 | Slide 2 stat cards | +25% Venues Compared, 2.8 → 3.5 | `venueShopping.avgVenues` |
-| Slide 2 stat cards | +7% Price Per Head, £101 → £108 | `pricePerHead.median` |
-| Slide 2 stat cards | +19% Lead Times, 93 → 111 days | `leadTimes.median` |
-| Slide 3 copy | "£8,562 in 2023 to £11,500 in 2025" | `bookingValues.median` |
-| Slide 3 copy | "£101–£108 across 2023–2025" | `pricePerHead.median` |
+| Slide 2 stat cards | +68% Price Per Head, £53 → £89 | `pricePerHead.median` |
+| Slide 2 stat cards | +39% Lead Times, 57 → 79 days | `leadTimes.median` |
+| Slide 3 copy | "£3,801 in 2023 to £6,000 in 2025" | `bookingValues.median` |
+| Slide 3 copy | "£53 in 2022 to £89 in 2025" | `pricePerHead.median` |
+| Slide 4 copy | "£19,000 median" for award ceremonies | `valuesByCategory` |
 | Slide 8 copy | "2.8 to 3.5 per enquiry" | `venueShopping.avgVenues` |
+| Slide 12 copy | "58% since 2023", "£18,000" | `bookingValues` |
 
 ## Validation History
 
@@ -219,3 +231,5 @@ The following values in `organisers.html` are hardcoded (not driven by data.js) 
 |------|------|----|
 | 25 March 2026 | Full MongoDB validation of all data sections | Claude |
 | 25 March 2026 | Snowflake validation of booking values, PPH, category values, industry spend, conversion by lead time | Claude |
+| 27 March 2026 | Switched financial data from Snowflake CONTRACT (~20% coverage) to MongoDB booking lines (99.5% coverage) | Claude |
+| 27 March 2026 | Updated data.js, organisers.html copy, industry profiles, event type profiles with BL-based values | Claude |

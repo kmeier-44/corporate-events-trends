@@ -521,14 +521,14 @@ function initCharts() {
     }
   });
 
-  // ── chartCategoryTrend — Multi-line, enquiry proportions for shape but y-axis hidden ──
+  // ── chartCategoryTrend — Multi-line, enquiry volume index (2022=100) ──
   if (document.getElementById('chartCategoryTrend')) {
     const id = 'chartCategoryTrend';
     const catNames = ['Conference', 'Corporate Party', 'Meeting', 'Christmas Party', 'Networking', 'Summer Party', 'Award Ceremony', 'Private Dining'];
-    const proportions = DATA.categoryMix.enquiryCounts;
-    const datasets = catNames.filter(name => proportions[name]).map((name, i) => ({
+    const indexes = DATA.categoryMix.enquiryIndex;
+    const datasets = catNames.filter(name => indexes[name]).map((name, i) => ({
       label: name,
-      data: proportions[name],
+      data: indexes[name],
       borderColor: palette[i],
       backgroundColor: palette[i],
       pointRadius: 4,
@@ -537,6 +537,21 @@ function initCharts() {
       tension: 0.2,
       fill: false
     }));
+
+    // Add market total as a dashed reference line
+    if (DATA.marketVolume) {
+      datasets.push({
+        label: 'Total Market',
+        data: DATA.marketVolume.enquiryIndex,
+        borderColor: 'rgba(255,255,255,0.35)',
+        backgroundColor: 'transparent',
+        pointRadius: 0,
+        borderWidth: 1.5,
+        borderDash: [6, 4],
+        tension: 0.2,
+        fill: false
+      });
+    }
 
     new Chart(document.getElementById(id), {
       type: 'line',
@@ -554,7 +569,10 @@ function initCharts() {
           tooltip: {
             callbacks: {
               label: ctx => {
-                return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(1) + '% of enquiries';
+                const val = ctx.parsed.y;
+                const change = val - 100;
+                const sign = change >= 0 ? '+' : '';
+                return ctx.dataset.label + ': ' + val + ' (' + sign + change + '% vs 2022)';
               }
             }
           }
@@ -565,8 +583,11 @@ function initCharts() {
             ticks: { color: tickColor(id) }
           },
           y: {
-            beginAtZero: true,
-            display: false  // Hide y-axis — show shape/trend only
+            grid: { color: gridColor(id) },
+            ticks: {
+              color: tickColor(id),
+              callback: v => v === 100 ? '2022 baseline' : v
+            }
           }
         }
       }
