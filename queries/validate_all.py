@@ -18,6 +18,13 @@ WON = {"status": "won"}
 WON_BL = {"status": "won"}
 HV = {"venueId": {"$type": "int"}}
 
+# Exclude non-corporate categories from aggregate queries
+EXCLUDE_CATS = {"category": {"$nin": [
+    "category-birthdayParty", "category-wedding", "category-other", None
+]}}
+# Combined filter for won corporate bookings
+WON_CORP = {**WON, **EXCLUDE_CATS}
+
 # Category mapping: data.js name -> MongoDB slug
 CAT_MAP = {
     "Conference": "category-conference",
@@ -43,10 +50,10 @@ print("  Source: Snowflake CONTRACT table — see 13-snowflake-booking-values.sq
 print("  data.js bookingValues: median [8562, 10922, 11500] for 2023-2025")
 
 # ── 2. GROUP SIZES (from bookings collection) ──
-print("\n=== 2. GROUP SIZES (booking level) ===")
+print("\n=== 2. GROUP SIZES (booking level, corporate only) ===")
 for year in [2022, 2023, 2024, 2025]:
     results = list(bk.aggregate([
-        {"$match": {**WON, **yf(year), "people": {"$exists": True, "$gt": 0}}},
+        {"$match": {**WON_CORP, **yf(year), "people": {"$exists": True, "$gt": 0}}},
         {"$sort": {"people": 1}},
         {"$group": {"_id": None, "sizes": {"$push": "$people"}, "count": {"$sum": 1}}}
     ]))
@@ -55,9 +62,9 @@ for year in [2022, 2023, 2024, 2025]:
         print(f"  {year}: n={len(sizes)}, median={statistics.median(sizes):.0f}, p25={statistics.quantiles(sizes,n=4)[0]:.0f}, p75={statistics.quantiles(sizes,n=4)[2]:.0f}")
 
 # ── 3. LEAD TIMES (from bookings collection) ──
-print("\n=== 3. LEAD TIMES (booking level, timestamp->eventdate) ===")
+print("\n=== 3. LEAD TIMES (booking level, corporate only) ===")
 for year in [2022, 2023, 2024, 2025]:
-    docs = bk.find({**WON, **yf(year), "timestamp": {"$exists": True, "$gt": 0}}, {"eventdate":1, "timestamp":1})
+    docs = bk.find({**WON_CORP, **yf(year), "timestamp": {"$exists": True, "$gt": 0}}, {"eventdate":1, "timestamp":1, "category":1})
     leads = []
     for d in docs:
         try:
@@ -103,9 +110,9 @@ for year in [2022, 2023, 2024, 2025]:
         print(f"  {year}: n={len(results)}, avg={sum(counts)/len(counts):.2f}, multiVenue={sum(1 for c in counts if c>1)/len(counts)*100:.1f}%")
 
 # ── 6. SEASONALITY (from bookings collection) ──
-print("\n=== 6. SEASONALITY (event month %, won bookings) ===")
+print("\n=== 6. SEASONALITY (event month %, corporate won bookings) ===")
 results = list(bk.aggregate([
-    {"$match": {**WON, "eventdate": {"$gt": 0}}},
+    {"$match": {**WON_CORP, "eventdate": {"$gt": 0}}},
     {"$addFields": {"em": {"$month": {"$toDate": {"$toLong": "$eventdate"}}}}},
     {"$group": {"_id": "$em", "c": {"$sum": 1}}},
     {"$sort": {"_id": 1}}
@@ -115,9 +122,9 @@ pcts = {r["_id"]: round(r["c"]/total*100, 1) for r in results}
 print(f"  MongoDB: {[pcts.get(m, 0) for m in range(1, 13)]}")
 
 # ── 7. DAY OF WEEK (from bookings collection) ──
-print("\n=== 7. DAY OF WEEK ===")
+print("\n=== 7. DAY OF WEEK (corporate only) ===")
 results = list(bk.aggregate([
-    {"$match": {**WON, "eventdate": {"$gt": 0}}},
+    {"$match": {**WON_CORP, "eventdate": {"$gt": 0}}},
     {"$addFields": {"dow": {"$dayOfWeek": {"$toDate": {"$toLong": "$eventdate"}}}}},
     {"$group": {"_id": "$dow", "c": {"$sum": 1}}},
     {"$sort": {"_id": 1}}
@@ -130,10 +137,10 @@ for r in results:
 print(f"  MongoDB: {[dow_pcts.get(d, 0) for d in ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']]}")
 
 # ── 8. CATEGORY MIX (from bookings collection) ──
-print("\n=== 8. CATEGORY MIX (% won bookings) ===")
+print("\n=== 8. CATEGORY MIX (% won corporate bookings) ===")
 for year in [2022, 2023, 2024, 2025]:
     results = list(bk.aggregate([
-        {"$match": {**WON, **yf(year)}},
+        {"$match": {**WON_CORP, **yf(year)}},
         {"$group": {"_id": "$category", "c": {"$sum": 1}}},
         {"$sort": {"c": -1}}
     ]))
@@ -170,16 +177,20 @@ total = sum(r["c"] for r in results)
 pcts = {r["_id"]: round(r["c"]/total*100, 1) for r in results}
 print(f"  MongoDB: {[pcts.get(m, 0) for m in range(1, 13)]}")
 
-# Xmas party group size by enquiry month
-print("\n=== 11. XMAS — Avg Group Size by Enquiry Month ===")
+# Xmas party group size by enquiry month (median, excludes outliers >1000)
+print("\n=== 11. XMAS — Median Group Size by Enquiry Month ===")
 results = list(bk.aggregate([
-    {"$match": {"category": "category-christmasParty", "timestamp": {"$gt": 0}, "people": {"$gt": 0}}},
+    {"$match": {"category": "category-christmasParty", "timestamp": {"$gt": 0}, "people": {"$gt": 0, "$lte": 1000}}},
     {"$addFields": {"cm": {"$month": {"$toDate": {"$toLong": "$timestamp"}}}}},
-    {"$group": {"_id": "$cm", "avg": {"$avg": "$people"}, "c": {"$sum": 1}}},
+    {"$group": {"_id": "$cm", "sizes": {"$push": "$people"}, "c": {"$sum": 1}}},
     {"$sort": {"_id": 1}}
 ]))
-sizes = {r["_id"]: round(r["avg"]) for r in results}
-print(f"  MongoDB: {[sizes.get(m, 0) for m in range(1, 13)]}")
+sizes = {}
+for r in results:
+    s = sorted(r["sizes"])
+    sizes[r["_id"]] = round(statistics.median(s))
+print(f"  MongoDB (median): {[sizes.get(m, 0) for m in range(1, 13)]}")
+print(f"  Counts:           {[next((r['c'] for r in results if r['_id']==m), 0) for m in range(1, 13)]}")
 
 # ── 12. ENQUIRY COUNTS AS PROPORTIONS (from bookings collection) ──
 print("\n=== 12. ENQUIRY PROPORTIONS BY CATEGORY ===")
@@ -211,7 +222,60 @@ for name in tracked:
     props = [round(raw_by_cat[name][yi] / year_totals[yi] * 100, 1) if year_totals[yi] > 0 else 0 for yi in range(4)]
     print(f"  '{name}': {props}")
 
-# ── 13. TOTAL COUNTS ──
+# ── 13a. SEASONALITY BY TYPE (event month %) ──
+print("\n=== 13a. SEASONALITY BY TYPE (event month %, won bookings) ===")
+for name, slug in [("Conference","category-conference"), ("Christmas Party","category-christmasParty"),
+                    ("Summer Party","category-summerParty"), ("Corporate Party","category-corporateParty")]:
+    results = list(bk.aggregate([
+        {"$match": {**WON, "category": slug, "eventdate": {"$gt": 0}}},
+        {"$addFields": {"em": {"$month": {"$toDate": {"$toLong": "$eventdate"}}}}},
+        {"$group": {"_id": "$em", "c": {"$sum": 1}}},
+        {"$sort": {"_id": 1}}
+    ]))
+    total = sum(r["c"] for r in results)
+    pcts = [round(next((r["c"] for r in results if r["_id"]==m), 0)/total*100, 0) if total else 0 for m in range(1, 13)]
+    print(f"  {name}: {pcts}")
+
+# ── 13b. CLOSE MONTH BY TYPE (timestamp month %) ──
+print("\n=== 13b. CLOSE MONTH BY TYPE (timestamp/creation month %, won bookings) ===")
+for name, slug in [("Conference","category-conference"), ("Christmas Party","category-christmasParty"),
+                    ("Summer Party","category-summerParty"), ("Corporate Party","category-corporateParty")]:
+    results = list(bk.aggregate([
+        {"$match": {**WON, "category": slug, "timestamp": {"$gt": 0}}},
+        {"$addFields": {"cm": {"$month": {"$toDate": {"$toLong": "$timestamp"}}}}},
+        {"$group": {"_id": "$cm", "c": {"$sum": 1}}},
+        {"$sort": {"_id": 1}}
+    ]))
+    total = sum(r["c"] for r in results)
+    pcts = [round(next((r["c"] for r in results if r["_id"]==m), 0)/total*100, 1) if total else 0 for m in range(1, 13)]
+    print(f"  {name}: {pcts}")
+
+# ── 13c. XMAS GROUP SIZE BY YEAR ──
+print("\n=== 13c. XMAS GROUP SIZE BY YEAR ===")
+for year in [2022, 2023, 2024, 2025]:
+    results = list(bk.aggregate([
+        {"$match": {"category": "category-christmasParty", **yf(year), "people": {"$gt": 0, "$lte": 1000}}},
+        {"$sort": {"people": 1}},
+        {"$group": {"_id": None, "sizes": {"$push": "$people"}, "c": {"$sum": 1}}}
+    ]))
+    if results:
+        s = results[0]["sizes"]
+        print(f"  {year}: n={len(s)}, median={statistics.median(s):.0f}, p25={statistics.quantiles(s,n=4)[0]:.0f}, p75={statistics.quantiles(s,n=4)[2]:.0f}")
+
+# ── 13d. XMAS GROUP SIZE DISTRIBUTION ──
+print("\n=== 13d. XMAS GROUP SIZE DISTRIBUTION ===")
+results = list(bk.aggregate([
+    {"$match": {"category": "category-christmasParty", "people": {"$gt": 0, "$lte": 1000}}},
+    {"$bucket": {"groupBy": "$people", "boundaries": [1, 51, 101, 201, 501, 1001], "default": "other",
+                 "output": {"count": {"$sum": 1}}}}
+]))
+total = sum(r["count"] for r in results if r["_id"] != "other")
+for r in results:
+    if r["_id"] != "other":
+        label = {1: "1-50", 51: "51-100", 101: "101-200", 201: "201-500", 501: "500+"}[r["_id"]]
+        print(f"  {label}: {r['count']/total*100:.1f}%")
+
+# ── 14. TOTAL COUNTS ──
 print("\n=== 13. TOTAL COUNTS ===")
 print(f"  All bookings: {bk.count_documents({})}")
 print(f"  Won bookings: {bk.count_documents(WON)}")

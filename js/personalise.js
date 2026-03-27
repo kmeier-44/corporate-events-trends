@@ -77,7 +77,7 @@
   function personaliseTitle(data) {
     var subtitle = document.querySelector('.title-slide .subtitle');
     if (subtitle && data.company_name) {
-      subtitle.textContent = 'Personalised insights for ' + data.company_name + ' \u2014 powered by 40,000+ corporate enquiries';
+      subtitle.textContent = 'Personalised insights for ' + data.company_name + ' - powered by real corporate booking data';
     }
 
     var spans = document.querySelectorAll('.title-slide p');
