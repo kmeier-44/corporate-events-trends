@@ -178,7 +178,7 @@
     // Build heading
     var heading = document.createElement('h3');
     heading.className = 'pe-comparison-heading';
-    heading.textContent = 'How This Compares to ' + indProfile.industry;
+    heading.textContent = 'How ' + indProfile.industry + ' Compares';
     container.appendChild(heading);
 
     // Build comparison cards
@@ -220,46 +220,47 @@
   }
 
   // ── Generate comparison data points ──
+  // Direction: how the viewer's INDUSTRY compares to this event type's average
   function generateComparisonInsights(eventProfile, indProfile) {
     var insights = [];
 
-    // Spend comparison
-    var spendDelta = eventProfile.spend.median - indProfile.medianSpend;
-    var spendPct = Math.round((spendDelta / indProfile.medianSpend) * 100);
+    // Spend comparison (industry vs event type)
+    var spendDelta = indProfile.medianSpend - eventProfile.spend.median;
+    var spendPct = Math.round((spendDelta / eventProfile.spend.median) * 100);
     insights.push({
-      label: 'Spend vs Industry Average',
+      label: 'Your Industry Spend',
       delta: (spendPct >= 0 ? '+' : '') + spendPct + '%',
-      detail: formatCurrency(eventProfile.spend.median) + ' vs ' + formatCurrency(indProfile.medianSpend) + ' industry median',
+      detail: formatCurrency(indProfile.medianSpend) + ' vs ' + formatCurrency(eventProfile.spend.median) + ' event type median',
       direction: spendPct >= 0 ? 'higher' : 'lower'
     });
 
-    // PPH comparison
-    var pphDelta = eventProfile.pph - indProfile.pph;
-    var pphPct = Math.round((pphDelta / indProfile.pph) * 100);
+    // PPH comparison (industry vs event type)
+    var pphDelta = indProfile.pph - eventProfile.pph;
+    var pphPct = Math.round((pphDelta / eventProfile.pph) * 100);
     insights.push({
-      label: 'Per Head vs Industry',
+      label: 'Your Per Head Cost',
       delta: (pphPct >= 0 ? '+' : '') + pphPct + '%',
-      detail: formatCurrency(eventProfile.pph) + ' vs ' + formatCurrency(indProfile.pph) + ' industry average',
+      detail: formatCurrency(indProfile.pph) + ' vs ' + formatCurrency(eventProfile.pph) + ' event type average',
       direction: pphPct >= 0 ? 'higher' : 'lower'
     });
 
-    // Group size comparison
-    var groupDelta = eventProfile.groupSize.median - indProfile.groupSize;
-    var groupPct = Math.round((groupDelta / indProfile.groupSize) * 100);
+    // Group size comparison (industry vs event type)
+    var groupDelta = indProfile.groupSize - eventProfile.groupSize.median;
+    var groupPct = Math.round((groupDelta / eventProfile.groupSize.median) * 100);
     insights.push({
-      label: 'Group Size vs Industry',
+      label: 'Your Group Size',
       delta: (groupPct >= 0 ? '+' : '') + groupPct + '%',
-      detail: eventProfile.groupSize.median + ' vs ' + indProfile.groupSize + ' industry average',
+      detail: indProfile.groupSize + ' vs ' + eventProfile.groupSize.median + ' event type average',
       direction: groupPct >= 0 ? 'larger' : 'smaller'
     });
 
-    // Lead time comparison
-    var leadDelta = eventProfile.leadDays.median - indProfile.leadDays;
-    var leadPct = Math.round((leadDelta / indProfile.leadDays) * 100);
+    // Lead time comparison (industry vs event type)
+    var leadDelta = indProfile.leadDays - eventProfile.leadDays.median;
+    var leadPct = Math.round((leadDelta / eventProfile.leadDays.median) * 100);
     insights.push({
-      label: 'Lead Time vs Industry',
+      label: 'Your Lead Time',
       delta: (leadPct >= 0 ? '+' : '') + leadPct + '%',
-      detail: eventProfile.leadDays.median + ' vs ' + indProfile.leadDays + ' days industry average',
+      detail: indProfile.leadDays + ' vs ' + eventProfile.leadDays.median + ' days event type average',
       direction: leadPct >= 0 ? 'longer' : 'shorter'
     });
 
@@ -267,29 +268,30 @@
   }
 
   // ── Generate a contextual takeaway sentence ──
+  // Framed from the viewer's industry perspective
   function generateTakeaway(eventProfile, indProfile) {
-    var spendRatio = eventProfile.spend.median / indProfile.medianSpend;
-    var leadRatio = eventProfile.leadDays.median / indProfile.leadDays;
-    var groupRatio = eventProfile.groupSize.median / indProfile.groupSize;
+    var spendRatio = indProfile.medianSpend / eventProfile.spend.median;
+    var leadRatio = indProfile.leadDays / eventProfile.leadDays.median;
+    var groupRatio = indProfile.groupSize / eventProfile.groupSize.median;
 
     var parts = [];
 
     if (spendRatio > 1.3) {
-      parts.push(eventProfile.label + 's cost significantly more than your industry average \u2014 budget ' + Math.round((spendRatio - 1) * 100) + '% above your usual spend');
+      parts.push('your industry typically spends ' + Math.round((spendRatio - 1) * 100) + '% more than average on ' + eventProfile.label.toLowerCase() + 's - you may have room to negotiate');
     } else if (spendRatio < 0.7) {
-      parts.push(eventProfile.label + 's are a cost-effective format for your sector, coming in well below industry norms');
+      parts.push('your industry spends less than average on ' + eventProfile.label.toLowerCase() + 's - budget ' + Math.round((1 - spendRatio) * 100) + '% more than your usual spend for this format');
     }
 
     if (leadRatio > 1.2) {
-      parts.push('plan ' + Math.round((leadRatio - 1) * 100) + '% further ahead than your typical events to secure the right venue');
+      parts.push('your sector already plans well ahead, which gives you an advantage when booking popular venues');
     } else if (leadRatio < 0.8) {
-      parts.push('these events have shorter planning cycles than your industry norm \u2014 but starting early still helps');
+      parts.push('your sector books faster than average for this event type - starting earlier would unlock better availability');
     }
 
     if (groupRatio > 1.5) {
-      parts.push('group sizes run much larger, so prioritise venues with high-capacity spaces');
+      parts.push('your industry runs larger events than typical, so prioritise venues with high-capacity spaces');
     } else if (groupRatio < 0.5) {
-      parts.push('these are more intimate events \u2014 consider boutique or private dining venues');
+      parts.push('your industry runs smaller groups for this format - consider boutique or private dining venues');
     }
 
     if (parts.length === 0) return null;
@@ -635,16 +637,25 @@
     slide.style.display = '';
     slide.classList.remove('personalised-hidden');
 
+    // Set the subtitle with industry name
+    var subtitle = slide.querySelector('.et-trends-subtitle');
+    if (subtitle) {
+      subtitle.textContent = 'For ' + indProfile.industry;
+    }
+
     var container = slide.querySelector('.event-type-trends-content');
     if (!container) return;
 
     container.innerHTML = '';
 
-    // Gaining
+    // Gaining - wrapped in a box
     if (etData.gaining && etData.gaining.length > 0) {
+      var gainBox = document.createElement('div');
+      gainBox.className = 'et-trends-box et-trends-gaining';
+
       var gainH = document.createElement('h3');
       gainH.textContent = 'Event Types Gaining Share';
-      container.appendChild(gainH);
+      gainBox.appendChild(gainH);
 
       var gainCards = document.createElement('div');
       gainCards.className = 'venue-trend-cards';
@@ -656,15 +667,18 @@
           '<div class="stat-detail">' + t.from.toFixed(1) + '% &rarr; ' + t.to.toFixed(1) + '%</div>';
         gainCards.appendChild(card);
       });
-      container.appendChild(gainCards);
+      gainBox.appendChild(gainCards);
+      container.appendChild(gainBox);
     }
 
-    // Declining
+    // Declining - wrapped in a box
     if (etData.declining && etData.declining.length > 0) {
+      var decBox = document.createElement('div');
+      decBox.className = 'et-trends-box et-trends-declining';
+
       var decH = document.createElement('h3');
-      decH.style.marginTop = '20px';
       decH.textContent = 'Event Types Declining';
-      container.appendChild(decH);
+      decBox.appendChild(decH);
 
       var decCards = document.createElement('div');
       decCards.className = 'venue-trend-cards';
@@ -676,13 +690,14 @@
           '<div class="stat-detail">' + t.from.toFixed(1) + '% &rarr; ' + t.to.toFixed(1) + '%</div>';
         decCards.appendChild(card);
       });
-      container.appendChild(decCards);
+      decBox.appendChild(decCards);
+      container.appendChild(decBox);
     }
 
     // Takeaway
     var takeaway = document.createElement('p');
     takeaway.className = 'event-type-trends-takeaway';
-    takeaway.textContent = 'Based on share of all enquiries in ' + indProfile.industry + ', comparing 2022\u20132023 vs 2024\u20132025.';
+    takeaway.textContent = 'Based on share of all enquiries in ' + indProfile.industry + ', comparing 2022-2023 vs 2024-2025.';
     container.appendChild(takeaway);
   }
 

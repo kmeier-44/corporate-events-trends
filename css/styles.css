@@ -1102,5 +1102,34 @@ p.insight {
   .sparkline-legend { font-size: 0.58rem; gap: 6px; }
 }
 
+/* ── Event Type Trends Boxes (Industry Personalisation) ── */
+.et-trends-box {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.et-trends-box h3 {
+  margin-bottom: 12px;
+}
+.et-trends-gaining {
+  border-left: 3px solid var(--hs-green);
+}
+.et-trends-declining {
+  border-left: 3px solid var(--hs-red);
+}
+.light-slide .et-trends-box {
+  background: rgba(255,255,255,0.85);
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+.light-slide .et-trends-gaining {
+  border-left-color: var(--hs-green);
+}
+.light-slide .et-trends-declining {
+  border-left-color: var(--hs-red);
+}
+
 /* ── Venue Types (Industry Personalisation) ── */
 /* Reuses .venue-trend-cards and .venue-trend-card from Venue Sourcing slide */
