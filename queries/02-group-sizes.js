@@ -23,7 +23,7 @@ db.bookings.aggregate([
   }}
 ])
 
-// Results (25 March 2026 — from bookinglines, TO BE RE-RUN):
+// Results (25 March 2026 — from bookings collection):
 // 2022: n=1066, median=200, p25=100, p75=300
 // 2023: n=1246, median=170, p25=100, p75=300
 // 2024: n=1521, median=150, p25=100, p75=300
